@@ -3,15 +3,21 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 
+def properties = new Properties()
+def propertiesFile = rootProject.file('local.properties')
+if (propertiesFile.exists()) {
+    properties.load(new FileInputStream(propertiesFile))
+}
+
 android {
     compileSdkVersion compile_sdk_version
 
     defaultConfig {
-        applicationId "io.horizontalsystems.bankwallet"
+        applicationId "com.owlting.app.owlwallet"
         minSdkVersion min_sdk_version
         targetSdkVersion compile_sdk_version
-        versionCode 69
-        versionName "0.28.0"
+        versionCode 1
+        versionName "0.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         kapt {
@@ -39,6 +45,18 @@ android {
             keyAlias "testKeystore"
             keyPassword "testKeystore123"
         }
+        release {
+            storeFile properties['storeFile'] ? file(properties['storeFile']) : null
+            storePassword properties['storePassword']
+            keyAlias properties['keyAlias']
+            keyPassword properties['keyPassword']
+        }
+        debug {
+            storeFile file("../owlwallet-debug-key.jks")
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
     }
 
     buildTypes {
@@ -50,8 +68,10 @@ android {
             resValue "string", "twitterBearerToken", "AAAAAAAAAAAAAAAAAAAAAJgeNwEAAAAA6xVpR6xLKTrxIA3kkSyRA92LDpA%3Da6auybDwcymUyh2BcS6zZwicUdxGtrzJC0qvOSdRwKLeqBGhwB"
             resValue "string", "cryptoCompareApiKey", "2b08fe1dba559ca6acf5e1897b6de8749cee0ace6052d7aa7fccf6aa9f1b3255"
             resValue "string", "uniswapGraphUrl", "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
-            resValue "string", "infuraProjectId", "2a1306f1d12f4c109a4d4fb9be46b02e"
-            resValue "string", "infuraSecretKey", "fc479a9290b64a84a15fa6544a130218"
+//            resValue "string", "infuraProjectId", "2a1306f1d12f4c109a4d4fb9be46b02e"
+//            resValue "string", "infuraSecretKey", "fc479a9290b64a84a15fa6544a130218"
+            resValue "string", "infuraProjectId", properties['infuraProjectId.dev']
+            resValue "string", "infuraSecretKey", properties['infuraSecretKey.dev']
             resValue "string", "etherscanKey", "GKNHXT22ED7PRVCKZATFZQD1YI7FK9AAYE"
             resValue "string", "bscscanKey", "5ZGSHWYHZVA8XZHB8PF6UUTRNNB4KT43ZZ"
             resValue "string", "polygonscanKey", "TNQ44BCF1MS3S75Y6A2B6SN88I8UYFJFRM"
@@ -67,6 +87,12 @@ android {
             resValue "string", "marketApiBaseUrl", "https://api-dev.blocksdecoded.com"
             resValue "string", "marketApiKey", "IQf1uAjkthZp1i2pYzkXFDom"
             resValue "string", "walletConnectV2Key", "8b4f41c60880a3e3ad57d82fddb30568"
+
+            resValue "string", "owlauthProjectCode", properties['owlauthProjectCode']
+            resValue "string", "owlauthBaseUrl", properties['owlauthBaseUrl.dev']
+            resValue "string", "owlwalletBaseUrl", properties['owlwalletBaseUrl.dev']
+
+            signingConfig signingConfigs.debug
         }
 
         apptestnet {
@@ -92,8 +118,10 @@ android {
             resValue "string", "twitterBearerToken", "AAAAAAAAAAAAAAAAAAAAAJgeNwEAAAAA6xVpR6xLKTrxIA3kkSyRA92LDpA%3Da6auybDwcymUyh2BcS6zZwicUdxGtrzJC0qvOSdRwKLeqBGhwB"
             resValue "string", "cryptoCompareApiKey", ""
             resValue "string", "uniswapGraphUrl", "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
-            resValue "string", "infuraProjectId", "5bf760228fcd47bb8d277dba49b7b369"
-            resValue "string", "infuraSecretKey", "7b81c992c98d4e60aaa8a0ef9acff2be"
+//            resValue "string", "infuraProjectId", "5bf760228fcd47bb8d277dba49b7b369"
+//            resValue "string", "infuraSecretKey", "7b81c992c98d4e60aaa8a0ef9acff2be"
+            resValue "string", "infuraProjectId", properties['infuraProjectId.prod']
+            resValue "string", "infuraSecretKey", properties['infuraSecretKey.prod']
             resValue "string", "etherscanKey", "TTH1114D5VD5ZMCJZ4B74SGIDRCGSKWGX9"
             resValue "string", "bscscanKey", "HBQQN4GTKCHYSRZCKFVQJ3FWGPY4T8237Y"
             resValue "string", "polygonscanKey", "2JM7USE5YRI59RWFZQI2RECAZSNI5QEQGV"
@@ -109,6 +137,12 @@ android {
             resValue "string", "marketApiBaseUrl", "https://api.blocksdecoded.com"
             resValue "string", "marketApiKey", "IQf1uAjkthZp1i2pYzkXFDom"
             resValue "string", "walletConnectV2Key", "0c5ca155c2f165a7d0c88686f2113a72"
+
+            resValue "string", "owlauthProjectCode", properties['owlauthProjectCode']
+            resValue "string", "owlauthBaseUrl", properties['owlauthBaseUrl.prod']
+            resValue "string", "owlwalletBaseUrl", properties['owlwalletBaseUrl.prod']
+
+            signingConfig signingConfigs.release
         }
 
         appcenterrelease {
@@ -225,10 +259,12 @@ dependencies {
 
     // Wallet kits
     implementation 'com.github.horizontalsystems:bitcoin-kit-android:3bb37b0'
-    implementation 'com.github.horizontalsystems:ethereum-kit-android:18a5363'
+    releaseImplementation 'com.github.horizontalsystems:ethereum-kit-android:18a5363'
+    debugImplementation 'com.github.robin00220:ethereum-kit-android:9e67b53'
     implementation 'com.github.horizontalsystems:blockchain-fee-rate-kit-android:501cf1e'
     implementation 'com.github.horizontalsystems:binance-chain-kit-android:fa4df60'
-    implementation 'com.github.horizontalsystems:market-kit-android:63b5860'
+    releaseImplementation 'com.github.horizontalsystems:market-kit-android:63b5860'
+    debugImplementation 'com.github.robin00220:market-kit-android:36cf33a'
 
     // Zcash SDK
     implementation "cash.z.ecc.android:zcash-android-sdk:1.9.0-beta03"
@@ -269,7 +305,9 @@ dependencies {
     // Tooling support (Previews, etc.)
     implementation 'androidx.compose.ui:ui-tooling:1.2.1'
     // Integration with ViewModels
+//    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.5.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
+    implementation "com.google.accompanist:accompanist-swiperefresh:0.18.0"
 
     implementation "androidx.compose.runtime:runtime-livedata:1.2.1"
     implementation "io.coil-kt:coil-compose:2.1.0"
@@ -282,6 +320,9 @@ dependencies {
     implementation "com.google.accompanist:accompanist-flowlayout:0.25.0"
     implementation "com.google.accompanist:accompanist-swiperefresh:0.25.0"
     implementation "com.google.accompanist:accompanist-permissions:0.25.0"
+
+    implementation 'com.jakewharton.timber:timber:5.0.1'
+    implementation 'androidx.datastore:datastore-preferences:1.0.0'
 
     // UI Tests
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.2.1'

@@ -44,16 +44,16 @@ fun BalanceNoAccount(navController: NavController) {
                     }
                 }
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            ButtonPrimaryTransparent(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 48.dp),
-                title = stringResource(R.string.Button_WatchAddress),
-                onClick = {
-                    navController.slideFromRight(R.id.watchAddressFragment)
-                }
-            )
+//            Spacer(modifier = Modifier.height(16.dp))
+//            ButtonPrimaryTransparent(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(horizontal = 48.dp),
+//                title = stringResource(R.string.Button_WatchAddress),
+//                onClick = {
+//                    navController.slideFromRight(R.id.watchAddressFragment)
+//                }
+//            )
         }
     }
 }

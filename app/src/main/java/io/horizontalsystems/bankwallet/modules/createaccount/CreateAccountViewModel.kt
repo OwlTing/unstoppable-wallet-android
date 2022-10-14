@@ -124,10 +124,14 @@ class CreateAccountViewModel(
 
     private fun activateDefaultWallets(account: Account) {
         val tokenQueries = listOf(
-            TokenQuery(BlockchainType.Bitcoin, TokenType.Native),
+//            TokenQuery(BlockchainType.Bitcoin, TokenType.Native),
             TokenQuery(BlockchainType.Ethereum, TokenType.Native),
-            TokenQuery(BlockchainType.BinanceSmartChain, TokenType.Native),
+//            TokenQuery(BlockchainType.BinanceSmartChain, TokenType.Native),
+            TokenQuery(BlockchainType.Polygon, TokenType.Native),
             TokenQuery(BlockchainType.Avalanche, TokenType.Native),
+//            TokenQuery(BlockchainType.Optimism, TokenType.Native),
+//            TokenQuery(BlockchainType.ArbitrumOne, TokenType.Native),
+//            TokenQuery(BlockchainType.Zcash, TokenType.Native)
         )
         walletActivator.activateWallets(account, tokenQueries)
     }

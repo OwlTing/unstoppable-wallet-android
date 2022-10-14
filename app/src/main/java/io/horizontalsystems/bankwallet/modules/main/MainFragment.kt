@@ -78,10 +78,10 @@ class MainFragment : BaseFragment(), RateAppDialogFragment.Listener {
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.navigation_market -> binding.viewPager.setCurrentItem(0, false)
-                R.id.navigation_balance -> binding.viewPager.setCurrentItem(1, false)
-                R.id.navigation_transactions -> binding.viewPager.setCurrentItem(2, false)
-                R.id.navigation_settings -> binding.viewPager.setCurrentItem(3, false)
+//                R.id.navigation_market -> binding.viewPager.setCurrentItem(0, false)
+                R.id.navigation_balance -> binding.viewPager.setCurrentItem(0, false)
+                R.id.navigation_transactions -> binding.viewPager.setCurrentItem(1, false)
+                R.id.navigation_settings -> binding.viewPager.setCurrentItem(2, false)
             }
             true
         }
@@ -104,18 +104,18 @@ class MainFragment : BaseFragment(), RateAppDialogFragment.Listener {
             startActivity(Intent(activity, RootedDeviceActivity::class.java))
         })
 
-        viewModel.showRateAppLiveEvent.observe(viewLifecycleOwner, Observer {
-            activity?.let {
-                RateAppDialogFragment.show(it, this)
-            }
-        })
+//        viewModel.showRateAppLiveEvent.observe(viewLifecycleOwner, Observer {
+//            activity?.let {
+//                RateAppDialogFragment.show(it, this)
+//            }
+//        })
 
-        viewModel.showWhatsNewLiveEvent.observe(viewLifecycleOwner) {
-            findNavController().slideFromBottom(
-                R.id.releaseNotesFragment,
-                bundleOf(ReleaseNotesFragment.showAsClosablePopupKey to true)
-            )
-        }
+//        viewModel.showWhatsNewLiveEvent.observe(viewLifecycleOwner) {
+//            findNavController().slideFromBottom(
+//                R.id.releaseNotesFragment,
+//                bundleOf(ReleaseNotesFragment.showAsClosablePopupKey to true)
+//            )
+//        }
 
         viewModel.openPlayMarketLiveEvent.observe(viewLifecycleOwner, Observer {
             openAppInPlayMarket()
@@ -127,7 +127,7 @@ class MainFragment : BaseFragment(), RateAppDialogFragment.Listener {
 
         viewModel.setBadgeVisibleLiveData.observe(viewLifecycleOwner, Observer { visible ->
             val bottomMenu = binding.bottomNavigation.getChildAt(0) as? BottomNavigationMenuView
-            val settingsNavigationViewItem = bottomMenu?.getChildAt(3) as? BottomNavigationItemView
+            val settingsNavigationViewItem = bottomMenu?.getChildAt(2) as? BottomNavigationItemView
 
             if (visible) {
                 if (bottomBadgeView?.parent == null) {
@@ -139,7 +139,7 @@ class MainFragment : BaseFragment(), RateAppDialogFragment.Listener {
         })
 
         viewModel.transactionTabEnabledLiveData.observe(viewLifecycleOwner, { enabled ->
-            binding.bottomNavigation.menu.getItem(2).isEnabled = enabled
+            binding.bottomNavigation.menu.getItem(1).isEnabled = enabled
         })
 
     }

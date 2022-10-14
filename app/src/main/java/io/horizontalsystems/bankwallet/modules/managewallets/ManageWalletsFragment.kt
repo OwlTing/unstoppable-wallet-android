@@ -11,9 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -153,25 +151,37 @@ private fun ManageWalletsScreen(
     Column(
         modifier = Modifier.background(color = ComposeAppTheme.colors.tyler)
     ) {
-        SearchBar(
-            title = stringResource(R.string.ManageCoins_title),
-            searchHintText = stringResource(R.string.ManageCoins_Search),
-            navController = navController,
-            menuItems = if (viewModel.addTokenEnabled) {
-                listOf(
-                    MenuItem(
-                        title = TranslatableString.ResString(R.string.ManageCoins_AddToken),
-                        icon = R.drawable.ic_add_yellow,
-                        onClick = {
-                            navController.slideFromRight(R.id.addTokenFragment)
-                        }
-                    ))
-            } else {
-                listOf()
+//        SearchBar(
+//            title = stringResource(R.string.ManageCoins_title),
+//            searchHintText = stringResource(R.string.ManageCoins_Search),
+//            navController = navController,
+//            menuItems = if (viewModel.addTokenEnabled) {
+//                listOf(
+//                    MenuItem(
+//                        title = TranslatableString.ResString(R.string.ManageCoins_AddToken),
+//                        icon = R.drawable.ic_add_yellow,
+//                        onClick = {
+//                            navController.slideFromRight(R.id.addTokenFragment)
+//                        }
+//                    ))
+//            } else {
+//                listOf()
+//            },
+//            onSearchTextChanged = { text ->
+//                viewModel.updateFilter(text)
+//            }
+//        }
+        AppBar(
+            title = TranslatableString.ResString(R.string.ManageCoins_title),
+            navigationIcon = {
+                HsIconButton(onClick = { navController.popBackStack() }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_back),
+                        contentDescription = "back",
+                        tint = ComposeAppTheme.colors.jacob
+                    )
+                }
             },
-            onSearchTextChanged = { text ->
-                viewModel.updateFilter(text)
-            }
         )
 
         coinItems?.let {

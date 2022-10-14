@@ -1,5 +1,6 @@
 package io.horizontalsystems.bankwallet.core.managers
 
+import io.horizontalsystems.bankwallet.BuildConfig
 import io.horizontalsystems.bankwallet.core.providers.AppConfigProvider
 import io.horizontalsystems.bankwallet.core.storage.BlockchainSettingsStorage
 import io.horizontalsystems.bankwallet.entities.EvmSyncSource
@@ -8,6 +9,7 @@ import io.horizontalsystems.ethereumkit.models.TransactionSource
 import io.horizontalsystems.marketkit.models.BlockchainType
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import java.net.URL
 
 class EvmSyncSourceManager(
     appConfigProvider: AppConfigProvider,
@@ -22,18 +24,35 @@ class EvmSyncSourceManager(
     val defaultSyncSources: Map<BlockchainType, List<EvmSyncSource>> =
         mapOf(
             BlockchainType.Ethereum to listOf(
-                getSyncSource(
-                    BlockchainType.Ethereum,
-                    "MainNet Websocket",
-                    RpcSource.ethereumInfuraWebSocket(appConfigProvider.infuraProjectId, appConfigProvider.infuraProjectSecret),
-                    TransactionSource.ethereumEtherscan(appConfigProvider.etherscanApiKey)
-                ),
-                getSyncSource(
-                    BlockchainType.Ethereum,
-                    "MainNet HTTP",
-                    RpcSource.ethereumInfuraHttp(appConfigProvider.infuraProjectId, appConfigProvider.infuraProjectSecret),
-                    TransactionSource.ethereumEtherscan(appConfigProvider.etherscanApiKey)
-                )
+                if (BuildConfig.DEBUG)
+                    getSyncSource(
+                        BlockchainType.Ethereum,
+                        "TestNet Websocket",
+                        RpcSource.goerliInfuraWebSocket(appConfigProvider.infuraProjectId, appConfigProvider.infuraProjectSecret),
+                        TransactionSource.goerliEtherscan(appConfigProvider.etherscanApiKey)
+                    )
+                else
+                    getSyncSource(
+                        BlockchainType.Ethereum,
+                        "MainNet Websocket",
+                        RpcSource.ethereumInfuraWebSocket(appConfigProvider.infuraProjectId, appConfigProvider.infuraProjectSecret),
+                        TransactionSource.ethereumEtherscan(appConfigProvider.etherscanApiKey)
+                    ),
+
+                if (BuildConfig.DEBUG)
+                    getSyncSource(
+                        BlockchainType.Ethereum,
+                        "TestNet HTTP",
+                        RpcSource.goerliInfuraHttp(appConfigProvider.infuraProjectId, appConfigProvider.infuraProjectSecret),
+                        TransactionSource.goerliEtherscan(appConfigProvider.etherscanApiKey)
+                    )
+                else
+                    getSyncSource(
+                        BlockchainType.Ethereum,
+                        "MainNet HTTP",
+                        RpcSource.ethereumInfuraHttp(appConfigProvider.infuraProjectId, appConfigProvider.infuraProjectSecret),
+                        TransactionSource.ethereumEtherscan(appConfigProvider.etherscanApiKey)
+                    )
             ),
 
             BlockchainType.BinanceSmartChain to listOf(
@@ -42,13 +61,31 @@ class EvmSyncSourceManager(
                 getSyncSource(BlockchainType.BinanceSmartChain, "Default WebSocket", RpcSource.binanceSmartChainWebSocket(), TransactionSource.bscscan(appConfigProvider.bscscanApiKey))
             ),
 
-            BlockchainType.Polygon to listOf(
-                getSyncSource(BlockchainType.Polygon, "Polygon-RPC HTTP", RpcSource.polygonRpcHttp(), TransactionSource.polygonscan(appConfigProvider.polygonscanApiKey))
-            ),
+            if (BuildConfig.DEBUG)
+                BlockchainType.Polygon to listOf(
+                    getSyncSource(BlockchainType.Polygon, "Polygon-RPC HTTP",
+                        RpcSource.Http(listOf(URL("https://rpc.ankr.com/polygon_mumbai")), null), TransactionSource(
+                        "mumbai.polygonscan.com",
+                        TransactionSource.SourceType.Etherscan("https://api-testnet.polygonscan.com", "https://mumbai.polygonscan.com", appConfigProvider.snowtraceApiKey)
+                    ))
+                )
+            else
+                BlockchainType.Polygon to listOf(
+                    getSyncSource(BlockchainType.Polygon, "Polygon-RPC HTTP", RpcSource.polygonRpcHttp(), TransactionSource.polygonscan(appConfigProvider.polygonscanApiKey))
+                ),
 
-            BlockchainType.Avalanche to listOf(
-                getSyncSource(BlockchainType.Avalanche, "Avax.network", RpcSource.avaxNetworkHttp(), TransactionSource.snowtrace(appConfigProvider.snowtraceApiKey))
-            ),
+            if (BuildConfig.DEBUG)
+                BlockchainType.Avalanche to listOf(
+                    getSyncSource(BlockchainType.Avalanche, "Avax.network", RpcSource.Http(listOf(URL("https://api.avax-test.network/ext/bc/C/rpc")), null), TransactionSource(
+                        "testnet.snowtrace.io",
+                        TransactionSource.SourceType.Etherscan("https://api-testnet.snowtrace.io", "https://testnet.snowtrace.io", appConfigProvider.snowtraceApiKey)
+                    ))
+                )
+            else
+                BlockchainType.Avalanche to listOf(
+                    getSyncSource(BlockchainType.Avalanche, "Avax.network", RpcSource.avaxNetworkHttp(), TransactionSource.snowtrace(appConfigProvider.snowtraceApiKey))
+                ),
+
 
             BlockchainType.Optimism to listOf(
                 getSyncSource(BlockchainType.Optimism, "Optimism.io HTTP", RpcSource.optimismRpcHttp(), TransactionSource.optimisticEtherscan(appConfigProvider.optimisticEtherscanApiKey))

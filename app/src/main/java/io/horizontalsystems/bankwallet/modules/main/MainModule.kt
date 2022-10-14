@@ -32,7 +32,13 @@ object MainModule {
     class FactoryForActivityViewModel : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return MainActivityViewModel(App.wc2SessionManager) as T
+            return MainActivityViewModel(
+                App.wc2SessionManager,
+                App.accountManager,
+                App.walletManager,
+                App.owlTingRepo,
+                App.preferenceHelper,
+            ) as T
         }
     }
 
@@ -52,7 +58,7 @@ object MainModule {
 
     @Parcelize
     enum class MainTab : Parcelable {
-        Market,
+//        Market,
         Balance,
         Transactions,
         Settings;

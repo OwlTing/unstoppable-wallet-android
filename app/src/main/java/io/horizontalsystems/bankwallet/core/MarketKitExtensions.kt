@@ -102,24 +102,24 @@ val TokenQuery.customCoinUid: String
 
 val TokenQuery.isSupported: Boolean
     get() = when (blockchainType) {
-        BlockchainType.Bitcoin,
-        BlockchainType.BitcoinCash,
-        BlockchainType.Litecoin,
-        BlockchainType.Dash,
-        BlockchainType.Zcash -> {
-            tokenType is TokenType.Native
-        }
+//        BlockchainType.Bitcoin,
+//        BlockchainType.BitcoinCash,
+//        BlockchainType.Litecoin,
+//        BlockchainType.Dash,
+//        BlockchainType.Zcash -> {
+//            tokenType is TokenType.Native
+//        }
         BlockchainType.Ethereum,
-        BlockchainType.BinanceSmartChain,
+//        BlockchainType.BinanceSmartChain,
         BlockchainType.Polygon,
-        BlockchainType.Optimism,
-        BlockchainType.ArbitrumOne,
+//        BlockchainType.Optimism,
+//        BlockchainType.ArbitrumOne,
         BlockchainType.Avalanche -> {
             tokenType is TokenType.Native || tokenType is TokenType.Eip20
         }
-        BlockchainType.BinanceChain -> {
-            tokenType is TokenType.Native || tokenType is TokenType.Bep2
-        }
+//        BlockchainType.BinanceChain -> {
+//            tokenType is TokenType.Native || tokenType is TokenType.Bep2
+//        }
         else -> false
     }
 

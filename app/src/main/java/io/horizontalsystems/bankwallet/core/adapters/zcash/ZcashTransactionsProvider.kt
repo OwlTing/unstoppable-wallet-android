@@ -57,8 +57,8 @@ class ZcashTransactionsProvider(private val receiveAddress: String) {
                     .map { it.filter { !it.isIncoming } }
                     .filter { it.isNotEmpty() }
             }
-            FilterTransactionType.Swap,
-            FilterTransactionType.Approve -> Observable.empty()
+//            FilterTransactionType.Swap,
+//            FilterTransactionType.Approve -> Observable.empty()
         }
 
         return observable.toFlowable(BackpressureStrategy.BUFFER)
@@ -74,8 +74,8 @@ class ZcashTransactionsProvider(private val receiveAddress: String) {
             FilterTransactionType.All -> getTxsFiltered(from, limit, null)
             FilterTransactionType.Incoming -> getTxsFiltered(from, limit, true)
             FilterTransactionType.Outgoing -> getTxsFiltered(from, limit, false)
-            FilterTransactionType.Swap,
-            FilterTransactionType.Approve, -> Single.just(listOf())
+//            FilterTransactionType.Swap,
+//            FilterTransactionType.Approve, -> Single.just(listOf())
         }
     }
 

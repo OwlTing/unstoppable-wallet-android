@@ -71,7 +71,8 @@ object LocaleHelper {
 
     private fun load(context: Context): Locale {
         val preferences = getPreferences(context)
-        val language = preferences.getString(SELECTED_LANGUAGE, null) ?: Locale.getDefault().language
+//        val language = preferences.getString(SELECTED_LANGUAGE, null) ?: Locale.getDefault().language
+        val language = preferences.getString(SELECTED_LANGUAGE, null) ?: Locale("en").language
         return Locale(language)
     }
 

@@ -283,6 +283,11 @@
     <fragment
         android:id="@+id/selectSwapCoinDialog"
         android:name="io.horizontalsystems.bankwallet.modules.swap.coinselect.SelectSwapCoinFragment" />
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="io.horizontalsystems.bankwallet.owlwallet.login.LoginFragment" />
+
     <dialog
         android:id="@+id/wcErrorNoAccountFragment"
         android:name="io.horizontalsystems.bankwallet.modules.walletconnect.WCErrorNoAccountFragment" />

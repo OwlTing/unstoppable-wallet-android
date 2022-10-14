@@ -21,11 +21,11 @@ class BtcBlockchainManager(
     val transactionSortModeUpdatedObservable: Observable<BlockchainType> =
         transactionSortModeUpdatedSubject
 
-    private val blockchainTypes = listOf(
-        BlockchainType.Bitcoin,
-        BlockchainType.BitcoinCash,
-        BlockchainType.Litecoin,
-        BlockchainType.Dash,
+    private val blockchainTypes : List<BlockchainType> = listOf(
+//        BlockchainType.Bitcoin,
+//        BlockchainType.BitcoinCash,
+//        BlockchainType.Litecoin,
+//        BlockchainType.Dash,
     )
 
     val allBlockchains = marketKit.blockchains(blockchainTypes.map { it.uid })

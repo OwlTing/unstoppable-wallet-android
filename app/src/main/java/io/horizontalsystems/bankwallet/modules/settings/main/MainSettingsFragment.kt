@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,12 +16,14 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -31,7 +34,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import io.horizontalsystems.bankwallet.R
 import io.horizontalsystems.bankwallet.core.BaseFragment
-import io.horizontalsystems.bankwallet.core.slideFromBottom
 import io.horizontalsystems.bankwallet.core.slideFromRight
 import io.horizontalsystems.bankwallet.modules.manageaccounts.ManageAccountsModule
 import io.horizontalsystems.bankwallet.modules.walletconnect.WCAccountTypeNotSupportedDialog
@@ -39,8 +41,8 @@ import io.horizontalsystems.bankwallet.modules.walletconnect.version1.WC1Manager
 import io.horizontalsystems.bankwallet.ui.compose.ComposeAppTheme
 import io.horizontalsystems.bankwallet.ui.compose.TranslatableString
 import io.horizontalsystems.bankwallet.ui.compose.components.*
-import io.horizontalsystems.bankwallet.ui.helpers.LinkHelper
 import io.horizontalsystems.core.findNavController
+import io.horizontalsystems.core.helpers.HudHelper
 
 class MainSettingsFragment : BaseFragment() {
 
@@ -80,6 +82,7 @@ private fun SettingsScreen(
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 Spacer(modifier = Modifier.height(12.dp))
                 SettingSections(viewModel, navController)
+                OwlTingSections(viewModel, navController)
                 SettingsFooter(viewModel.appVersion, viewModel.companyWebPage)
             }
         }
@@ -98,6 +101,8 @@ private fun SettingSections(
     val walletConnectSessionCount by viewModel.walletConnectSessionCountLiveData.observeAsState(0)
     val baseCurrency by viewModel.baseCurrencyLiveData.observeAsState()
     val language by viewModel.languageLiveData.observeAsState()
+
+
 
     CellSingleLineLawrenceSection(
         listOf({
@@ -126,53 +131,55 @@ private fun SettingSections(
 
     Spacer(Modifier.height(32.dp))
 
+//    CellSingleLineLawrenceSection(
+//        listOf {
+//            HsSettingCell(
+//                R.string.Settings_WalletConnect,
+//                R.drawable.ic_wallet_connect_20,
+//                value = if (walletConnectSessionCount > 0) walletConnectSessionCount.toString() else null,
+//                onClick = {
+//                    when (val state = viewModel.getWalletConnectSupportState()) {
+//                        WC1Manager.SupportState.Supported -> {
+//                            navController.slideFromRight(R.id.wallet_connect_graph)
+//                        }
+//                        WC1Manager.SupportState.NotSupportedDueToNoActiveAccount -> {
+//                            navController.slideFromBottom(R.id.wcErrorNoAccountFragment)
+//                        }
+//                        is WC1Manager.SupportState.NotSupported -> {
+//                            navController.slideFromBottom(
+//                                R.id.wcAccountTypeNotSupportedDialog,
+//                                WCAccountTypeNotSupportedDialog.prepareParams(state.accountTypeDescription)
+//                            )
+//                        }
+//                    }
+//                }
+//            )
+//        }
+//    )
+//
+//    Spacer(Modifier.height(32.dp))
+
     CellSingleLineLawrenceSection(
-        listOf {
-            HsSettingCell(
-                R.string.Settings_WalletConnect,
-                R.drawable.ic_wallet_connect_20,
-                value = if (walletConnectSessionCount > 0) walletConnectSessionCount.toString() else null,
-                onClick = {
-                    when (val state = viewModel.getWalletConnectSupportState()) {
-                        WC1Manager.SupportState.Supported -> {
-                            navController.slideFromRight(R.id.wallet_connect_graph)
-                        }
-                        WC1Manager.SupportState.NotSupportedDueToNoActiveAccount -> {
-                            navController.slideFromBottom(R.id.wcErrorNoAccountFragment)
-                        }
-                        is WC1Manager.SupportState.NotSupported -> {
-                            navController.slideFromBottom(
-                                R.id.wcAccountTypeNotSupportedDialog,
-                                WCAccountTypeNotSupportedDialog.prepareParams(state.accountTypeDescription)
-                            )
-                        }
+        listOf(
+            {
+                HsSettingCell(
+                    R.string.Settings_Appearance,
+                    R.drawable.ic_brush_20,
+                    onClick = {
+                        navController.slideFromRight(R.id.appearanceFragment)
                     }
-                }
-            )
-        }
-    )
-
-    Spacer(Modifier.height(32.dp))
-
-    CellSingleLineLawrenceSection(
-        listOf({
-            HsSettingCell(
-                R.string.Settings_Appearance,
-                R.drawable.ic_brush_20,
-                onClick = {
-                    navController.slideFromRight(R.id.appearanceFragment)
-                }
-            )
-        }, {
-            HsSettingCell(
-                R.string.Settings_BaseCurrency,
-                R.drawable.ic_currency,
-                value = baseCurrency?.code,
-                onClick = {
-                    navController.slideFromRight(R.id.baseCurrencySettingsFragment)
-                }
-            )
-        }, {
+                )
+            },
+            {
+                HsSettingCell(
+                    R.string.Settings_BaseCurrency,
+                    R.drawable.ic_currency,
+                    value = baseCurrency?.code,
+                    onClick = {
+                        navController.slideFromRight(R.id.baseCurrencySettingsFragment)
+                    }
+                )
+            }, /*{
             HsSettingCell(
                 R.string.Settings_Language,
                 R.drawable.ic_language,
@@ -189,45 +196,136 @@ private fun SettingSections(
                     navController.slideFromRight(R.id.experimentalFeaturesFragment)
                 }
             )
-        })
+        }*/
+        )
     )
 
+//    Spacer(Modifier.height(32.dp))
+
+//    CellSingleLineLawrenceSection(
+//        listOf({
+//            HsSettingCell(
+//                R.string.Settings_Faq,
+//                R.drawable.ic_faq_20,
+//                onClick = {
+//                    navController.slideFromRight(R.id.faqListFragment)
+//                }
+//            )
+//        }, {
+//            HsSettingCell(
+//                R.string.Guides_Title,
+//                R.drawable.ic_academy_20,
+//                onClick = {
+//                    navController.slideFromRight(R.id.academyFragment)
+//                }
+//            )
+//        })
+//    )
+
+//    Spacer(Modifier.height(32.dp))
+
+//    CellSingleLineLawrenceSection(
+//        listOf {
+//            HsSettingCell(
+//                R.string.SettingsAboutApp_Title,
+//                R.drawable.ic_about_app_20,
+//                showAlert = showAlertAboutApp,
+//                onClick = {
+//                    navController.slideFromRight(R.id.aboutAppFragment)
+//                }
+//            )
+//        }
+//    )
+
     Spacer(Modifier.height(32.dp))
+}
 
-    CellSingleLineLawrenceSection(
-        listOf({
-            HsSettingCell(
-                R.string.Settings_Faq,
-                R.drawable.ic_faq_20,
-                onClick = {
-                    navController.slideFromRight(R.id.faqListFragment)
-                }
+@Composable
+private fun OwlTingSections(
+    viewModel: MainSettingsViewModel,
+    navController: NavController
+) {
+    val loginState by viewModel.loginState.collectAsState()
+    val snackBarState by viewModel.snackBarState.collectAsState()
+
+    when (snackBarState) {
+        is SnackBarState.Loading ->
+            HudHelper.showInProcessMessage(
+                LocalView.current,
+                R.string.Alert_Loading,
+                io.horizontalsystems.snackbar.SnackbarDuration.INDEFINITE
             )
-        }, {
-            HsSettingCell(
-                R.string.Guides_Title,
-                R.drawable.ic_academy_20,
-                onClick = {
-                    navController.slideFromRight(R.id.academyFragment)
-                }
-            )
-        })
-    )
-
-    Spacer(Modifier.height(32.dp))
-
-    CellSingleLineLawrenceSection(
-        listOf {
-            HsSettingCell(
-                R.string.SettingsAboutApp_Title,
-                R.drawable.ic_about_app_20,
-                showAlert = showAlertAboutApp,
-                onClick = {
-                    navController.slideFromRight(R.id.aboutAppFragment)
-                }
+        is SnackBarState.LogoutSuccess -> {
+            HudHelper.showSuccessMessage(
+                LocalView.current,
+                (snackBarState as SnackBarState.LogoutSuccess).msg,
+                io.horizontalsystems.snackbar.SnackbarDuration.SHORT
             )
         }
-    )
+        is SnackBarState.SyncSuccess -> {
+            HudHelper.showSuccessMessage(
+                LocalView.current,
+                (snackBarState as SnackBarState.SyncSuccess).msg,
+                io.horizontalsystems.snackbar.SnackbarDuration.SHORT
+            )
+        }
+        is SnackBarState.Failed -> {
+            HudHelper.showErrorMessage(
+                LocalView.current,
+                (snackBarState as SnackBarState.Failed).msg
+            )
+        }
+        else -> null
+    }
+
+    AnimatedVisibility(
+        visible = !loginState,
+        enter = fadeIn() + expandVertically(),
+        exit = shrinkVertically() + fadeOut()
+    ) {
+        CellSingleLineLawrenceSection(
+            listOf {
+                HsSettingCell(
+                    R.string.Settings_Login,
+                    R.drawable.ic_baseline_login_24,
+                    onClick = {
+                        navController.slideFromRight(R.id.loginFragment)
+                    }
+                )
+            }
+        )
+    }
+
+    AnimatedVisibility(
+        visible = loginState,
+        enter = fadeIn() + expandVertically(),
+        exit = shrinkVertically() + fadeOut()
+    ) {
+        CellSingleLineLawrenceSection(
+            listOf(
+                {
+                    HsSettingCell(
+                        R.string.Settings_Logout,
+                        R.drawable.ic_baseline_logout_24,
+                        showArrow = false,
+                        onClick = {
+                            viewModel.doLogout()
+                        }
+                    )
+                },
+                {
+                    HsSettingCell(
+                        R.string.Settings_Sync,
+                        R.drawable.ic_baseline_backup_24,
+                        showArrow = false,
+                        onClick = {
+                            viewModel.getWallets()
+                        }
+                    )
+                }
+            )
+        )
+    }
 
     Spacer(Modifier.height(32.dp))
 }
@@ -238,6 +336,7 @@ fun HsSettingCell(
     @DrawableRes icon: Int,
     value: String? = null,
     showAlert: Boolean = false,
+    showArrow: Boolean = true,
     onClick: () -> Unit
 ) {
     Row(
@@ -273,11 +372,13 @@ fun HsSettingCell(
             )
             Spacer(Modifier.width(12.dp))
         }
-        Image(
-            modifier = Modifier.size(20.dp),
-            painter = painterResource(id = R.drawable.ic_arrow_right),
-            contentDescription = null,
-        )
+        if (showArrow) {
+            Image(
+                modifier = Modifier.size(20.dp),
+                painter = painterResource(id = R.drawable.ic_arrow_right),
+                contentDescription = null,
+            )
+        }
     }
 }
 
@@ -288,9 +389,16 @@ private fun SettingsFooter(appVersion: String, companyWebPage: String) {
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        caption_grey(text = stringResource(R.string.Settings_InfoTitleWithVersion, appVersion).uppercase())
+        caption_grey(
+            text = stringResource(
+                R.string.Settings_InfoTitleWithVersion,
+                appVersion
+            ).uppercase()
+        )
         Divider(
-            modifier = Modifier.width(100.dp).padding(top = 8.dp, bottom = 4.5.dp),
+            modifier = Modifier
+                .width(100.dp)
+                .padding(top = 8.dp, bottom = 4.5.dp),
             thickness = 0.5.dp,
             color = ComposeAppTheme.colors.steel20
         )
@@ -299,16 +407,16 @@ private fun SettingsFooter(appVersion: String, companyWebPage: String) {
             style = ComposeAppTheme.typography.micro,
             color = ComposeAppTheme.colors.grey,
         )
-        Image(
-            modifier = Modifier
-                .padding(top = 32.dp)
-                .size(32.dp)
-                .clickable {
-                    LinkHelper.openLinkInAppBrowser(context, companyWebPage)
-                },
-            painter = painterResource(id = R.drawable.ic_company_logo),
-            contentDescription = null,
-        )
+//        Image(
+//            modifier = Modifier
+//                .padding(top = 32.dp)
+//                .size(32.dp)
+//                .clickable {
+//                    LinkHelper.openLinkInAppBrowser(context, companyWebPage)
+//                },
+//            painter = painterResource(id = R.drawable.ic_company_logo),
+//            contentDescription = null,
+//        )
         caption_grey(
             modifier = Modifier.padding(top = 12.dp, bottom = 32.dp),
             text = stringResource(R.string.Settings_CompanyName),

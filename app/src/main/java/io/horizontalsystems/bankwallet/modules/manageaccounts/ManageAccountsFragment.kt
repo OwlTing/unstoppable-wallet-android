@@ -98,10 +98,13 @@ fun ManageAccountsScreen(navController: NavController, mode: ManageAccountsModul
                 item {
                     Spacer(modifier = Modifier.height(12.dp))
 
+                    var showActions = true
                     viewItems?.let { (regularAccounts, watchAccounts) ->
                         if (regularAccounts.isNotEmpty()) {
                             AccountsSection(regularAccounts, viewModel, navController)
                             Spacer(modifier = Modifier.height(32.dp))
+
+                            showActions = false
                         }
 
                         if (watchAccounts.isNotEmpty()) {
@@ -117,6 +120,9 @@ fun ManageAccountsScreen(navController: NavController, mode: ManageAccountsModul
                         }
                     }
 
+                    if (!showActions) {
+                        return@item
+                    }
                     val actions = listOf(
                         ActionViewItem(R.drawable.ic_plus, R.string.ManageAccounts_CreateNewWallet) {
                             navController.navigateWithTermsAccepted {
@@ -128,9 +134,9 @@ fun ManageAccountsScreen(navController: NavController, mode: ManageAccountsModul
                                 navController.slideFromRight(R.id.restoreMnemonicFragment, args)
                             }
                         },
-                        ActionViewItem(R.drawable.icon_binocule_20, R.string.ManageAccounts_WatchAddress) {
-                            navController.slideFromRight(R.id.watchAddressFragment, args)
-                        }
+//                        ActionViewItem(R.drawable.icon_binocule_20, R.string.ManageAccounts_WatchAddress) {
+//                            navController.slideFromRight(R.id.watchAddressFragment, args)
+//                        }
                     )
                     CellSingleLineLawrenceSection(actions) {
                         Row(

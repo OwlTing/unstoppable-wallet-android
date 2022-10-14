@@ -136,31 +136,31 @@ fun AppearanceScreen(navController: NavController) {
                         }
                         Spacer(modifier = Modifier.height(24.dp))
 
-                        HeaderText(text = stringResource(id = R.string.Appearance_AppIcon))
-                        AppIconSection(uiState.appIconOptions) {
-                            scope.launch {
-                                selectedAppIcon = it
-                                sheetState.show()
-                            }
-                        }
-                        Spacer(modifier = Modifier.height(24.dp))
+//                        HeaderText(text = stringResource(id = R.string.Appearance_AppIcon))
+//                        AppIconSection(uiState.appIconOptions) {
+//                            scope.launch {
+//                                selectedAppIcon = it
+//                                sheetState.show()
+//                            }
+//                        }
+//                        Spacer(modifier = Modifier.height(24.dp))
 
-                        HeaderText(text = stringResource(id = R.string.Appearance_BalanceConversion))
-                        CellSingleLineLawrenceSection(uiState.baseTokenOptions.options) { option ->
-                            RowSelect(
-                                imageContent = {
-                                    CoinImage(
-                                        iconUrl = option.coin.iconUrl,
-                                        modifier = Modifier.size(24.dp)
-                                    )
-                                },
-                                text = option.coin.code,
-                                selected = option == uiState.baseTokenOptions.selected
-                            ) {
-                                viewModel.onEnterBaseToken(option)
-                            }
-                        }
-                        Spacer(modifier = Modifier.height(24.dp))
+//                        HeaderText(text = stringResource(id = R.string.Appearance_BalanceConversion))
+//                        CellSingleLineLawrenceSection(uiState.baseTokenOptions.options) { option ->
+//                            RowSelect(
+//                                imageContent = {
+//                                    CoinImage(
+//                                        iconUrl = option.coin.iconUrl,
+//                                        modifier = Modifier.size(24.dp)
+//                                    )
+//                                },
+//                                text = option.coin.code,
+//                                selected = option == uiState.baseTokenOptions.selected
+//                            ) {
+//                                viewModel.onEnterBaseToken(option)
+//                            }
+//                        }
+//                        Spacer(modifier = Modifier.height(24.dp))
 
                         HeaderText(text = stringResource(id = R.string.Appearance_BalanceValue))
                         CellMultilineLawrenceSection(uiState.balanceViewTypeOptions.options) { option ->

@@ -44,6 +44,11 @@ import io.horizontalsystems.bankwallet.modules.walletconnect.version1.WC1Session
 import io.horizontalsystems.bankwallet.modules.walletconnect.version2.WC2Manager
 import io.horizontalsystems.bankwallet.modules.walletconnect.version2.WC2Service
 import io.horizontalsystems.bankwallet.modules.walletconnect.version2.WC2SessionManager
+import io.horizontalsystems.bankwallet.owlwallet.data.source.DefaultOTRepository
+import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.OTAuthRemoteDataSource
+import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.OTWalletApiClient
+import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.OTWalletRemoteDataSource
+import io.horizontalsystems.bankwallet.owlwallet.utils.PreferenceHelper
 import io.horizontalsystems.bankwallet.widgets.MarketWidgetManager
 import io.horizontalsystems.bankwallet.widgets.MarketWidgetRepository
 import io.horizontalsystems.core.BackgroundManager
@@ -54,6 +59,7 @@ import io.horizontalsystems.core.security.KeyStoreManager
 import io.horizontalsystems.ethereumkit.core.EthereumKit
 import io.horizontalsystems.hdwalletkit.Mnemonic
 import io.reactivex.plugins.RxJavaPlugins
+import timber.log.Timber
 import java.util.logging.Level
 import java.util.logging.Logger
 import androidx.work.Configuration as WorkConfiguration
@@ -61,7 +67,6 @@ import androidx.work.Configuration as WorkConfiguration
 class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
 
     companion object : ICoreApp by CoreApp {
-
         lateinit var feeRateProvider: FeeRateProvider
         lateinit var localStorage: ILocalStorage
         lateinit var marketStorage: IMarketStorage
@@ -121,6 +126,21 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
         lateinit var marketWidgetManager: MarketWidgetManager
         lateinit var marketWidgetRepository: MarketWidgetRepository
         lateinit var watchAddressBlockchainManager: WatchAddressBlockchainManager
+
+        lateinit var owlTingRepo: DefaultOTRepository
+        lateinit var preferenceHelper: PreferenceHelper
+
+        fun initOwlTingRepo() {
+            OTWalletApiClient.clear()
+
+            owlTingRepo = DefaultOTRepository(
+                otAuthRemote = OTAuthRemoteDataSource(),
+                otWalletRemote = OTWalletRemoteDataSource(
+                    OTWalletApiClient.getInstance(preferenceHelper),
+                    preferenceHelper,
+                )
+            )
+        }
     }
 
     override val testMode = BuildConfig.testMode
@@ -131,6 +151,8 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
         if (!BuildConfig.DEBUG) {
             //Disable logging for lower levels in Release build
             Logger.getLogger("").level = Level.SEVERE
+        } else {
+            Timber.plant(DebugTree())
         }
 
         RxJavaPlugins.setErrorHandler { e: Throwable? ->
@@ -175,7 +197,8 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
         accountManager = AccountManager(accountsStorage, accountCleaner)
 
         val proFeaturesStorage = ProFeaturesStorage(appDatabase)
-        proFeatureAuthorizationManager = ProFeaturesAuthorizationManager(proFeaturesStorage, accountManager, appConfigProvider)
+        proFeatureAuthorizationManager =
+            ProFeaturesAuthorizationManager(proFeaturesStorage, accountManager, appConfigProvider)
 
         enabledWalletsStorage = EnabledWalletsStorage(appDatabase)
         walletStorage = WalletStorage(marketKit, enabledWalletsStorage)
@@ -236,7 +259,8 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
         connectivityManager = ConnectivityManager(backgroundManager)
 
         zcashBirthdayProvider = ZcashBirthdayProvider(this, testMode)
-        restoreSettingsManager = RestoreSettingsManager(restoreSettingsStorage, zcashBirthdayProvider)
+        restoreSettingsManager =
+            RestoreSettingsManager(restoreSettingsStorage, zcashBirthdayProvider)
 
         evmLabelManager = EvmLabelManager(
             EvmLabelProvider(),
@@ -245,8 +269,25 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
             appDatabase.syncerStateDao()
         )
 
-        val adapterFactory = AdapterFactory(instance, testMode, btcBlockchainManager, evmBlockchainManager, evmSyncSourceManager, binanceKitManager, backgroundManager, restoreSettingsManager, coinManager, evmLabelManager)
-        adapterManager = AdapterManager(walletManager, adapterFactory, btcBlockchainManager, evmBlockchainManager, binanceKitManager)
+        val adapterFactory = AdapterFactory(
+            instance,
+            testMode,
+            btcBlockchainManager,
+            evmBlockchainManager,
+            evmSyncSourceManager,
+            binanceKitManager,
+            backgroundManager,
+            restoreSettingsManager,
+            coinManager,
+            evmLabelManager
+        )
+        adapterManager = AdapterManager(
+            walletManager,
+            adapterFactory,
+            btcBlockchainManager,
+            evmBlockchainManager,
+            binanceKitManager
+        )
         transactionAdapterManager = TransactionAdapterManager(adapterManager, adapterFactory)
 
         feeCoinProvider = FeeTokenProvider(marketKit)
@@ -254,24 +295,26 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
         addressParserFactory = AddressParserFactory()
 
         pinComponent = PinComponent(
-                pinStorage = pinStorage,
-                encryptionManager = encryptionManager,
-                excludedActivityNames = listOf(
-                        KeyStoreActivity::class.java.name,
-                        LockScreenActivity::class.java.name,
-                        LauncherActivity::class.java.name,
-                        TorConnectionActivity::class.java.name
-                )
+            pinStorage = pinStorage,
+            encryptionManager = encryptionManager,
+            excludedActivityNames = listOf(
+                KeyStoreActivity::class.java.name,
+                LockScreenActivity::class.java.name,
+                LauncherActivity::class.java.name,
+                TorConnectionActivity::class.java.name
+            )
         )
 
-        backgroundStateChangeListener = BackgroundStateChangeListener(systemInfoManager, keyStoreManager, pinComponent).apply {
-            backgroundManager.registerListener(this)
-        }
+        backgroundStateChangeListener =
+            BackgroundStateChangeListener(systemInfoManager, keyStoreManager, pinComponent).apply {
+                backgroundManager.registerListener(this)
+            }
 
         rateAppManager = RateAppManager(walletManager, adapterManager, localStorage)
 
         wc1SessionStorage = WC1SessionStorage(appDatabase)
-        wc1SessionManager = WC1SessionManager(wc1SessionStorage, accountManager, evmSyncSourceManager)
+        wc1SessionManager =
+            WC1SessionManager(wc1SessionStorage, accountManager, evmSyncSourceManager)
         wc1RequestManager = WC1RequestManager()
         wc1Manager = WC1Manager(accountManager, evmBlockchainManager)
         wc2Manager = WC2Manager(accountManager, evmBlockchainManager)
@@ -291,12 +334,15 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
             currencyManager
         )
 
-        releaseNotesManager = ReleaseNotesManager(systemInfoManager, localStorage, appConfigProvider)
+        releaseNotesManager =
+            ReleaseNotesManager(systemInfoManager, localStorage, appConfigProvider)
+
+        preferenceHelper = PreferenceHelper(applicationContext)
+        initOwlTingRepo()
 
         setAppTheme()
 
         registerActivityLifecycleCallbacks(ActivityLifecycleCallbacks(torKitManager))
-
 
 
         val nftStorage = NftStorage(appDatabase.nftDao(), marketKit)
@@ -307,7 +353,12 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
         initializeWalletConnectV2(appConfig)
 
         wc2Service = WC2Service()
-        wc2SessionManager = WC2SessionManager(accountManager, WC2SessionStorage(appDatabase), wc2Service, wc2Manager)
+        wc2SessionManager = WC2SessionManager(
+            accountManager,
+            WC2SessionStorage(appDatabase),
+            wc2Service,
+            wc2Manager
+        )
 
         baseTokenManager = BaseTokenManager(coinManager, localStorage)
         balanceViewTypeManager = BalanceViewTypeManager(localStorage)

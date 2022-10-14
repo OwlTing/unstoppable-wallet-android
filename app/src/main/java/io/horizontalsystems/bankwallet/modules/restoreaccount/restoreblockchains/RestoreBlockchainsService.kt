@@ -44,18 +44,18 @@ class RestoreBlockchainsService(
         }
 
     private val blockchainTypes = listOf(
-        BlockchainType.Bitcoin,
+//        BlockchainType.Bitcoin,
         BlockchainType.Ethereum,
-        BlockchainType.BinanceSmartChain,
+//        BlockchainType.BinanceSmartChain,
         BlockchainType.Polygon,
         BlockchainType.Avalanche,
-        BlockchainType.Optimism,
-        BlockchainType.ArbitrumOne,
-        BlockchainType.Zcash,
-        BlockchainType.Dash,
-        BlockchainType.BitcoinCash,
-        BlockchainType.Litecoin,
-        BlockchainType.BinanceChain,
+//        BlockchainType.Optimism,
+//        BlockchainType.ArbitrumOne,
+//        BlockchainType.Zcash,
+//        BlockchainType.Dash,
+//        BlockchainType.BitcoinCash,
+//        BlockchainType.Litecoin,
+//        BlockchainType.BinanceChain,
     )
 
     init {

@@ -1,5 +1,6 @@
 package io.horizontalsystems.bankwallet.modules.managewallets
 
+import io.horizontalsystems.bankwallet.BuildConfig
 import io.horizontalsystems.bankwallet.core.*
 import io.horizontalsystems.bankwallet.core.managers.MarketKitWrapper
 import io.horizontalsystems.bankwallet.core.managers.RestoreSettings
@@ -80,17 +81,32 @@ class ManageWalletsService(
 
     private fun fetchFullCoins(): List<FullCoin> {
         return if (filter.isBlank()) {
-            val account = this.account ?: return emptyList()
-            val featuredFullCoins =
-                marketKit.fullCoins("", 100).toMutableList()
-                    .filter { it.eligibleTokens(account.type).isNotEmpty() }
+//            val account = this.account ?: return emptyList()
+//            val featuredFullCoins =
+//                marketKit.fullCoins("", 100).toMutableList()
+//                    .filter { it.eligibleTokens(account.type).isNotEmpty() }
+            val featuredFullCoins = marketKit.fullCoins(
+                if (BuildConfig.DEBUG) listOf(
+                    "ethereum",
+                    "matic-network",
+                    "avalanche-2",
+                    "circle-usd-coin",
+                ) else listOf(
+                    "ethereum",
+                    "matic-network",
+                    "avalanche-2",
+                    "usd-coin",
+                    "tether",
+                    "dai",
+                )
+            ).toMutableList()
 
             val featuredCoins = featuredFullCoins.map { it.coin }
+
             val enabledFullCoins = marketKit.fullCoins(
                 coinUids = wallets.filter { !featuredCoins.contains(it.coin) }.map { it.coin.uid }
             )
             val customFullCoins = wallets.filter { it.token.isCustom }.map { it.token.fullCoin }
-
             featuredFullCoins + enabledFullCoins + customFullCoins
         } else if (isContractAddress(filter)) {
             val tokens = marketKit.tokens(filter)
@@ -98,7 +114,21 @@ class ManageWalletsService(
 
             marketKit.fullCoins(coinUids).toMutableList()
         } else {
-            marketKit.fullCoins(filter, 20).toMutableList()
+            marketKit.fullCoins(filter, 20).toMutableList().filter {
+                if (BuildConfig.DEBUG) listOf(
+                    "ethereum",
+                    "matic-network",
+                    "avalanche-2",
+                    "circle-usd-coin",
+                ).contains(it.coin.uid) else listOf(
+                    "ethereum",
+                    "matic-network",
+                    "avalanche-2",
+                    "usd-coin",
+                    "tether",
+                    "dai",
+                ).contains(it.coin.uid)
+            }
         }
     }
 

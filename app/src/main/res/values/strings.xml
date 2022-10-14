@@ -1,5 +1,5 @@
 <resources>
-    <string name="App_Name" translatable="false">Unstoppable</string>
+    <string name="App_Name" translatable="false">OwlTing Wallet</string>
 
     <!--Common-->
 
@@ -716,9 +716,9 @@
     <string name="Settings_Terms">Terms</string>
     <string name="Settings_Privacy">Privacy</string>
     <string name="Settings_ShareThisWallet">Tell Friends</string>
-    <string name="Settings_InfoTitleWithVersion" translatable="false">Unstoppable %s</string>
+    <string name="Settings_InfoTitleWithVersion" translatable="false">OwlTing Wallet %s</string>
     <string name="Settings_InfoSubtitle" translatable="false">decentralized app</string>
-    <string name="Settings_CompanyName" translatable="false">horizontal systems</string>
+    <string name="Settings_CompanyName" translatable="false">OwlTing Group</string>
     <string name="Settings_Faq" translatable="false">FAQ</string>
     <string name="Settings_AppStatus">App Status</string>
     <string name="Settings_WalletConnect">Wallet Connect</string>
@@ -741,6 +741,19 @@
     <string name="SettingsAboutApp_Twitter" translatable="false">Twitter</string>
     <string name="SettingsAboutApp_Site">Website</string>
     <string name="SettingsAboutApp_WhatsNew">What\'s New</string>
+
+    <string name="Settings_Login" translatable="false">Login</string>
+    <string name="Settings_Logout" translatable="false">Logout</string>
+    <string name="Settings_Sync" translatable="false">Sync</string>
+
+    <!-- Auth  -->
+    <string name="Auth_Email" translatable="false">Email</string>
+    <string name="Auth_Email_Hint" translatable="false">Email</string>
+    <string name="Auth_Password" translatable="false">Password</string>
+    <string name="Auth_Password_Hint" translatable="false">At least 8 characters</string>
+    <string name="Auth_Forget_Password" translatable="false">Forget password</string>
+    <string name="Auth_Reset_Password_Success" translatable="false">Send a password reset email.</string>
+    <string name="Auth_Reset_Password_Failed" translatable="false">Error! Please try again later.</string>
 
     <!-- Privacy  -->
 

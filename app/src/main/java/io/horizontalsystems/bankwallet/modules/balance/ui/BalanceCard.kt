@@ -287,40 +287,40 @@ private fun ButtonsRow(viewItem: BalanceViewItem, navController: NavController, 
                 enabled = viewItem.sendEnabled
             )
             Spacer(modifier = Modifier.width(8.dp))
-            if (viewItem.swapVisible) {
-                ButtonPrimaryCircle(
-                    icon = R.drawable.ic_arrow_down_left_24,
-                    onClick = onClickReceive,
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                ButtonPrimaryCircle(
-                    icon = R.drawable.ic_swap_24,
-                    onClick = {
-                        navController.slideFromBottom(
-                            R.id.swapFragment,
-                            SwapMainModule.prepareParams(viewItem.wallet.token)
-                        )
-                    },
-                    enabled = viewItem.swapEnabled
-                )
-            } else {
+//            if (viewItem.swapVisible) {
+//                ButtonPrimaryCircle(
+//                    icon = R.drawable.ic_arrow_down_left_24,
+//                    onClick = onClickReceive,
+//                )
+//                Spacer(modifier = Modifier.width(8.dp))
+//                ButtonPrimaryCircle(
+//                    icon = R.drawable.ic_swap_24,
+//                    onClick = {
+//                        navController.slideFromBottom(
+//                            R.id.swapFragment,
+//                            SwapMainModule.prepareParams(viewItem.wallet.token)
+//                        )
+//                    },
+//                    enabled = viewItem.swapEnabled
+//                )
+//            } else {
                 ButtonPrimaryDefault(
                     modifier = Modifier.weight(1f),
                     title = stringResource(R.string.Balance_Receive),
                     onClick = onClickReceive,
                 )
-            }
+//            }
         }
         Spacer(modifier = Modifier.width(8.dp))
-        ButtonPrimaryCircle(
-            icon = R.drawable.ic_chart_24,
-            onClick = {
-                val coinUid = viewItem.wallet.coin.uid
-                val arguments = CoinFragment.prepareParams(coinUid)
-
-                navController.slideFromRight(R.id.coinFragment, arguments)
-            },
-        )
+//        ButtonPrimaryCircle(
+//            icon = R.drawable.ic_chart_24,
+//            onClick = {
+//                val coinUid = viewItem.wallet.coin.uid
+//                val arguments = CoinFragment.prepareParams(coinUid)
+//
+//                navController.slideFromRight(R.id.coinFragment, arguments)
+//            },
+//        )
     }
 }
 

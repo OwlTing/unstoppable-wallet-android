@@ -23,6 +23,8 @@ object MainSettingsModule {
             val viewModel = MainSettingsViewModel(
                 service,
                 App.appConfigProvider.companyWebPageLink,
+                App.owlTingRepo,
+                App.preferenceHelper
             )
 
             return viewModel as T

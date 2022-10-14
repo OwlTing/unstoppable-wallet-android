@@ -15,11 +15,11 @@ class EvmBlockchainManager(
 
     val allBlockchainTypes = listOf(
             BlockchainType.Ethereum,
-            BlockchainType.BinanceSmartChain,
+//            BlockchainType.BinanceSmartChain,
             BlockchainType.Polygon,
             BlockchainType.Avalanche,
-            BlockchainType.Optimism,
-            BlockchainType.ArbitrumOne,
+//            BlockchainType.Optimism,
+//            BlockchainType.ArbitrumOne,
     )
 
     val allBlockchains = marketKit.blockchains(allBlockchainTypes.map { it.uid })

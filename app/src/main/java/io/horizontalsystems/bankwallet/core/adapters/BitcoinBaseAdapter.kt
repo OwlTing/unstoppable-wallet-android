@@ -120,10 +120,10 @@ abstract class BitcoinBaseAdapter(
                     }
 
             }
-            FilterTransactionType.Swap,
-            FilterTransactionType.Approve -> {
-                Observable.empty()
-            }
+//            FilterTransactionType.Swap,
+//            FilterTransactionType.Approve -> {
+//                Observable.empty()
+//            }
         }
 
         return observable.toFlowable(BackpressureStrategy.BUFFER)

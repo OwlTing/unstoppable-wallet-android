@@ -87,9 +87,9 @@ class MainViewModel(
         }
         return when(service.launchPage){
             LaunchPage.Market,
-            LaunchPage.Watchlist -> MainModule.MainTab.Market
+            LaunchPage.Watchlist -> MainModule.MainTab.Balance
             LaunchPage.Balance -> MainModule.MainTab.Balance
-            LaunchPage.Auto -> service.currentMainTab ?: MainModule.MainTab.Market
+            LaunchPage.Auto -> service.currentMainTab ?: MainModule.MainTab.Balance
         }
     }
 
@@ -140,7 +140,7 @@ class MainViewModel(
     }
 
     private fun updateBadgeVisibility() {
-        val visible = !(backupManager.allBackedUp && termsManager.allTermsAccepted && pinComponent.isPinSet)
+        val visible = !(backupManager.allBackedUp /*&& termsManager.allTermsAccepted*/ && pinComponent.isPinSet)
         setBadgeVisibleLiveData.postValue(visible)
     }
 
