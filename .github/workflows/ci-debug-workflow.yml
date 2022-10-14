@@ -1,0 +1,53 @@
+name: ci debug workflow
+on:
+  workflow_dispatch:
+
+jobs:
+  debug_build:
+    runs-on: [self-hosted, linux]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1.2'
+          bundler-cache: true
+
+      - name: Decode local properties
+        id: localProperties
+        uses: timheuer/base64-to-file@v1.1
+        with:
+          fileName: 'local.properties'
+          encodedString: ${{ secrets.LOCAL_PROPERTIES }}
+
+      - run: cp "${{ steps.localProperties.outputs.filePath }}" "./"
+
+      - name: Get the version name
+        id: versionNameId
+        run: echo "versionName=$(cat app/build.gradle | grep " versionName " | awk -F '"' '{print $2}')" >> $GITHUB_ENV
+#        run: echo "::set-output name=versionName::$(cat app/build.gradle | grep "versionName " | awk -F '"' '{print $2}')"
+      - name: Get the version code
+        id: versionCodeId
+        run: echo "versionCode=$(cat app/build.gradle | grep " versionCode " | awk '{print $2}')" >> $GITHUB_ENV
+#        run: echo "::set-output name=versionCode::$(cat app/build.gradle | grep "versionCode " | awk '{print $2}')"
+
+      - run: bundle exec fastlane dev
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
+#      - name: Configure AWS credentials from Production account
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          aws-access-key-id: ${{ secrets.S3_ACCESS_KEY }}
+#          aws-secret-access-key: ${{ secrets.S3_SECRET_ACCESS_KEY }}
+#          aws-region: ap-northeast-1
+#        env:
+#          S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+#          S3_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
+#
+#      - name: Deploy (Copy files to s3 bucket with the AWS CLI)
+#        run: aws s3 cp build/app/outputs/bundle/devRelease/app-dev-release.aab s3://owlting-qa/owlmarket_mobile/${{ steps.versionNameId.outputs.versionName }}.${{ steps.versionCodeId.outputs.versionCode }}/owlmarket-dev-${{ steps.versionNameId.outputs.versionName }}.${{ steps.versionCodeId.outputs.versionCode }}.aab --acl public-read

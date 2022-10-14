@@ -64,7 +64,7 @@ class EvmSyncSourceManager(
             if (BuildConfig.DEBUG)
                 BlockchainType.Polygon to listOf(
                     getSyncSource(BlockchainType.Polygon, "Polygon-RPC HTTP",
-                        RpcSource.Http(listOf(URL("https://rpc.ankr.com/polygon_mumbai")), null), TransactionSource(
+                        RpcSource.Http(listOf(URL("https://matic-mumbai.chainstacklabs.com")), null), TransactionSource(
                         "mumbai.polygonscan.com",
                         TransactionSource.SourceType.Etherscan("https://api-testnet.polygonscan.com", "https://mumbai.polygonscan.com", appConfigProvider.snowtraceApiKey)
                     ))

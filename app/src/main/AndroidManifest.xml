@@ -12,7 +12,8 @@
     <application
         android:name=".core.App"
         android:allowBackup="false"
-        android:icon="@mipmap/launcher_main"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/App_Name"
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
@@ -76,7 +77,8 @@
         <activity-alias
             android:name="${applicationId}.MainLauncherAlias"
             android:enabled="true"
-            android:icon="@mipmap/launcher_main"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/App_Name"
             android:exported="true"
             android:targetActivity=".modules.launcher.LauncherActivity">
@@ -100,7 +102,8 @@
         <activity-alias
             android:name="${applicationId}.DarkLauncherAlias"
             android:enabled="false"
-            android:icon="@mipmap/launcher_dark"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:label="@string/App_Name"
             android:exported="true"
             android:targetActivity=".modules.launcher.LauncherActivity">
