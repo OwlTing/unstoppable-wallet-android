@@ -17,6 +17,7 @@ import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.OTWallet
 import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.SyncWalletsRequest
 import io.horizontalsystems.bankwallet.owlwallet.data.succeeded
 import io.horizontalsystems.bankwallet.owlwallet.utils.PreferenceHelper
+import io.horizontalsystems.bankwallet.owlwallet.utils.WalletSyncHelper
 import io.horizontalsystems.core.SingleLiveEvent
 import io.horizontalsystems.ethereumkit.core.EthereumKit
 import io.horizontalsystems.ethereumkit.crypto.CryptoUtils
@@ -32,10 +33,10 @@ import timber.log.Timber
 
 class MainActivityViewModel(
     wcSessionManager: WC2SessionManager,
-    private val accountManager: IAccountManager,
     private val walletManager: IWalletManager,
     private val owlTingRepo: OTRepository,
-    private val preferenceHelper: PreferenceHelper,
+    preferenceHelper: PreferenceHelper,
+    private val walletSyncHelper: WalletSyncHelper,
 ) : ViewModel() {
     private val disposables = CompositeDisposable()
 
@@ -48,17 +49,23 @@ class MainActivityViewModel(
             owlTingRepo.loginStateFlow().collect {
                 Timber.d("loginState: $it")
                 isLoggedIn = it
-                logAllWallets()
+                if (isLoggedIn) {
+                    walletSyncHelper.syncWithRetry()
+                }
             }
         }
 
         viewModelScope.launch {
-            logAllWallets()
+            if (isLoggedIn) {
+                walletSyncHelper.syncWithRetry()
+            }
         }
 
         viewModelScope.launch {
             walletManager.activeWalletsUpdatedObservable.asFlow().collect {
-                logAllWallets()
+                if (isLoggedIn) {
+                    walletSyncHelper.syncWithRetry()
+                }
             }
         }
 
@@ -70,82 +77,7 @@ class MainActivityViewModel(
             }
     }
 
-    private suspend fun logAllWallets() {
-        Timber.d("before logAllWallets $isLoggedIn")
-        if (!isLoggedIn) {
-            return
-        }
-
-        Timber.d("logAllWallets")
-        var needRetry: Boolean
-        do {
-            needRetry = false
-            val otWallets = mutableListOf<OTWallet>()
-            val accounts = accountManager.accounts
-            accounts.forEach { account ->
-                val wallets = walletManager.getWallets(account)
-                otWallets.addAll(
-                    wallets.map { wallet ->
-                        Timber.d("wallet: $wallet")
-                        val address = getAddress(account, wallet)
-                        OTWallet(
-                            address = address,
-                            currency = getCurrency(wallet.token.blockchainType),
-                            symbol = wallet.token.coin.code,
-                            decimals = wallet.token.decimals.toString()
-                        )
-                    }
-                )
-            }
-            if (otWallets.isNotEmpty()) {
-
-                val result = owlTingRepo.syncWallets(SyncWalletsRequest(otWallets))
-
-                needRetry = if (result.succeeded) {
-                    false
-                } else {
-                    if ((result as OTResult.Error).exception is RefreshTokenExpiredException) {
-                        false
-                    } else {
-                        delay(1000)
-                        true
-                    }
-                }
-            }
-        } while (needRetry && isLoggedIn)
-    }
-
     override fun onCleared() {
         disposables.clear()
-    }
-
-    private fun getAddress(account: Account, wallet: Wallet): String {
-        return when (account.type) {
-            is AccountType.Address -> account.type.address
-            is AccountType.Mnemonic -> {
-                val seed = Mnemonic().toSeed(account.type.words, account.type.passphrase)
-                val privateKey =
-                    EthereumKit.privateKey(seed, getChain(wallet.token.blockchainType))
-                val publicKey =
-                    CryptoUtils.ecKeyFromPrivate(privateKey).publicKeyPoint.getEncoded(false)
-                        .drop(1).toByteArray()
-                Address(CryptoUtils.sha3(publicKey).takeLast(20).toByteArray()).eip55
-            }
-            else -> ""
-        }
-    }
-
-    private fun getChain(blockchainType: BlockchainType) = when (blockchainType) {
-        BlockchainType.Ethereum -> Chain.Ethereum
-        BlockchainType.Polygon -> Chain.Polygon
-        BlockchainType.Avalanche -> Chain.Avalanche
-        else -> throw IllegalArgumentException("Unsupported blockchain type $blockchainType")
-    }
-
-    private fun getCurrency(blockchainType: BlockchainType) = when(blockchainType) {
-        BlockchainType.Ethereum -> "ETH"
-        BlockchainType.Polygon -> "MATIC"
-        BlockchainType.Avalanche -> "AVAX"
-        else -> throw IllegalArgumentException("Unsupported blockchain type $blockchainType")
     }
 }

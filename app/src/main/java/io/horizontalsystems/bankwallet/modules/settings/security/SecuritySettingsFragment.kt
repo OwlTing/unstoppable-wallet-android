@@ -165,14 +165,14 @@ private fun SecurityCenterScreen(
                     )
                 }
 
-                item {
-                    Spacer(Modifier.height(24.dp))
-                    HeaderText(stringResource(R.string.SecurityCenter_Internet))
-                    TorBlock(
-                        torViewModel,
-                        showAppRestartAlert,
-                    )
-                }
+//                item {
+//                    Spacer(Modifier.height(24.dp))
+//                    HeaderText(stringResource(R.string.SecurityCenter_Internet))
+//                    TorBlock(
+//                        torViewModel,
+//                        showAppRestartAlert,
+//                    )
+//                }
 
                 item {
                     Spacer(Modifier.height(24.dp))

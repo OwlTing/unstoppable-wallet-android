@@ -49,6 +49,7 @@ import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.OTAuthRemote
 import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.OTWalletApiClient
 import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.OTWalletRemoteDataSource
 import io.horizontalsystems.bankwallet.owlwallet.utils.PreferenceHelper
+import io.horizontalsystems.bankwallet.owlwallet.utils.WalletSyncHelper
 import io.horizontalsystems.bankwallet.widgets.MarketWidgetManager
 import io.horizontalsystems.bankwallet.widgets.MarketWidgetRepository
 import io.horizontalsystems.core.BackgroundManager
@@ -129,6 +130,7 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
 
         lateinit var owlTingRepo: DefaultOTRepository
         lateinit var preferenceHelper: PreferenceHelper
+        lateinit var walletSyncHelper: WalletSyncHelper
 
         fun initOwlTingRepo() {
             OTWalletApiClient.clear()
@@ -339,6 +341,8 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
 
         preferenceHelper = PreferenceHelper(applicationContext)
         initOwlTingRepo()
+        walletSyncHelper =
+            WalletSyncHelper(accountManager, walletManager, owlTingRepo, preferenceHelper)
 
         setAppTheme()
 

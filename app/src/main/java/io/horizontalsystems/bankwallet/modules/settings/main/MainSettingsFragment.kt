@@ -43,6 +43,7 @@ import io.horizontalsystems.bankwallet.ui.compose.TranslatableString
 import io.horizontalsystems.bankwallet.ui.compose.components.*
 import io.horizontalsystems.core.findNavController
 import io.horizontalsystems.core.helpers.HudHelper
+import timber.log.Timber
 
 class MainSettingsFragment : BaseFragment() {
 
@@ -94,15 +95,12 @@ private fun SettingSections(
     viewModel: MainSettingsViewModel,
     navController: NavController
 ) {
-
     val showAlertManageWallet by viewModel.manageWalletShowAlertLiveData.observeAsState(false)
     val showAlertSecurityCenter by viewModel.securityCenterShowAlertLiveData.observeAsState(false)
     val showAlertAboutApp by viewModel.aboutAppShowAlertLiveData.observeAsState(false)
     val walletConnectSessionCount by viewModel.walletConnectSessionCountLiveData.observeAsState(0)
     val baseCurrency by viewModel.baseCurrencyLiveData.observeAsState()
     val language by viewModel.languageLiveData.observeAsState()
-
-
 
     CellSingleLineLawrenceSection(
         listOf({
@@ -160,45 +158,57 @@ private fun SettingSections(
 //    Spacer(Modifier.height(32.dp))
 
     CellSingleLineLawrenceSection(
-        listOf(
-            {
-                HsSettingCell(
-                    R.string.Settings_Appearance,
-                    R.drawable.ic_brush_20,
-                    onClick = {
-                        navController.slideFromRight(R.id.appearanceFragment)
-                    }
-                )
-            },
-            {
-                HsSettingCell(
-                    R.string.Settings_BaseCurrency,
-                    R.drawable.ic_currency,
-                    value = baseCurrency?.code,
-                    onClick = {
-                        navController.slideFromRight(R.id.baseCurrencySettingsFragment)
-                    }
-                )
-            }, /*{
+        listOf {
             HsSettingCell(
-                R.string.Settings_Language,
-                R.drawable.ic_language,
-                value = language,
+                R.string.Settings_Appearance,
+                R.drawable.ic_brush_20,
                 onClick = {
-                    navController.slideFromRight(R.id.languageSettingsFragment)
+                    navController.slideFromRight(R.id.appearanceFragment)
                 }
             )
-        }, {
-            HsSettingCell(
-                R.string.Settings_ExperimentalFeatures,
-                R.drawable.ic_experimental,
-                onClick = {
-                    navController.slideFromRight(R.id.experimentalFeaturesFragment)
-                }
-            )
-        }*/
-        )
+        }
     )
+
+//    CellSingleLineLawrenceSection(
+//        listOf(
+//            {
+//                HsSettingCell(
+//                    R.string.Settings_Appearance,
+//                    R.drawable.ic_brush_20,
+//                    onClick = {
+//                        navController.slideFromRight(R.id.appearanceFragment)
+//                    }
+//                )
+//            },
+//            {
+//                HsSettingCell(
+//                    R.string.Settings_BaseCurrency,
+//                    R.drawable.ic_currency,
+//                    value = baseCurrency?.code,
+//                    onClick = {
+//                        navController.slideFromRight(R.id.baseCurrencySettingsFragment)
+//                    }
+//                )
+//            }, {
+//                HsSettingCell(
+//                    R.string.Settings_Language,
+//                    R.drawable.ic_language,
+//                    value = language,
+//                    onClick = {
+//                        navController.slideFromRight(R.id.languageSettingsFragment)
+//                    }
+//                )
+//            }, {
+//                HsSettingCell(
+//                    R.string.Settings_ExperimentalFeatures,
+//                    R.drawable.ic_experimental,
+//                    onClick = {
+//                        navController.slideFromRight(R.id.experimentalFeaturesFragment)
+//                    }
+//                )
+//            }
+//        )
+//    )
 
 //    Spacer(Modifier.height(32.dp))
 
@@ -245,6 +255,7 @@ private fun OwlTingSections(
     viewModel: MainSettingsViewModel,
     navController: NavController
 ) {
+    Timber.d("OwlTingSections")
     val loginState by viewModel.loginState.collectAsState()
     val snackBarState by viewModel.snackBarState.collectAsState()
 
@@ -319,7 +330,7 @@ private fun OwlTingSections(
                         R.drawable.ic_baseline_backup_24,
                         showArrow = false,
                         onClick = {
-                            viewModel.getWallets()
+                            viewModel.syncWallets()
                         }
                     )
                 }

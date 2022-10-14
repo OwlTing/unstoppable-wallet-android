@@ -3,18 +3,35 @@ package io.horizontalsystems.bankwallet.modules.settings.main
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.horizontalsystems.bankwallet.core.IAccountManager
+import io.horizontalsystems.bankwallet.core.IWalletManager
 import io.horizontalsystems.bankwallet.core.subscribeIO
+import io.horizontalsystems.bankwallet.entities.Account
+import io.horizontalsystems.bankwallet.entities.AccountType
+import io.horizontalsystems.bankwallet.entities.Wallet
 import io.horizontalsystems.bankwallet.modules.walletconnect.version1.WC1Manager
 import io.horizontalsystems.bankwallet.owlwallet.data.OTResult
+import io.horizontalsystems.bankwallet.owlwallet.data.RefreshTokenExpiredException
 import io.horizontalsystems.bankwallet.owlwallet.data.source.OTRepository
+import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.OTWallet
+import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.SyncWalletsRequest
 import io.horizontalsystems.bankwallet.owlwallet.data.succeeded
 import io.horizontalsystems.bankwallet.owlwallet.utils.PreferenceHelper
+import io.horizontalsystems.bankwallet.owlwallet.utils.WalletSyncHelper
+import io.horizontalsystems.ethereumkit.core.EthereumKit
+import io.horizontalsystems.ethereumkit.crypto.CryptoUtils
+import io.horizontalsystems.ethereumkit.models.Address
+import io.horizontalsystems.ethereumkit.models.Chain
+import io.horizontalsystems.hdwalletkit.Mnemonic
+import io.horizontalsystems.marketkit.models.BlockchainType
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 sealed class SnackBarState {
     object Loading : SnackBarState()
@@ -28,7 +45,12 @@ class MainSettingsViewModel(
     val companyWebPage: String,
     private val repo: OTRepository,
     preferenceHelper: PreferenceHelper,
+    private val walletSyncHelper: WalletSyncHelper
 ) : ViewModel() {
+
+    init {
+        Timber.d("init")
+    }
 
     private var disposables: CompositeDisposable = CompositeDisposable()
 
@@ -78,23 +100,30 @@ class MainSettingsViewModel(
 
     // ViewModel
 
-    fun getWallets() {
+    fun syncWallets() {
         viewModelScope.launch {
             _snackBarState.value = SnackBarState.Loading
-            val result = repo.getWallets()
+            delay(100)
+            val result = walletSyncHelper.sync()
             if (result.succeeded) {
                 _snackBarState.value = SnackBarState.SyncSuccess("Sync success")
             } else {
-                _snackBarState.value = SnackBarState.Failed((result as OTResult.Error).exception.message!!)
+                _snackBarState.value =
+                    SnackBarState.Failed((result as OTResult.Error).exception.message!!)
             }
+            delay(100)
+            _snackBarState.value = null
         }
     }
 
     fun doLogout() {
         viewModelScope.launch {
             _snackBarState.value = SnackBarState.Loading
+            delay(100)
             repo.doLogout()
             _snackBarState.value = SnackBarState.LogoutSuccess("Logged out")
+            delay(100)
+            _snackBarState.value = null
         }
     }
 

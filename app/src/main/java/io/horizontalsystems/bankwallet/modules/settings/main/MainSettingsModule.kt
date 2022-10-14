@@ -24,7 +24,8 @@ object MainSettingsModule {
                 service,
                 App.appConfigProvider.companyWebPageLink,
                 App.owlTingRepo,
-                App.preferenceHelper
+                App.preferenceHelper,
+                App.walletSyncHelper
             )
 
             return viewModel as T

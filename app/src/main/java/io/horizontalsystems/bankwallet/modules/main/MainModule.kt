@@ -34,10 +34,10 @@ object MainModule {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return MainActivityViewModel(
                 App.wc2SessionManager,
-                App.accountManager,
                 App.walletManager,
                 App.owlTingRepo,
                 App.preferenceHelper,
+                App.walletSyncHelper,
             ) as T
         }
     }
