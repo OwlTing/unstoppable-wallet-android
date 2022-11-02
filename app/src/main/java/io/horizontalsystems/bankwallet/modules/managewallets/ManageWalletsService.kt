@@ -10,6 +10,7 @@ import io.horizontalsystems.bankwallet.entities.ConfiguredToken
 import io.horizontalsystems.bankwallet.entities.Wallet
 import io.horizontalsystems.bankwallet.modules.enablecoin.EnableCoinService
 import io.horizontalsystems.ethereumkit.core.AddressValidator
+import io.horizontalsystems.marketkit.models.BlockchainType
 import io.horizontalsystems.marketkit.models.Coin
 import io.horizontalsystems.marketkit.models.FullCoin
 import io.horizontalsystems.marketkit.models.Token
@@ -90,17 +91,36 @@ class ManageWalletsService(
                     "ethereum",
                     "matic-network",
                     "avalanche-2",
-                    "circle-usd-coin",
+                    "usd-coin",
                 ) else listOf(
                     "ethereum",
                     "matic-network",
                     "avalanche-2",
                     "usd-coin",
-                    "tether",
-                    "dai",
                 )
-            ).toMutableList()
-
+            ).map {
+                when (it.coin.code) {
+                    "ETH" -> {
+                        FullCoin(
+                            it.coin,
+                            it.tokens.filter { token -> token.blockchainType == BlockchainType.Ethereum }
+                        )
+                    }
+                    "MATIC" -> {
+                        FullCoin(
+                            it.coin,
+                            it.tokens.filter { token -> token.blockchainType == BlockchainType.Polygon }
+                        )
+                    }
+                    "AVAX" -> {
+                        FullCoin(
+                            it.coin,
+                            it.tokens.filter { token -> token.blockchainType == BlockchainType.Avalanche }
+                        )
+                    }
+                    else -> it
+                }
+            }.toMutableList()
             val featuredCoins = featuredFullCoins.map { it.coin }
 
             val enabledFullCoins = marketKit.fullCoins(
@@ -119,14 +139,12 @@ class ManageWalletsService(
                     "ethereum",
                     "matic-network",
                     "avalanche-2",
-                    "circle-usd-coin",
+                    "usd-coin",
                 ).contains(it.coin.uid) else listOf(
                     "ethereum",
                     "matic-network",
                     "avalanche-2",
                     "usd-coin",
-                    "tether",
-                    "dai",
                 ).contains(it.coin.uid)
             }
         }
@@ -253,6 +271,10 @@ class ManageWalletsService(
 
     override fun clear() {
         disposables.clear()
+    }
+
+    fun getUSDCFullCoin(): FullCoin? {
+        return fullCoins.firstOrNull { it.coin.uid == "usd-coin" }
     }
 
     data class Item(

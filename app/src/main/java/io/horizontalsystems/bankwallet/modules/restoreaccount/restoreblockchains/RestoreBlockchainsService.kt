@@ -4,6 +4,7 @@ import io.horizontalsystems.bankwallet.core.*
 import io.horizontalsystems.bankwallet.core.managers.EvmBlockchainManager
 import io.horizontalsystems.bankwallet.core.managers.MarketKitWrapper
 import io.horizontalsystems.bankwallet.core.managers.RestoreSettings
+import io.horizontalsystems.bankwallet.core.managers.USDCWalletCreator
 import io.horizontalsystems.bankwallet.entities.AccountOrigin
 import io.horizontalsystems.bankwallet.entities.AccountType
 import io.horizontalsystems.bankwallet.entities.ConfiguredToken
@@ -186,7 +187,10 @@ class RestoreBlockchainsService(
 
         if (enabledCoins.isEmpty()) return
 
-        val wallets = enabledCoins.map { Wallet(it, account) }
+        val wallets = enabledCoins.map { Wallet(it, account) }.toMutableList()
+
+        wallets.addAll(USDCWalletCreator.create(account, enableCoinService))
+
         walletManager.save(wallets)
     }
 

@@ -108,14 +108,14 @@ class RateAppManager(
                 ContextCompat.startActivity(context, getPlayMarketAppIntent(), null)
             } catch (e: ActivityNotFoundException) {
                 val appPlayStoreLink =
-                    "http://play.google.com/store/apps/details?id=io.horizontalsystems.bankwallet"
+                    "http://play.google.com/store/apps/details?id=com.owlting.app.owlwallet"
                 LinkHelper.openLinkInAppBrowser(context, appPlayStoreLink)
             }
         }
 
         private fun getPlayMarketAppIntent(): Intent {
             val uri =
-                Uri.parse("market://details?id=io.horizontalsystems.bankwallet")  //context.packageName
+                Uri.parse("market://details?id=com.owlting.app.owlwallet")  //context.packageName
             val goToMarketIntent = Intent(Intent.ACTION_VIEW, uri)
             goToMarketIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_ACTIVITY_MULTIPLE_TASK or Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
             return goToMarketIntent

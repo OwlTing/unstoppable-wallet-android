@@ -1,9 +1,9 @@
-name: ci debug workflow
+name: ci release workflow
 on:
   workflow_dispatch:
 
 jobs:
-  debug_build:
+  release_build:
     runs-on: [self-hosted, linux]
     steps:
       - name: Checkout code
@@ -16,6 +16,14 @@ jobs:
         with:
           ruby-version: '3.1.2'
           bundler-cache: true
+
+      - name: Decode release key
+        id: releaseKey
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: "owlwallet-release-key.jks"
+          fileDir: "../"
+          encodedString: ${{ secrets.RELEASE_KEY }}
 
       - name: Decode local properties
         id: localProperties
@@ -33,7 +41,7 @@ jobs:
         id: versionCodeId
         run: echo "versionCode=$(cat app/build.gradle | grep " versionCode " | awk '{print $2}')" >> $GITHUB_ENV
 
-      - run: bundle exec fastlane dev
+      - run: bundle exec fastlane prod
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
@@ -48,4 +56,4 @@ jobs:
           S3_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
 
       - name: Deploy (Copy files to s3 bucket with the AWS CLI)
-        run: aws s3 cp app/build/outputs/apk/debug/app-debug.apk s3://owlting-qa/owlwallet_android/${{ env.versionName }}.${{ env.versionCode }}/owlwallet-dev-${{ env.versionName }}.${{ env.versionCode }}.apk --acl public-read
+        run: aws s3 cp app/build/outputs/bundle/release/app-release.aab s3://owlting-qa/owlwallet_android/${{ env.versionName }}.${{ env.versionCode }}/owlwallet-prod-${{ env.versionName }}.${{ env.versionCode }}.aab --acl public-read

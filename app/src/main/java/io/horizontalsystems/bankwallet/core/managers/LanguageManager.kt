@@ -16,21 +16,53 @@ class LanguageManager : ILanguageManager {
         }
 
     override var currentLanguage: String
-        get() = currentLocale.language
+        get() {
+            return if (currentLocale.language == "zh" && currentLocale.country == "TW") {
+                "tw"
+            } else {
+                currentLocale.language
+            }
+        }
         set(value) {
-            currentLocale = Locale(value)
+            currentLocale = when (value) {
+                "tw" -> traditionalChinese
+                "zh" -> simplifiedChinese
+                else -> Locale(value)
+            }
         }
 
     override val currentLanguageName: String
-        get() = currentLocale.displayLanguage.replaceFirstChar(Char::uppercase)
+        get() {
+            return if (currentLocale.language == "zh" && currentLocale.country == "TW") {
+                traditionalChinese.getDisplayScript(traditionalChinese).replaceFirstChar(Char::uppercase)
+            } else if (currentLocale.language == "zh" && currentLocale.country == "CN") {
+                simplifiedChinese.getDisplayScript(simplifiedChinese).replaceFirstChar(Char::uppercase)
+            } else {
+                currentLocale.displayLanguage.replaceFirstChar(Char::uppercase)
+            }
+        }
 
     override fun getName(language: String): String {
-        return Locale(language).displayLanguage.replaceFirstChar(Char::uppercase)
+        return when (language) {
+            "tw" -> Locale.TRADITIONAL_CHINESE.displayName.replaceFirstChar(Char::uppercase)
+            "zh" -> Locale.SIMPLIFIED_CHINESE.displayName.replaceFirstChar(Char::uppercase)
+            else -> Locale(language).displayLanguage.replaceFirstChar(Char::uppercase)
+        }
     }
 
     override fun getNativeName(language: String): String {
-        val locale = Locale(language)
-        return locale.getDisplayLanguage(locale).replaceFirstChar(Char::uppercase)
+        return when (language) {
+            "tw" -> traditionalChinese.getDisplayScript(traditionalChinese).replaceFirstChar(Char::uppercase)
+            "zh" -> simplifiedChinese.getDisplayScript(simplifiedChinese).replaceFirstChar(Char::uppercase)
+            else -> {
+                val locale = Locale(language)
+                locale.getDisplayLanguage(locale).replaceFirstChar(Char::uppercase)
+            }
+        }
     }
 
+    companion object {
+        val traditionalChinese: Locale = Locale.Builder().setLanguage("zh").setScript("Hant").setRegion("TW").build()
+        val simplifiedChinese: Locale = Locale.Builder().setLanguage("zh").setScript("Hans").setRegion("CN").build()
+    }
 }

@@ -4,6 +4,7 @@ import io.horizontalsystems.bankwallet.owlwallet.data.OTResult
 import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.GetWalletsResponse
 import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.ResetPasswordResponse
 import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.SyncWalletsRequest
+import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.VersionData
 import kotlinx.coroutines.flow.Flow
 
 interface OTRepository {

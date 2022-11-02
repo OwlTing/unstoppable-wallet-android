@@ -1,7 +1,9 @@
 name: Check PR and notify
 
+#on:
+#  pull_request:
 on:
-  pull_request:
+  workflow_dispatch:
 
 jobs:
   notify:

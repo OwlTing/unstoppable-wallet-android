@@ -158,15 +158,27 @@ private fun SettingSections(
 //    Spacer(Modifier.height(32.dp))
 
     CellSingleLineLawrenceSection(
-        listOf {
-            HsSettingCell(
-                R.string.Settings_Appearance,
-                R.drawable.ic_brush_20,
-                onClick = {
-                    navController.slideFromRight(R.id.appearanceFragment)
-                }
-            )
-        }
+        listOf(
+            {
+                HsSettingCell(
+                    R.string.Settings_Appearance,
+                    R.drawable.ic_brush_20,
+                    onClick = {
+                        navController.slideFromRight(R.id.appearanceFragment)
+                    }
+                )
+            },
+            {
+                HsSettingCell(
+                    R.string.Settings_Language,
+                    R.drawable.ic_language,
+                    value = language,
+                    onClick = {
+                        navController.slideFromRight(R.id.languageSettingsFragment)
+                    }
+                )
+            },
+        )
     )
 
 //    CellSingleLineLawrenceSection(
@@ -269,14 +281,14 @@ private fun OwlTingSections(
         is SnackBarState.LogoutSuccess -> {
             HudHelper.showSuccessMessage(
                 LocalView.current,
-                (snackBarState as SnackBarState.LogoutSuccess).msg,
+                stringResource(id = R.string.Auth_Logged_Out),
                 io.horizontalsystems.snackbar.SnackbarDuration.SHORT
             )
         }
         is SnackBarState.SyncSuccess -> {
             HudHelper.showSuccessMessage(
                 LocalView.current,
-                (snackBarState as SnackBarState.SyncSuccess).msg,
+                stringResource(id = R.string.Settings_Sync_Success),
                 io.horizontalsystems.snackbar.SnackbarDuration.SHORT
             )
         }

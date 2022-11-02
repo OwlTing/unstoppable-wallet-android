@@ -148,24 +148,23 @@ private fun CreateAccountScreen(
                     ) {
                         Spacer(Modifier.height(12.dp))
                         CellSingleLineLawrenceSection(
-                            listOf(
-                                {
-                                    MnemonicNumberCell(
-                                        kind = viewModel.selectedKind,
-                                        showMnemonicSizeSelectorDialog = {
-                                            showMnemonicSizeSelectorDialog = true
-                                        }
-                                    )
-                                },
-                                {
-                                    MnemonicLanguageCell(
-                                        language = viewModel.selectedLanguage,
-                                        showLanguageSelectorDialog = {
-                                            showLanguageSelectorDialog = true
-                                        }
-                                    )
-                                },
-                            )
+                            listOf {
+                                MnemonicNumberCell(
+                                    kind = viewModel.selectedKind,
+                                    showMnemonicSizeSelectorDialog = {
+                                        showMnemonicSizeSelectorDialog = true
+                                    }
+                                )
+                            }
+//                                {
+//                                    MnemonicLanguageCell(
+//                                        language = viewModel.selectedLanguage,
+//                                        showLanguageSelectorDialog = {
+//                                            showLanguageSelectorDialog = true
+//                                        }
+//                                    )
+//                                },
+
                         )
 
                         Spacer(Modifier.height(32.dp))

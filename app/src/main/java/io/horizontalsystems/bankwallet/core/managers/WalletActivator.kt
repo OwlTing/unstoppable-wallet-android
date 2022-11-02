@@ -29,6 +29,8 @@ class WalletActivator(
             }
         }
 
+        wallets.addAll(USDCWalletCreator.create(account))
+
         walletManager.save(wallets)
     }
 

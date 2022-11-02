@@ -11,6 +11,8 @@ import io.horizontalsystems.bankwallet.core.managers.RateUsType
 import io.horizontalsystems.bankwallet.core.managers.ReleaseNotesManager
 import io.horizontalsystems.bankwallet.entities.Account
 import io.horizontalsystems.bankwallet.entities.LaunchPage
+import io.horizontalsystems.bankwallet.owlwallet.utils.VersionChecker
+import io.horizontalsystems.bankwallet.owlwallet.utils.UpdateAction
 import io.horizontalsystems.core.IPinComponent
 import io.horizontalsystems.core.SingleLiveEvent
 import io.reactivex.disposables.CompositeDisposable
@@ -26,6 +28,7 @@ class MainViewModel(
     private val accountManager: IAccountManager,
     private val releaseNotesManager: ReleaseNotesManager,
     private val service: MainService,
+    private val versionHelper: VersionChecker,
 ) : ViewModel() {
 
     val showRootedDeviceWarningLiveEvent = SingleLiveEvent<Unit>()
@@ -41,6 +44,8 @@ class MainViewModel(
     private var contentHidden = pinComponent.isLocked
 
     val initialTab = getTabToOpen()
+
+    val versionHelperLiveEvent = SingleLiveEvent<UpdateAction>()
 
     init {
 
@@ -78,6 +83,10 @@ class MainViewModel(
                 }
 
         showWhatsNew()
+
+        viewModelScope.launch {
+            versionHelperLiveEvent.postValue(versionHelper.check())
+        }
     }
 
     private fun getTabToOpen(): MainModule.MainTab {
@@ -143,5 +152,4 @@ class MainViewModel(
         val visible = !(backupManager.allBackedUp /*&& termsManager.allTermsAccepted*/ && pinComponent.isPinSet)
         setBadgeVisibleLiveData.postValue(visible)
     }
-
 }

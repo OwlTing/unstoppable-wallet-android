@@ -58,7 +58,7 @@ class LoginViewModel(
             val isValid = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
             _emailState.value =
                 if (isValid) DataState.Success(email)
-                else DataState.Error(Throwable("Invalid email format"))
+                else DataState.Error(Throwable())
         }
     }
 

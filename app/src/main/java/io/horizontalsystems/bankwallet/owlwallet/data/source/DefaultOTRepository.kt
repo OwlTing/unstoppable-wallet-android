@@ -1,9 +1,7 @@
 package io.horizontalsystems.bankwallet.owlwallet.data.source
 
 import io.horizontalsystems.bankwallet.owlwallet.data.OTResult
-import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.GetWalletsResponse
-import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.ResetPasswordResponse
-import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.SyncWalletsRequest
+import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.*
 import io.horizontalsystems.bankwallet.owlwallet.data.succeeded
 import kotlinx.coroutines.flow.Flow
 import timber.log.Timber

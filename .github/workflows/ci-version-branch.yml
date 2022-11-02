@@ -1,8 +1,10 @@
 name: Android CI (Dev)
 
+#on:
+#  push:
+#    branches: [ version/* ]
 on:
-  push:
-    branches: [ version/* ]
+  workflow_dispatch:
 
 jobs:
   build:

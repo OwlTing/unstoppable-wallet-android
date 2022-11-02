@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.horizontalsystems.bankwallet.core.ILocalStorage
 import io.horizontalsystems.core.ILanguageManager
+import timber.log.Timber
 
 class LanguageSettingsViewModel(
     private val languageManager: ILanguageManager,
@@ -35,6 +36,7 @@ class LanguageSettingsViewModel(
         private set
 
     fun onSelectLocale(localeType: LanguageSettingsModule.LocaleType) {
+        Timber.d("onSelectLocale: ${localeType.name}")
         if (localeType.name == currentLocale) {
             closeScreen = true
         } else {

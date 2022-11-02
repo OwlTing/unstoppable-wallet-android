@@ -13,6 +13,7 @@ import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.OTWallet
 import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.SyncWalletsRequest
 import io.horizontalsystems.bankwallet.owlwallet.data.succeeded
 import io.horizontalsystems.ethereumkit.core.EthereumKit
+import io.horizontalsystems.ethereumkit.core.signer.Signer
 import io.horizontalsystems.ethereumkit.crypto.CryptoUtils
 import io.horizontalsystems.ethereumkit.models.Address
 import io.horizontalsystems.ethereumkit.models.Chain
@@ -71,11 +72,11 @@ class WalletSyncHelper(
 
     private fun getAddress(account: Account, wallet: Wallet): String {
         return when (account.type) {
-            is AccountType.Address -> account.type.address
+            is AccountType.EvmAddress -> account.type.address
             is AccountType.Mnemonic -> {
                 val seed = Mnemonic().toSeed(account.type.words, account.type.passphrase)
                 val privateKey =
-                    EthereumKit.privateKey(seed, getChain(wallet.token.blockchainType))
+                    Signer.privateKey(seed, getChain(wallet.token.blockchainType))
                 val publicKey =
                     CryptoUtils.ecKeyFromPrivate(privateKey).publicKeyPoint.getEncoded(false)
                         .drop(1).toByteArray()

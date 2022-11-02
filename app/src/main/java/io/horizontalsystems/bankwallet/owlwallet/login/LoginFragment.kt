@@ -29,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import io.horizontalsystems.bankwallet.R
 import io.horizontalsystems.bankwallet.core.BaseFragment
+import io.horizontalsystems.bankwallet.entities.DataState
 import io.horizontalsystems.bankwallet.ui.compose.ComposeAppTheme
 import io.horizontalsystems.bankwallet.ui.compose.TranslatableString
 import io.horizontalsystems.bankwallet.ui.compose.components.*
@@ -74,7 +75,7 @@ fun LoginScreen(
         is SnackBarState.LoginSuccess -> {
             HudHelper.showSuccessMessage(
                 LocalView.current,
-                (uiState.currentState as SnackBarState.LoginSuccess).msg,
+                stringResource(id = R.string.Auth_Logged_In),
                 io.horizontalsystems.snackbar.SnackbarDuration.SHORT
             )
             navController.popBackStack()
@@ -135,7 +136,9 @@ fun LoginScreen(
                         hint = stringResource(id = R.string.Auth_Email_Hint),
                         pasteEnabled = false,
                         singleLine = true,
-                        state = uiState.emailState,
+                        state = if (uiState.emailState is DataState.Error) DataState.Error(
+                            Throwable(stringResource(id = R.string.Auth_Invalid_Email))
+                        ) else uiState.emailState,
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Done,
                         ),

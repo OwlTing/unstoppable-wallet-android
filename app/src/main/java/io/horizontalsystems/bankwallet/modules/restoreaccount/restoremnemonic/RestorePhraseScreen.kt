@@ -353,14 +353,14 @@ private fun BottomSection(
     }
 
     CellSingleLineLawrenceSection(
-        listOf({
+        listOf(/*{
             MnemonicLanguageCell(
                 language = uiState.language,
                 showLanguageSelectorDialog = {
                     showLanguageSelectorDialog = true
                 }
             )
-        },
+        },*/
             {
                 Row(
                     modifier = Modifier

@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -16,16 +15,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import io.horizontalsystems.bankwallet.R
 import io.horizontalsystems.bankwallet.core.BaseFragment
 import io.horizontalsystems.bankwallet.core.managers.RateAppManager
-import io.horizontalsystems.bankwallet.core.slideFromBottom
 import io.horizontalsystems.bankwallet.databinding.FragmentMainBinding
 import io.horizontalsystems.bankwallet.entities.Account
 import io.horizontalsystems.bankwallet.modules.rateapp.RateAppDialogFragment
-import io.horizontalsystems.bankwallet.modules.releasenotes.ReleaseNotesFragment
 import io.horizontalsystems.bankwallet.modules.rooteddevice.RootedDeviceActivity
+import io.horizontalsystems.bankwallet.owlwallet.utils.UpdateAction
+import io.horizontalsystems.bankwallet.ui.VersionCheckDialogFragment
 import io.horizontalsystems.bankwallet.ui.extensions.BottomSheetWalletSelectDialog
-import io.horizontalsystems.core.findNavController
 
-class MainFragment : BaseFragment(), RateAppDialogFragment.Listener {
+class MainFragment : BaseFragment(), RateAppDialogFragment.Listener, VersionCheckDialogFragment.Listener {
 
     private val viewModel by viewModels<MainViewModel> { MainModule.Factory() }
     private var bottomBadgeView: View? = null
@@ -45,11 +43,13 @@ class MainFragment : BaseFragment(), RateAppDialogFragment.Listener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                requireActivity().moveTaskToBack(true)
-            }
-        })
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    requireActivity().moveTaskToBack(true)
+                }
+            })
     }
 
     override fun onDestroyView() {
@@ -142,6 +142,16 @@ class MainFragment : BaseFragment(), RateAppDialogFragment.Listener {
             binding.bottomNavigation.menu.getItem(1).isEnabled = enabled
         })
 
+        viewModel.versionHelperLiveEvent.observe(viewLifecycleOwner, Observer { response ->
+            when (response) {
+                UpdateAction.Flexible, UpdateAction.Immediate -> {
+                    activity?.let {
+                        VersionCheckDialogFragment.show(it, response, this)
+                    }
+                }
+                else -> {}
+            }
+        })
     }
 
     private fun openWalletSwitchDialog(
@@ -186,4 +196,10 @@ class MainFragment : BaseFragment(), RateAppDialogFragment.Listener {
 
         return bottomBadgeView
     }
+
+    override fun onVersionCheckUpdateClick() {
+        openAppInPlayMarket()
+    }
+
+    override fun onVersionCheckCancelClick() {}
 }

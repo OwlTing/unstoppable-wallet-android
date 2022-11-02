@@ -3,41 +3,6 @@ update_fastlane
 default_platform(:android)
 
 platform :android do
-#   before_all do
-#     reset_git_repo(force: true, skip_clean: true)
-#   end
-
-#   desc "Submit a new Debug Build"
-#   lane :app_build do |options|
-#     commit = last_git_commit
-#
-#     gradle(task: "clean")
-#     gradle(task: "assembleAppcenterdebug", flags: "--stacktrace --no-daemon")
-#
-#     upload_to_app_center(api_token: options[:api_token], app_name: options[:app_name], notes: "Author: #{commit[:author]}, changes: #{commit[:message]}")
-#   end
-#
-#   desc "Submit a new Release Build"
-#   lane :app_build_release do |options|
-#     commit = last_git_commit
-#
-#     gradle(task: "clean")
-#     gradle(task: "assembleAppcenterrelease", flags: "--stacktrace --no-daemon")
-#
-#     upload_to_app_center(api_token: options[:api_token], app_name: options[:app_name], notes: "Author: #{commit[:author]}, changes: #{commit[:message]}")
-#   end
-#
-#   private_lane :upload_to_app_center do |options|
-#     appcenter_upload(
-#         api_token: options[:api_token],
-#         app_name: options[:app_name],
-#         owner_name: "Horizontal-Systems",
-#         owner_type: "organization",
-#         release_notes: options[:notes],
-#         notify_testers: true
-#       )
-#   end
-
   lane :dev do
     gradle(task: "clean")
     gradle(task: "assemble", build_type: "Debug", print_command: true, flags: "--stacktrace --no-daemon")
@@ -46,36 +11,19 @@ platform :android do
       app: "1:579010722190:android:f63e05916c8177d921ccdf",
       android_artifact_type: "APK",
       android_artifact_path: "./app/build/outputs/apk/debug/app-debug.apk",
-#       groups: "Testers"
+      groups: "Tester"
     )
-
-#     gradle(task: "bundle", build_type: "Debug", print_command: true, flags: "--stacktrace --no-daemon")
-
-#       firebase_app_distribution(
-#         app: "1:579010722190:android:f63e05916c8177d921ccdf",
-#         android_artifact_type: "AAB",
-#         android_artifact_path: "../build/app/outputs/bundle/devRelease/app-dev-release.aab",
-#         groups: "Testers"
-#       )
   end
 
   lane :prod do
       gradle(task: "clean")
-      gradle(task: "assemble", build_type: "Release", print_command: true, flags: "--stacktrace --no-daemon")
+      gradle(task: "bundle", build_type: "Release", print_command: true, flags: "--stacktrace --no-daemon")
+
       firebase_app_distribution(
-        app: "1:579010722190:android:f63e05916c8177d921ccdf",
-        android_artifact_type: "APK",
-        android_artifact_path: "./app/build/outputs/apk/release/app-release.apk",
-  #       groups: "Testers"
+        app: "1:682017879164:android:cc0832e43e72743c6405f9",
+        android_artifact_type: "AAB",
+        android_artifact_path: "./app/build/outputs/bundle/release/app-release.aab",
+        groups: "Tester"
       )
-
-  #     gradle(task: "bundle", build_type: "Debug", print_command: true, flags: "--stacktrace --no-daemon")
-
-  #       firebase_app_distribution(
-  #         app: "1:579010722190:android:f63e05916c8177d921ccdf",
-  #         android_artifact_type: "AAB",
-  #         android_artifact_path: "../build/app/outputs/bundle/devRelease/app-dev-release.aab",
-  #         groups: "Testers"
-  #       )
     end
 end

@@ -10,6 +10,7 @@ import java.util.*
 object LocaleHelper {
 
     private const val SELECTED_LANGUAGE = "Locale.Helper.Selected.Language"
+    private const val SELECTED_LANGUAGE_COUNTRY = "Locale.Helper.Selected.Language.Country"
     private val RTL: Set<String> by lazy {
         hashSetOf(
                 "ar",
@@ -66,14 +67,25 @@ object LocaleHelper {
         getPreferences(context)
             .edit()
             .putString(SELECTED_LANGUAGE, locale.language)
+            .putString(SELECTED_LANGUAGE_COUNTRY, locale.country)
             .apply()
     }
 
     private fun load(context: Context): Locale {
         val preferences = getPreferences(context)
-//        val language = preferences.getString(SELECTED_LANGUAGE, null) ?: Locale.getDefault().language
-        val language = preferences.getString(SELECTED_LANGUAGE, null) ?: Locale("en").language
-        return Locale(language)
-    }
+        val language =
+            preferences.getString(SELECTED_LANGUAGE, null) ?: Locale.getDefault().language
+        val country =
+            preferences.getString(SELECTED_LANGUAGE_COUNTRY, null) ?: Locale.getDefault().country
 
+        return if (language == "zh") {
+            if (country == "CN") {
+                Locale.Builder().setLanguage("zh").setScript("Hans").setRegion("CN").build()
+            } else {
+                Locale.Builder().setLanguage("zh").setScript("Hant").setRegion("TW").build()
+            }
+        } else {
+            Locale(language)
+        }
+    }
 }
