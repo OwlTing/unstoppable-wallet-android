@@ -158,74 +158,73 @@ fun ManageAccountScreen(navController: NavController, accountId: String) {
                                     }
                                 }
                             }
-
-//                            if (viewModel.bip32RootKey != null || viewModel.accountExtendedPrivateKey != null) {
-//                                add {
-//                                    AccountActionItem(
-//                                        title = stringResource(id = R.string.AccountExtendedPrivateKey),
-//                                        icon = painterResource(id = R.drawable.ic_key_20)
-//                                    ) {
-//                                        navController.authorizedAction {
-//                                            if (viewModel.bip32RootKey != null) {
-//                                                navController.slideFromRight(
-//                                                    R.id.accountExtendedKeyFragment,
-//                                                    ShowExtendedKeyModule.prepareParams(
-//                                                        viewModel.bip32RootKey,
-//                                                        ShowExtendedKeyModule.DisplayKeyType.AccountPrivateKey(true)
-//                                                    )
-//                                                )
-//                                            } else if (viewModel.accountExtendedPrivateKey != null) {
-//                                                navController.slideFromRight(
-//                                                    R.id.accountExtendedKeyFragment,
-//                                                    ShowExtendedKeyModule.prepareParams(
-//                                                        viewModel.accountExtendedPrivateKey,
-//                                                        ShowExtendedKeyModule.DisplayKeyType.AccountPrivateKey(false)
-//                                                    )
-//                                                )
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                            if (viewModel.bip32RootKey != null || viewModel.accountExtendedPublicKey != null || viewModel.accountExtendedPrivateKey != null) {
-//                                add {
-//                                    AccountActionItem(
-//                                        title = stringResource(id = R.string.AccountExtendedPublicKey),
-//                                        icon = painterResource(id = R.drawable.icon_link_20)
-//                                    ) {
-//                                        if (viewModel.bip32RootKey != null) {
-//                                            navController.slideFromRight(
-//                                                R.id.accountExtendedKeyFragment,
-//                                                ShowExtendedKeyModule.prepareParams(
-//                                                    viewModel.bip32RootKey,
-//                                                    ShowExtendedKeyModule.DisplayKeyType.AccountPublicKey(true)
-//                                                )
-//                                            )
-//                                        } else if (viewModel.accountExtendedPublicKey != null) {
-//                                            navController.slideFromRight(
-//                                                R.id.accountExtendedKeyFragment,
-//                                                ShowExtendedKeyModule.prepareParams(
-//                                                    viewModel.accountExtendedPublicKey,
-//                                                    ShowExtendedKeyModule.DisplayKeyType.AccountPublicKey(false)
-//                                                )
-//                                            )
-//                                        } else if (viewModel.accountExtendedPrivateKey != null) {
-//                                            navController.slideFromRight(
-//                                                R.id.accountExtendedKeyFragment,
-//                                                ShowExtendedKeyModule.prepareParams(
-//                                                    viewModel.accountExtendedPrivateKey,
-//                                                    ShowExtendedKeyModule.DisplayKeyType.AccountPublicKey(false)
-//                                                )
-//                                            )
-//                                        }
-//                                    }
-//                                }
-//                            }
+                            if (viewModel.bip32RootKey != null || viewModel.accountExtendedPrivateKey != null) {
+                                add {
+                                    AccountActionItem(
+                                        title = stringResource(id = R.string.AccountExtendedPrivateKey),
+                                        icon = painterResource(id = R.drawable.ic_key_20)
+                                    ) {
+                                        navController.authorizedAction {
+                                            if (viewModel.bip32RootKey != null) {
+                                                navController.slideFromRight(
+                                                    R.id.accountExtendedKeyFragment,
+                                                    ShowExtendedKeyModule.prepareParams(
+                                                        viewModel.bip32RootKey,
+                                                        ShowExtendedKeyModule.DisplayKeyType.AccountPrivateKey(true)
+                                                    )
+                                                )
+                                            } else if (viewModel.accountExtendedPrivateKey != null) {
+                                                navController.slideFromRight(
+                                                    R.id.accountExtendedKeyFragment,
+                                                    ShowExtendedKeyModule.prepareParams(
+                                                        viewModel.accountExtendedPrivateKey,
+                                                        ShowExtendedKeyModule.DisplayKeyType.AccountPrivateKey(false)
+                                                    )
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (viewModel.bip32RootKey != null || viewModel.accountExtendedPublicKey != null || viewModel.accountExtendedPrivateKey != null) {
+                                add {
+                                    AccountActionItem(
+                                        title = stringResource(id = R.string.AccountExtendedPublicKey),
+                                        icon = painterResource(id = R.drawable.icon_link_20)
+                                    ) {
+                                        if (viewModel.bip32RootKey != null) {
+                                            navController.slideFromRight(
+                                                R.id.accountExtendedKeyFragment,
+                                                ShowExtendedKeyModule.prepareParams(
+                                                    viewModel.bip32RootKey,
+                                                    ShowExtendedKeyModule.DisplayKeyType.AccountPublicKey(true)
+                                                )
+                                            )
+                                        } else if (viewModel.accountExtendedPublicKey != null) {
+                                            navController.slideFromRight(
+                                                R.id.accountExtendedKeyFragment,
+                                                ShowExtendedKeyModule.prepareParams(
+                                                    viewModel.accountExtendedPublicKey,
+                                                    ShowExtendedKeyModule.DisplayKeyType.AccountPublicKey(false)
+                                                )
+                                            )
+                                        } else if (viewModel.accountExtendedPrivateKey != null) {
+                                            navController.slideFromRight(
+                                                R.id.accountExtendedKeyFragment,
+                                                ShowExtendedKeyModule.prepareParams(
+                                                    viewModel.accountExtendedPrivateKey,
+                                                    ShowExtendedKeyModule.DisplayKeyType.AccountPublicKey(false)
+                                                )
+                                            )
+                                        }
+                                    }
+                                }
+                            }
                         }
-                        if (keyActions.isNotEmpty()) {
-                            Spacer(modifier = Modifier.height(32.dp))
-                            CellSingleLineLawrenceSection(keyActions)
-                        }
+//                        if (keyActions.isNotEmpty()) {
+//                            Spacer(modifier = Modifier.height(32.dp))
+//                            CellSingleLineLawrenceSection(keyActions)
+//                        }
                     }
                     KeyActionState.BackupRecoveryPhrase -> {
                         Spacer(modifier = Modifier.height(32.dp))

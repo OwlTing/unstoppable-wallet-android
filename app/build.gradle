@@ -16,8 +16,8 @@ android {
         applicationId "com.owlting.app.owlwallet"
         minSdkVersion min_sdk_version
         targetSdkVersion compile_sdk_version
-        versionCode 5
-        versionName "0.0.9"
+        versionCode 6
+        versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         kapt {
@@ -176,12 +176,6 @@ android {
     namespace 'io.horizontalsystems.bankwallet'
 }
 
-//repositories {
-//    flatDir {
-//        dirs 'libs'
-//    }
-//}
-
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "androidx.appcompat:appcompat:$appcompat_version"
@@ -271,7 +265,6 @@ dependencies {
     implementation 'com.github.horizontalsystems:binance-chain-kit-android:fa4df60'
     releaseImplementation 'com.github.horizontalsystems:market-kit-android:63b5860'
     debugImplementation 'com.github.robin00220:market-kit-android:e018a00'
-//    debugImplementation(name: 'marketkit-debug', ext: 'aar')
 
     // Zcash SDK
     implementation "cash.z.ecc.android:zcash-android-sdk:1.9.0-beta03"

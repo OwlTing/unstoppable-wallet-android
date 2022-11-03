@@ -83,7 +83,7 @@ private fun SettingsScreen(
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 Spacer(modifier = Modifier.height(12.dp))
                 SettingSections(viewModel, navController)
-                OwlTingSections(viewModel, navController)
+//                OwlTingSections(viewModel, navController)
                 SettingsFooter(viewModel.appVersion, viewModel.companyWebPage)
             }
         }
@@ -418,18 +418,18 @@ private fun SettingsFooter(appVersion: String, companyWebPage: String) {
                 appVersion
             ).uppercase()
         )
-        Divider(
-            modifier = Modifier
-                .width(100.dp)
-                .padding(top = 8.dp, bottom = 4.5.dp),
-            thickness = 0.5.dp,
-            color = ComposeAppTheme.colors.steel20
-        )
-        Text(
-            text = stringResource(R.string.Settings_InfoSubtitle),
-            style = ComposeAppTheme.typography.micro,
-            color = ComposeAppTheme.colors.grey,
-        )
+//        Divider(
+//            modifier = Modifier
+//                .width(100.dp)
+//                .padding(top = 8.dp, bottom = 4.5.dp),
+//            thickness = 0.5.dp,
+//            color = ComposeAppTheme.colors.steel20
+//        )
+//        Text(
+//            text = stringResource(R.string.Settings_InfoSubtitle),
+//            style = ComposeAppTheme.typography.micro,
+//            color = ComposeAppTheme.colors.grey,
+//        )
 //        Image(
 //            modifier = Modifier
 //                .padding(top = 32.dp)
@@ -440,10 +440,10 @@ private fun SettingsFooter(appVersion: String, companyWebPage: String) {
 //            painter = painterResource(id = R.drawable.ic_company_logo),
 //            contentDescription = null,
 //        )
-        caption_grey(
-            modifier = Modifier.padding(top = 12.dp, bottom = 32.dp),
-            text = stringResource(R.string.Settings_CompanyName),
-        )
+//        caption_grey(
+//            modifier = Modifier.padding(top = 12.dp, bottom = 32.dp),
+//            text = stringResource(R.string.Settings_CompanyName),
+//        )
     }
 }
 

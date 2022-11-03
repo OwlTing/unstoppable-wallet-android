@@ -473,7 +473,7 @@
     <string name="SwapInfo_Description">此兌換服務由基於%s區塊鏈的去中心化代幣兌換協議%s提供。\n\n%s不存在任何欺詐手段、以可靠方式推動代幣兌換的智能合約來實現完全自動化管理。</string>
     <string name="SwapInfo_DexRelated">%s相關</string>
     <string name="SwapInfo_AllowanceTitle">補貼</string>
-    <string name="SwapInfo_AllowanceDescription">不可阻止的令牌交換通過分散的令牌交換，即Uniswap，1inch，PancakeSwap，Quickswap，等等。 這些服務是完全自動化的，並在沒有任何欺騙手段的情況下以可靠的方式便利象征性的交換。 \n\n津貼指的是外匯服務有權為用戶花費的代幣金額。 通常情況下，備抵金額是在交易之前使用“審批”交易設定的。在進行交換行動之前需要足夠的備抵。</string>
+    <string name="SwapInfo_AllowanceDescription">OwlTing Wallet的令牌交換通過分散的令牌交換，即Uniswap，1inch，PancakeSwap，Quickswap，等等。 這些服務是完全自動化的，並在沒有任何欺騙手段的情況下以可靠的方式便利象征性的交換。 \n\n津貼指的是外匯服務有權為用戶花費的代幣金額。 通常情況下，備抵金額是在交易之前使用“審批”交易設定的。在進行交換行動之前需要足夠的備抵。</string>
     <string name="SwapInfo_PriceImpactTitle">價格影響</string>
     <string name="SwapInfo_PriceImpactDescription">與現貨價格的預期價格偏差越高，這種偏差就越大。</string>
     <string name="SwapInfo_SwapFeeTitle">互兌交易費用</string>
@@ -640,7 +640,7 @@
     <string name="VersionCheck_Update">更新</string>
     <string name="VersionCheck_No">先不要</string>
     <!-- Privacy  -->
-    <string name="Privacy_Information">不可阻擋不會收集任何數據，也不會使用可能會暴露任何用戶數據的分析工具。 錢包的設計是為了確保用戶高度的隱私。</string>
+    <string name="Privacy_Information">OwlTing Wallet不會收集任何數據，也不會使用可能會暴露任何用戶數據的分析工具。 錢包的設計是為了確保用戶高度的隱私。</string>
     <string name="Privacy_BulletedText1">用戶數據總是保留在用戶的設備上。</string>
     <string name="Privacy_BulletedText2">錢包沒有收集任何有關用戶的數據。</string>
     <string name="Privacy_BulletedText3">錢包沒有收集任何有關用戶的數據。</string>
@@ -1023,7 +1023,7 @@
     <string name="CoinPage_DetailsActiveAddresses">活躍地址</string>
     <string name="CoinPage_DetailsActiveAddresses_Description">不同時期交易中唯一錢包地址的數量。</string>
     <string name="CoinPage_NftBannerTitle">OwlTing NFT</string>
-    <string name="CoinPage_NftBannerDescription">通過持有不可阻擋的 NFT 獲取高級錢包功能。</string>
+    <string name="CoinPage_NftBannerDescription">通過持有OwlTing Wallet的 NFT 獲取高級錢包功能。</string>
     <string name="CoinPage_CoinNotFound">[%s]\n未找到</string>
     <string name="Nfts_Title">NFT</string>
     <string name="Nfts_PriceType_Days_7">平均7天</string>

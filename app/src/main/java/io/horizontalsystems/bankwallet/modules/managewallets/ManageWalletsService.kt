@@ -87,12 +87,7 @@ class ManageWalletsService(
 //                marketKit.fullCoins("", 100).toMutableList()
 //                    .filter { it.eligibleTokens(account.type).isNotEmpty() }
             val featuredFullCoins = marketKit.fullCoins(
-                if (BuildConfig.DEBUG) listOf(
-                    "ethereum",
-                    "matic-network",
-                    "avalanche-2",
-                    "usd-coin",
-                ) else listOf(
+                listOf(
                     "ethereum",
                     "matic-network",
                     "avalanche-2",
@@ -135,12 +130,7 @@ class ManageWalletsService(
             marketKit.fullCoins(coinUids).toMutableList()
         } else {
             marketKit.fullCoins(filter, 20).toMutableList().filter {
-                if (BuildConfig.DEBUG) listOf(
-                    "ethereum",
-                    "matic-network",
-                    "avalanche-2",
-                    "usd-coin",
-                ).contains(it.coin.uid) else listOf(
+                listOf(
                     "ethereum",
                     "matic-network",
                     "avalanche-2",
