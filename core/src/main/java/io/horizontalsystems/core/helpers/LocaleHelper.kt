@@ -85,7 +85,7 @@ object LocaleHelper {
                 Locale.Builder().setLanguage("zh").setScript("Hant").setRegion("TW").build()
             }
         } else {
-            Locale(language)
+            Locale("en")
         }
     }
 }
