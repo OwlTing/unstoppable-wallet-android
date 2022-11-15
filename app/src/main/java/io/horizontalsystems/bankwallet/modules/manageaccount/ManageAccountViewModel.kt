@@ -35,7 +35,7 @@ class ManageAccountViewModel(
 
     val accountType = account.type
     val showRecoveryPhrase: Boolean by lazy { accountType is AccountType.Mnemonic}
-    val showEvmPrivateKey: Boolean by lazy { accountType is AccountType.Mnemonic || accountType is AccountType.EvmPrivateKey }
+    val showEvmPrivateKey: Boolean by lazy { accountType is AccountType.Mnemonic /*|| accountType is AccountType.EvmPrivateKey*/ }
 
     val bip32RootKey: HDExtendedKey?
     val accountExtendedPrivateKey: HDExtendedKey?
