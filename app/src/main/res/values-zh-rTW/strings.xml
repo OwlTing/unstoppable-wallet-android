@@ -91,6 +91,13 @@
     <string name="Restore_PassphraseDescription">輸入您在創建此助記詞時使用的密碼.</string>
     <string name="Restore_Title">選擇區塊鏈</string>
     <string name="Restore_Key">密鑰</string>
+    <string name="Restore_By">由</string>
+    <string name="Restore_RestoreBy">還原方式</string>
+    <string name="Restore_RecoveryPhrase">助記詞</string>
+    <string name="Restore_PrivateKey">私鑰</string>
+    <string name="Restore_PrivateKeyHint">輸入 EVM 私鑰、BIP32 Root Key 或  Account Extended Private Key</string>
+    <string name="Restore_PhraseHint">輸入12、15、18、21或24個單詞</string>
+    <string name="Restore_PrivateKey_InvalidKey">錯誤密鑰</string>
     <string name="Select_Coins">選擇貨幣</string>
     <string name="Restore_BirthdayHeight">生日高度</string>
     <string name="Restore_ZCash">ZCash</string>
