@@ -3,8 +3,8 @@ package io.horizontalsystems.bankwallet.modules.restoreaccount.restoremnemonic
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import io.horizontalsystems.bankwallet.core.App
+import io.horizontalsystems.bankwallet.core.managers.PassphraseValidator
 import io.horizontalsystems.bankwallet.entities.AccountType
-import io.horizontalsystems.hdwalletkit.Language
 
 object RestoreMnemonicModule {
 
@@ -13,6 +13,7 @@ object RestoreMnemonicModule {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return RestoreMnemonicViewModel(
                 App.accountFactory,
+                PassphraseValidator(),
                 App.wordsManager,
                 App.thirdKeyboardStorage,
             ) as T
@@ -26,7 +27,6 @@ object RestoreMnemonicModule {
         val error: String?,
         val accountType: AccountType?,
         val wordSuggestions: WordSuggestions?,
-        val language: Language,
     )
 
     data class WordItem(val word: String, val range: IntRange)

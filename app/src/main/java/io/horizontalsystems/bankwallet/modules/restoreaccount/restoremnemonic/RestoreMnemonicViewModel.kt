@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.horizontalsystems.bankwallet.R
 import io.horizontalsystems.bankwallet.core.IAccountFactory
+import io.horizontalsystems.bankwallet.core.managers.PassphraseValidator
 import io.horizontalsystems.bankwallet.core.managers.WordsManager
 import io.horizontalsystems.bankwallet.core.providers.Translator
 import io.horizontalsystems.bankwallet.entities.AccountType
@@ -19,6 +20,7 @@ import io.horizontalsystems.hdwalletkit.WordList
 
 class RestoreMnemonicViewModel(
     accountFactory: IAccountFactory,
+    private val passphraseValidator: PassphraseValidator,
     private val wordsManager: WordsManager,
     private val thirdKeyboardStorage: IThirdKeyboard,
 ) : ViewModel() {
@@ -34,10 +36,9 @@ class RestoreMnemonicViewModel(
     private var error: String? = null
     private var accountType: AccountType? = null
     private var wordSuggestions: RestoreMnemonicModule.WordSuggestions? = null
-    private var language = Language.English
     private var text = ""
     private var cursorPosition = 0
-    private var mnemonicWordList = WordList.wordList(language)
+    private var mnemonicWordList = WordList.wordList(Language.English)
 
     var uiState by mutableStateOf(
         UiState(
@@ -47,7 +48,6 @@ class RestoreMnemonicViewModel(
             error = error,
             accountType = accountType,
             wordSuggestions = wordSuggestions,
-            language = language,
         )
     )
         private set
@@ -66,7 +66,6 @@ class RestoreMnemonicViewModel(
             error = error,
             accountType = accountType,
             wordSuggestions = wordSuggestions,
-            language = language,
         )
     }
 
@@ -101,7 +100,12 @@ class RestoreMnemonicViewModel(
 
     fun onEnterPassphrase(passphrase: String) {
         this.passphrase = passphrase
-        passphraseError = null
+
+        if (passphraseValidator.validate(passphrase)) {
+            passphraseError = null
+        } else {
+            passphraseError = Translator.getString(R.string.CreateWallet_Error_PassphraseForbiddenSymbols)
+        }
 
         emitState()
     }
@@ -115,14 +119,6 @@ class RestoreMnemonicViewModel(
         emitState()
     }
 
-    fun setMnemonicLanguage(language: Language) {
-        this.language = language
-        mnemonicWordList = WordList.wordList(language)
-        processText()
-
-        emitState()
-    }
-
     fun onProceed() {
         when {
             invalidWordItems.isNotEmpty() -> {
@@ -130,6 +126,8 @@ class RestoreMnemonicViewModel(
             }
             wordItems.size !in (Mnemonic.EntropyStrength.values().map { it.wordCount }) -> {
                 error = Translator.getString(R.string.Restore_Error_MnemonicWordCount, wordItems.size)
+            }
+            passphraseError != null -> {
             }
             passphraseEnabled && passphrase.isBlank() -> {
                 passphraseError = Translator.getString(R.string.Restore_Error_EmptyPassphrase)

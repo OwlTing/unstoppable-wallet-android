@@ -83,7 +83,6 @@ private fun CreateAccountScreen(
     }
 
     var showMnemonicSizeSelectorDialog by remember { mutableStateOf(false) }
-    var showLanguageSelectorDialog by remember { mutableStateOf(false) }
 
     ComposeAppTheme {
         Surface(color = ComposeAppTheme.colors.tyler) {
@@ -98,24 +97,6 @@ private fun CreateAccountScreen(
                     },
                     onSelectItem = {
                         viewModel.setMnemonicKind(it)
-                    }
-                )
-            }
-            if (showLanguageSelectorDialog) {
-                SelectorDialogCompose(
-                    title = stringResource(R.string.CreateWallet_Wordlist),
-                    items = viewModel.mnemonicLanguages.map {
-                        TabItem(
-                            stringResource(it.displayNameStringRes),
-                            it == viewModel.selectedLanguage,
-                            it
-                        )
-                    },
-                    onDismissRequest = {
-                        showLanguageSelectorDialog = false
-                    },
-                    onSelectItem = {
-                        viewModel.setMnemonicLanguage(it)
                     }
                 )
             }
@@ -148,23 +129,16 @@ private fun CreateAccountScreen(
                     ) {
                         Spacer(Modifier.height(12.dp))
                         CellSingleLineLawrenceSection(
-                            listOf {
-                                MnemonicNumberCell(
-                                    kind = viewModel.selectedKind,
-                                    showMnemonicSizeSelectorDialog = {
-                                        showMnemonicSizeSelectorDialog = true
-                                    }
-                                )
-                            }
-//                                {
-//                                    MnemonicLanguageCell(
-//                                        language = viewModel.selectedLanguage,
-//                                        showLanguageSelectorDialog = {
-//                                            showLanguageSelectorDialog = true
-//                                        }
-//                                    )
-//                                },
-
+                            listOf(
+                                {
+                                    MnemonicNumberCell(
+                                        kind = viewModel.selectedKind,
+                                        showMnemonicSizeSelectorDialog = {
+                                            showMnemonicSizeSelectorDialog = true
+                                        }
+                                    )
+                                },
+                            )
                         )
 
                         Spacer(Modifier.height(32.dp))
