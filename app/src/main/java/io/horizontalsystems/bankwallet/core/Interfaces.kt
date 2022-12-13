@@ -91,6 +91,7 @@ interface ILocalStorage {
     var marketFavoritesSortingField: SortingField?
     var marketFavoritesMarketField: MarketField?
     var relaunchBySettingChange: Boolean
+    var nonRecommendedAccountAlertDismissedAccounts: Set<String>
 
     fun getSwapProviderId(blockchainType: BlockchainType): String?
     fun setSwapProviderId(blockchainType: BlockchainType, providerId: String)
@@ -114,6 +115,7 @@ interface IMarketStorage {
 }
 
 interface IAccountManager {
+    val hasNonStandardAccount: Boolean
     val activeAccount: Account?
     val activeAccountObservable: Flowable<Optional<Account>>
     val isAccountsEmpty: Boolean
@@ -181,6 +183,7 @@ interface IClipboardManager {
 
 interface IWordsManager {
     fun validateChecksum(words: List<String>)
+    fun validateChecksumStrict(words: List<String>)
     fun isWordValid(word: String): Boolean
     fun isWordPartiallyValid(word: String): Boolean
     fun generateWords(count: Int = 12): List<String>

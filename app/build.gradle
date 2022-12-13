@@ -16,8 +16,8 @@ android {
         applicationId "com.owlting.app.owlwallet"
         minSdkVersion min_sdk_version
         targetSdkVersion compile_sdk_version
-        versionCode 9
-        versionName "1.0.1"
+        versionCode 10
+        versionName "1.0.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         kapt {
@@ -131,7 +131,7 @@ android {
             resValue "string", "defiyieldProviderApiKey", "b66ea1f5-f645-4e15-905a-65941580107d"
             resValue "string", "is_release", "true"
             resValue "string", "guidesUrl", "https://raw.githubusercontent.com/horizontalsystems/blockchain-crypto-guides/v1.2/index.json"
-            resValue "string", "faqUrl", "https://raw.githubusercontent.com/horizontalsystems/Unstoppable-Wallet-Website/v1.2/src/faq.json"
+            resValue "string", "faqUrl", "https://raw.githubusercontent.com/horizontalsystems/Unstoppable-Wallet-Website/v1.3/src/faq.json"
             resValue "string", "coinsJsonUrl", "https://raw.githubusercontent.com/horizontalsystems/cryptocurrencies/v0.21/coins.json"
             resValue "string", "providerCoinsJsonUrl", "https://raw.githubusercontent.com/horizontalsystems/cryptocurrencies/v0.21/provider.coins.json"
             resValue "string", "marketApiBaseUrl", "https://api.blocksdecoded.com"
@@ -258,13 +258,13 @@ dependencies {
 //    debugImplementation leakCanary
 
     // Wallet kits
-    implementation 'com.github.horizontalsystems:bitcoin-kit-android:3bb37b0'
-    releaseImplementation 'com.github.horizontalsystems:ethereum-kit-android:18a5363'
-    debugImplementation 'com.github.robin00220:ethereum-kit-android:8e1f682'
+    implementation 'com.github.horizontalsystems:bitcoin-kit-android:ff043ee'
+    releaseImplementation 'com.github.horizontalsystems:ethereum-kit-android:4a2320f'
+    debugImplementation 'com.github.OwlTing:ethereum-kit-android:585e38e'
     implementation 'com.github.horizontalsystems:blockchain-fee-rate-kit-android:501cf1e'
-    implementation 'com.github.horizontalsystems:binance-chain-kit-android:fa4df60'
+    implementation 'com.github.horizontalsystems:binance-chain-kit-android:2a89cad'
     releaseImplementation 'com.github.horizontalsystems:market-kit-android:63b5860'
-    debugImplementation 'com.github.robin00220:market-kit-android:e018a00'
+    debugImplementation 'com.github.OwlTing:market-kit-android:e018a00'
 
     // Zcash SDK
     implementation "cash.z.ecc.android:zcash-android-sdk:1.9.0-beta03"

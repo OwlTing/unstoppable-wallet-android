@@ -1,17 +1,18 @@
-package io.horizontalsystems.bankwallet.modules.restoreaccount.restoremnemonic
+package io.horizontalsystems.bankwallet.modules.restoreaccount.restoremnemonicnonstandard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import io.horizontalsystems.bankwallet.core.App
 import io.horizontalsystems.bankwallet.entities.AccountType
+import io.horizontalsystems.bankwallet.modules.restoreaccount.restoremnemonic.RestoreMnemonicModule
 import io.horizontalsystems.hdwalletkit.Language
 
-object RestoreMnemonicModule {
+object RestoreMnemonicNonStandardModule {
 
     class Factory : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return RestoreMnemonicViewModel(
+            return RestoreMnemonicNonStandardViewModel(
                 App.accountFactory,
                 App.wordsManager,
                 App.thirdKeyboardStorage,
@@ -25,12 +26,7 @@ object RestoreMnemonicModule {
         val invalidWordRanges: List<IntRange>,
         val error: String?,
         val accountType: AccountType?,
-        val wordSuggestions: WordSuggestions?,
+        val wordSuggestions: RestoreMnemonicModule.WordSuggestions?,
         val language: Language,
     )
-
-    data class WordItem(val word: String, val range: IntRange)
-    data class State(val allItems: List<WordItem>, val invalidItems: List<WordItem>)
-    data class WordSuggestions(val wordItem: WordItem, val options: List<String>)
-
 }
