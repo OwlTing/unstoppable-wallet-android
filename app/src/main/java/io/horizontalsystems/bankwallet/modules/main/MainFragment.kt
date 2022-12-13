@@ -92,13 +92,13 @@ class MainFragment : BaseFragment(), RateAppDialogFragment.Listener, VersionChec
                 true
             }
 
-        viewModel.openWalletSwitcherLiveEvent.observe(
-            viewLifecycleOwner,
-            { (wallets, selectedWallet) ->
-                openWalletSwitchDialog(wallets, selectedWallet) {
-                    viewModel.onSelect(it)
-                }
-            })
+//        viewModel.openWalletSwitcherLiveEvent.observe(
+//            viewLifecycleOwner,
+//            { (wallets, selectedWallet) ->
+//                openWalletSwitchDialog(wallets, selectedWallet) {
+//                    viewModel.onSelect(it)
+//                }
+//            })
 
         viewModel.showRootedDeviceWarningLiveEvent.observe(viewLifecycleOwner, {
             startActivity(Intent(activity, RootedDeviceActivity::class.java))
