@@ -16,7 +16,7 @@ android {
         applicationId "com.owlting.app.owlwallet"
         minSdkVersion min_sdk_version
         targetSdkVersion compile_sdk_version
-        versionCode 10
+        versionCode 11
         versionName "1.0.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
