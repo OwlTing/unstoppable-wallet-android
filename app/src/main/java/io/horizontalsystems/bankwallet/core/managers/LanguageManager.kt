@@ -1,7 +1,9 @@
 package io.horizontalsystems.bankwallet.core.managers
 
+import android.icu.util.ULocale.getDisplayLanguage
 import io.horizontalsystems.bankwallet.core.App
 import io.horizontalsystems.core.ILanguageManager
+import timber.log.Timber
 import java.util.*
 
 class LanguageManager : ILanguageManager {
@@ -44,8 +46,22 @@ class LanguageManager : ILanguageManager {
 
     override fun getName(language: String): String {
         return when (language) {
-            "tw" -> Locale.TRADITIONAL_CHINESE.displayName.replaceFirstChar(Char::uppercase)
-            "zh" -> Locale.SIMPLIFIED_CHINESE.displayName.replaceFirstChar(Char::uppercase)
+            "tw" -> {
+                val locale = Locale.Builder().setLanguage("zh").setScript("Hant").build()
+                if (currentLocale.language == "en") {
+                    return locale.displayLanguage + ", " + locale.displayScript.split(" Han")[0]
+                } else {
+                    return locale.displayLanguage
+                }
+            }
+            "zh" -> {
+                val locale = Locale.Builder().setLanguage("zh").setScript("Hans").build()
+                if (currentLocale.language == "en") {
+                    return locale.displayLanguage + ", " + locale.displayScript.split(" Han")[0]
+                } else {
+                    return locale.displayLanguage
+                }
+            }
             else -> Locale(language).displayLanguage.replaceFirstChar(Char::uppercase)
         }
     }

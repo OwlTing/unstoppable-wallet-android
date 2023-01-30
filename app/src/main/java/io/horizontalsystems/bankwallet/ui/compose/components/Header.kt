@@ -52,6 +52,41 @@ fun HeaderText(
 }
 
 @Composable
+fun HeaderText_leah(
+    text: String,
+    onInfoClick: (() -> Unit)? = null,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(32.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        subhead1_leah(
+            modifier = Modifier.padding(horizontal = 32.dp),
+            text = text.uppercase(),
+            maxLines = 1
+        )
+        onInfoClick?.let { onClick ->
+            Spacer(Modifier.weight(1f))
+            Icon(
+                modifier = Modifier
+                    .padding(end = 24.dp)
+                    .size(20.dp)
+                    .clickable(
+                        onClick = onClick,
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                    ),
+                painter = painterResource(R.drawable.ic_info_20),
+                tint = ComposeAppTheme.colors.grey,
+                contentDescription = null,
+            )
+        }
+    }
+}
+
+@Composable
 fun HeaderSorting(
     borderTop: Boolean = false,
     borderBottom: Boolean = false,

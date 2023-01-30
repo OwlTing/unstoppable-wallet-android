@@ -15,8 +15,8 @@ class OTS3RemoteDataSource(
         try {
             OTResult.Success(apiClient.getVersionData())
 //            OTResult.Success(listOf(
-//                VersionData("target", "1.0.0", 3, ""),
-//                VersionData("minimum", "0.0.9", 4, "")
+//                VersionData("target", "1.1.0", 14, ""),
+//                VersionData("minimum", "1.1.0", 13, "")
 //            ))
         } catch (e: Exception) {
             OTResult.Error(e)

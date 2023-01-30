@@ -1,23 +1,48 @@
 package io.horizontalsystems.bankwallet.owlwallet.data.source
 
 import io.horizontalsystems.bankwallet.owlwallet.data.OTResult
-import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.GetWalletsResponse
-import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.ResetPasswordResponse
-import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.SyncWalletsRequest
-import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.VersionData
+import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.*
 import kotlinx.coroutines.flow.Flow
 
 interface OTRepository {
 
     fun loginStateFlow(): Flow<Boolean>
 
-    suspend fun doLogin(email: String, password: String): OTResult<Boolean>
+    fun verifyStateFlow(): Flow<VerifyState>
 
-    suspend fun doLogout(): OTResult<Boolean>
+    suspend fun login(email: String, password: String): OTResult<LoginResponse>
+
+    suspend fun loginByToken(uuid: String, token: String): OTResult<LoginResponse>
+
+    suspend fun logout(): OTResult<Boolean>
+
+    suspend fun register(
+        email: String,
+        password: String,
+        name: String,
+        gender: String?,
+        birthday: String?,
+    ): OTResult<Boolean>
 
     suspend fun resetPassword(email: String): OTResult<ResetPasswordResponse>
 
-    suspend fun getWallets(): OTResult<GetWalletsResponse>
+    suspend fun deleteAccount(): OTResult<DeleteAccountResponse>
 
-    suspend fun syncWallets(request: SyncWalletsRequest): OTResult<Boolean>
+    suspend fun getCountries(
+        lang: String = "en",
+        filterType: String = "app",
+        nameFormat: String = "iso_code",
+    ): OTResult<CountriesResponse>
+
+    suspend fun getUserMeta(
+        lang: String = "en",
+    ): OTResult<UserMetaResponse>
+
+    suspend fun amlMetaRegister(
+        request: AmlMetaRegisterRequest
+    ): OTResult<UserMetaResponse>
+
+    suspend fun amlChainRegister(
+        request: AmlChainRegisterRequest
+    ): OTResult<UserMetaResponse>
 }

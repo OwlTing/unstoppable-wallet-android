@@ -22,6 +22,7 @@ import io.horizontalsystems.bankwallet.modules.rooteddevice.RootedDeviceActivity
 import io.horizontalsystems.bankwallet.owlwallet.utils.UpdateAction
 import io.horizontalsystems.bankwallet.ui.VersionCheckDialogFragment
 import io.horizontalsystems.bankwallet.ui.extensions.BottomSheetWalletSelectDialog
+import timber.log.Timber
 
 class MainFragment : BaseFragment(), RateAppDialogFragment.Listener, VersionCheckDialogFragment.Listener {
 
@@ -151,6 +152,12 @@ class MainFragment : BaseFragment(), RateAppDialogFragment.Listener, VersionChec
                 }
                 else -> {}
             }
+        })
+
+        viewModel.mainTabManager.setCurrentTabLiveEvent.observe(viewLifecycleOwner, Observer { tab ->
+            Timber.d("setCurrentTab $tab")
+            binding.viewPager.setCurrentItem(tab.ordinal, false)
+            binding.bottomNavigation.menu.getItem(tab.ordinal).isChecked = true
         })
     }
 

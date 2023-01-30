@@ -11,6 +11,7 @@ object LoginModule {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return LoginViewModel(
                 App.owlTingRepo,
+                App.languageManager,
             ) as T
         }
     }

@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -31,9 +32,7 @@ import io.horizontalsystems.bankwallet.core.App
 import io.horizontalsystems.bankwallet.core.BaseActivity
 import io.horizontalsystems.bankwallet.modules.main.MainModule
 import io.horizontalsystems.bankwallet.ui.compose.ComposeAppTheme
-import io.horizontalsystems.bankwallet.ui.compose.components.ButtonPrimaryYellow
-import io.horizontalsystems.bankwallet.ui.compose.components.body_grey
-import io.horizontalsystems.bankwallet.ui.compose.components.title3_leah
+import io.horizontalsystems.bankwallet.ui.compose.components.*
 
 class IntroActivity : BaseActivity() {
 
@@ -49,7 +48,8 @@ class IntroActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            IntroScreen(viewModel, nightMode) { finish() }
+//            IntroScreen(viewModel, nightMode) { finish() }
+            OwlTingIntroScreen(viewModel, nightMode) { finish() }
         }
         setStatusBarTransparent()
     }
@@ -62,6 +62,82 @@ class IntroActivity : BaseActivity() {
     }
 
 }
+
+@OptIn(ExperimentalPagerApi::class, ExperimentalSnapperApi::class)
+@Composable
+private fun OwlTingIntroScreen(
+    viewModel: IntroViewModel,
+    nightMode: Boolean,
+    closeActivity: () -> Unit
+) {
+    ComposeAppTheme {
+        val context = LocalContext.current
+        val uriHandler = LocalUriHandler.current
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(vertical = 130.dp)
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.owlting_intro_background_light),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.FillHeight
+                )
+                Image(
+                    painter = painterResource(R.drawable.owlting_intro_logo_light),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Inside
+                )
+            }
+            title3_leah(
+                modifier = Modifier.padding(horizontal = 24.dp),
+                text = stringResource(R.string.Intro_Wallet_Welcome),
+                textAlign = TextAlign.Center
+            )
+            Spacer(Modifier.height(4.dp))
+            title3_leah(
+                modifier = Modifier.padding(horizontal = 24.dp),
+                text = stringResource(R.string.Intro_Wallet_Name),
+                textAlign = TextAlign.Center
+            )
+            Row(
+                modifier = Modifier.padding(vertical = 16.dp, horizontal = 32.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                SimplePolicyCheckbox(
+                    checked = viewModel.termsOfUseAgreement.value,
+                    onCheckedChange = {
+                        viewModel.termsOfUseAgreement.value = it
+                    },
+                    description = stringResource(R.string.Intro_Wallet_Option),
+                    policy = stringResource(id = R.string.Intro_Wallet_Terms_Of_Use),
+                    url = viewModel.getTermsOfUseUrl(),
+                )
+            }
+            Spacer(Modifier.height(8.dp))
+            ButtonPrimaryYellow(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .fillMaxWidth(),
+                title = stringResource(R.string.Intro_Wallet_Agree),
+                onClick = {
+                    viewModel.onStartClicked()
+                    MainModule.start(context)
+                    closeActivity()
+                },
+                enabled = viewModel.termsOfUseAgreement.value
+            )
+            Spacer(Modifier.height(60.dp))
+        }
+    }
+}
+
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalSnapperApi::class)
 @Composable
@@ -136,7 +212,9 @@ private fun StaticContent(
         }
         Spacer(Modifier.weight(2f))
         ButtonPrimaryYellow(
-            modifier = Modifier.padding(horizontal = 24.dp).fillMaxWidth(),
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+                .fillMaxWidth(),
             title = stringResource(R.string.Intro_Wallet_Screen1Description),
             onClick = {
                 viewModel.onStartClicked()

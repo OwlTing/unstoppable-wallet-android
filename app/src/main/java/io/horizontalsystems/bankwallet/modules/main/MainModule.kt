@@ -26,6 +26,9 @@ object MainModule {
                 App.releaseNotesManager,
                 service,
                 App.versionChecker,
+                App.mainTabManager,
+                App.owlTingRepo,
+                App.languageManager,
             ) as T
         }
     }
@@ -35,10 +38,6 @@ object MainModule {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return MainActivityViewModel(
                 App.wc2SessionManager,
-                App.walletManager,
-                App.owlTingRepo,
-                App.preferenceHelper,
-                App.walletSyncHelper,
             ) as T
         }
     }

@@ -40,6 +40,64 @@ fun ButtonPrimaryDefault(
 }
 
 @Composable
+fun TextButtonYellow(
+    modifier: Modifier = Modifier,
+    title: String,
+    onClick: () -> Unit,
+    enabled: Boolean = true
+) {
+    ButtonPrimary(
+        modifier = modifier,
+        onClick = onClick,
+        buttonColors = ButtonDefaults.buttonColors(
+            backgroundColor = Color.Transparent,
+            contentColor = ComposeAppTheme.colors.yellowD,
+            disabledBackgroundColor = Color.Transparent,
+            disabledContentColor = ComposeAppTheme.colors.grey50,
+        ),
+        content = {
+            Text(
+                title,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        },
+        enabled = enabled
+    )
+}
+
+@Composable
+fun OutlinedButtonDefault(
+    modifier: Modifier = Modifier,
+    title: String,
+    onClick: () -> Unit,
+    enabled: Boolean = true
+) {
+    ButtonPrimary(
+        modifier = modifier,
+        onClick = onClick,
+        border = BorderStroke(
+            1.dp,
+            if (enabled) ComposeAppTheme.colors.leah else Color.Transparent
+        ),
+        buttonColors = ButtonDefaults.buttonColors(
+            backgroundColor = Color.Transparent,
+            contentColor = ComposeAppTheme.colors.leah,
+            disabledBackgroundColor = ComposeAppTheme.colors.steel20,
+            disabledContentColor = ComposeAppTheme.colors.grey50,
+        ),
+        content = {
+            Text(
+                title,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        },
+        enabled = enabled
+    )
+}
+
+@Composable
 fun ButtonPrimaryTransparent(
     modifier: Modifier = Modifier,
     title: String,

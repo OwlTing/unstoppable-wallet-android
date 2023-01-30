@@ -111,11 +111,12 @@ private fun LanguageCell(
             .clickable(onClick = onClick),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            painter = painterResource(icon),
-            contentDescription = null
-        )
+//        Image(
+//            modifier = Modifier.padding(horizontal = 16.dp),
+//            painter = painterResource(icon),
+//            contentDescription = null
+//        )
+        Spacer(Modifier.width(16.dp))
         Column(modifier = Modifier.weight(1f)) {
             body_leah(
                 text = title,

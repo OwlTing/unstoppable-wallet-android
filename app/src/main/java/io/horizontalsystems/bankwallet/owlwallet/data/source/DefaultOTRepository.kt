@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
 
 class DefaultOTRepository(
-    private val otAuthRemote: OTAuthDataSource,
     private val otWalletRemote: OTWalletDataSource,
 ) : OTRepository {
 
@@ -15,33 +14,54 @@ class DefaultOTRepository(
         return otWalletRemote.loginStateFlow()
     }
 
-    override suspend fun doLogin(email: String, password: String): OTResult<Boolean> {
-        val signInByEmailResult = otAuthRemote.signInByEmail(
-            email, password
+    override fun verifyStateFlow(): Flow<VerifyState> {
+        return otWalletRemote.verifyStateFlow()
+    }
+
+    override suspend fun login(email: String, password: String): OTResult<LoginResponse> {
+        return otWalletRemote.login(
+            email,
+            password
+        )
+    }
+
+    override suspend fun loginByToken(uuid: String, token: String): OTResult<LoginResponse> {
+        return otWalletRemote.loginByToken(uuid, token)
+    }
+
+    override suspend fun register(
+        email: String,
+        password: String,
+        name: String,
+        gender: String?,
+        birthday: String?
+    ): OTResult<Boolean> {
+        val registerResult = otWalletRemote.register(
+            email,
+            password,
+            name,
+            gender,
+            birthday,
         )
 
-        if (!signInByEmailResult.succeeded) {
-            return signInByEmailResult as OTResult.Error
+        if (!registerResult.succeeded) {
+            return registerResult as OTResult.Error
         }
 
-        val signInResp = (signInByEmailResult as OTResult.Success).data
-        Timber.d("signInResp: $signInResp")
-
-        val loginResult = otWalletRemote.login(
-            signInResp.uuid,
-            signInResp.secret
-        )
-
-        if (!loginResult.succeeded) {
-            return loginResult as OTResult.Error
-        }
-
-        val loginResp = (loginResult as OTResult.Success).data
-        Timber.d("loginResp: $loginResp")
+        val registerResp = (registerResult as OTResult.Success).data
+        Timber.d("registerResp: $registerResp")
         return OTResult.Success(true)
     }
 
-    override suspend fun doLogout(): OTResult<Boolean> {
+    override suspend fun resetPassword(email: String): OTResult<ResetPasswordResponse> {
+        return otWalletRemote.resetPassword(email);
+    }
+
+    override suspend fun deleteAccount(): OTResult<DeleteAccountResponse> {
+        return otWalletRemote.deleteAccount()
+    }
+
+    override suspend fun logout(): OTResult<Boolean> {
         val logoutResult = otWalletRemote.logout()
         if (logoutResult is OTResult.Error) {
             Timber.e("logout Failed")
@@ -49,25 +69,23 @@ class DefaultOTRepository(
         return OTResult.Success(true)
     }
 
-    override suspend fun resetPassword(email: String): OTResult<ResetPasswordResponse> {
-        val resetResult = otAuthRemote.resetPasswordByEmail(email)
-        if (!resetResult.succeeded) {
-            return resetResult as OTResult.Error
-        }
-        return OTResult.Success((resetResult as OTResult.Success).data)
+    override suspend fun getCountries(
+        lang: String,
+        filterType: String,
+        nameFormat: String
+    ): OTResult<CountriesResponse> {
+        return otWalletRemote.getCountries(lang, filterType, nameFormat)
     }
 
-
-    override suspend fun getWallets(): OTResult<GetWalletsResponse> {
-        return otWalletRemote.getWallets()
+    override suspend fun getUserMeta(lang: String): OTResult<UserMetaResponse> {
+        return otWalletRemote.getUserMeta(lang)
     }
 
-    override suspend fun syncWallets(request: SyncWalletsRequest): OTResult<Boolean> {
-        val result = otWalletRemote.syncWallets(request)
-        return if (result.succeeded) {
-            OTResult.Success(true)
-        } else {
-            result as OTResult.Error
-        }
+    override suspend fun amlMetaRegister(request: AmlMetaRegisterRequest): OTResult<UserMetaResponse> {
+        return otWalletRemote.amlMetaRegister(request)
+    }
+
+    override suspend fun amlChainRegister(request: AmlChainRegisterRequest): OTResult<UserMetaResponse> {
+        return otWalletRemote.amlChainRegister(request)
     }
 }

@@ -25,7 +25,7 @@ class LaunchViewModel(
             KeyStoreValidationResult.UserNotAuthenticated -> Page.UserAuthentication
             KeyStoreValidationResult.KeyIsInvalid -> Page.KeyInvalidated
             KeyStoreValidationResult.KeyIsValid -> when {
-//                accountManager.isAccountsEmpty && !mainShowedOnce -> Page.Welcome
+                accountManager.isAccountsEmpty && !mainShowedOnce -> Page.Welcome
                 pinComponent.isLocked -> Page.Unlock
                 else -> Page.Main
             }

@@ -12,12 +12,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,15 +32,14 @@ import androidx.navigation.NavController
 import io.horizontalsystems.bankwallet.R
 import io.horizontalsystems.bankwallet.core.BaseFragment
 import io.horizontalsystems.bankwallet.core.slideFromRight
+import io.horizontalsystems.bankwallet.modules.main.MainModule
 import io.horizontalsystems.bankwallet.modules.manageaccounts.ManageAccountsModule
-import io.horizontalsystems.bankwallet.modules.walletconnect.WCAccountTypeNotSupportedDialog
-import io.horizontalsystems.bankwallet.modules.walletconnect.version1.WC1Manager
+import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.VerifyState
 import io.horizontalsystems.bankwallet.ui.compose.ComposeAppTheme
 import io.horizontalsystems.bankwallet.ui.compose.TranslatableString
 import io.horizontalsystems.bankwallet.ui.compose.components.*
 import io.horizontalsystems.core.findNavController
 import io.horizontalsystems.core.helpers.HudHelper
-import timber.log.Timber
 
 class MainSettingsFragment : BaseFragment() {
 
@@ -83,8 +79,8 @@ private fun SettingsScreen(
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 Spacer(modifier = Modifier.height(12.dp))
                 SettingSections(viewModel, navController)
-//                OwlTingSections(viewModel, navController)
-                SettingsFooter(viewModel.appVersion, viewModel.companyWebPage)
+                OwlTingSections(viewModel, navController)
+                SettingsFooter(viewModel)
             }
         }
     }
@@ -267,8 +263,8 @@ private fun OwlTingSections(
     viewModel: MainSettingsViewModel,
     navController: NavController
 ) {
-    Timber.d("OwlTingSections")
     val loginState by viewModel.loginState.collectAsState()
+    val verifyState by viewModel.verifyState.collectAsState()
     val snackBarState by viewModel.snackBarState.collectAsState()
 
     when (snackBarState) {
@@ -285,10 +281,10 @@ private fun OwlTingSections(
                 io.horizontalsystems.snackbar.SnackbarDuration.SHORT
             )
         }
-        is SnackBarState.SyncSuccess -> {
+        is SnackBarState.DeleteSuccess -> {
             HudHelper.showSuccessMessage(
                 LocalView.current,
-                stringResource(id = R.string.Settings_Sync_Success),
+                stringResource(id = R.string.Settings_Account_Deleted),
                 io.horizontalsystems.snackbar.SnackbarDuration.SHORT
             )
         }
@@ -301,56 +297,106 @@ private fun OwlTingSections(
         else -> null
     }
 
+    val showNoWalletDialog = remember { mutableStateOf(false) }
+    val stateString = when (verifyState) {
+        VerifyState.VERIFIED -> stringResource(id = R.string.Binding_Status_Bound)
+        VerifyState.UNVERIFIED -> stringResource(id = R.string.Binding_Status_Verifying)
+        VerifyState.REJECTED -> stringResource(id = R.string.Binding_Status_Reject)
+        else -> stringResource(id = R.string.Binding_Status_Unbound)
+    }
+    val stateType = when (verifyState) {
+        VerifyState.VERIFIED -> CellValueType.POSITIVE
+        else -> CellValueType.NEGATIVE
+    }
+    CellSingleLineLawrenceSection(
+        listOf {
+            HsSettingCell(
+                R.string.Binding_Title,
+                R.drawable.ic_bind,
+                value = stateString,
+                valueType = stateType,
+                onClick = {
+                    if (viewModel.canLogin()) {
+                        if (loginState) {
+                            when (verifyState) {
+                                VerifyState.VERIFIED -> navController.slideFromRight(R.id.bindingStatusFragment)
+                                VerifyState.REJECTED, VerifyState.UNFINISHED, VerifyState.NOT_FOUND -> navController.slideFromRight(R.id.bindingFormFragment)
+                                else -> {}
+                            }
+                        } else {
+                            navController.slideFromRight(R.id.loginFragment)
+                        }
+                    } else {
+                        showNoWalletDialog.value = true
+                    }
+                },
+                showArrow = verifyState != VerifyState.UNVERIFIED
+            )
+        }
+    )
+
+    Spacer(Modifier.height(30.dp))
+
     AnimatedVisibility(
         visible = !loginState,
         enter = fadeIn() + expandVertically(),
-        exit = shrinkVertically() + fadeOut()
+        exit = fadeOut() + shrinkVertically(),
     ) {
-        CellSingleLineLawrenceSection(
-            listOf {
-                HsSettingCell(
-                    R.string.Settings_Login,
-                    R.drawable.ic_baseline_login_24,
-                    onClick = {
-                        navController.slideFromRight(R.id.loginFragment)
-                    }
-                )
-            }
+        ButtonPrimaryYellow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            title = stringResource(R.string.Settings_Login_Binding),
+            onClick = {
+                if (viewModel.canLogin()) {
+                    navController.slideFromRight(R.id.loginFragment)
+                } else {
+                    showNoWalletDialog.value = true
+                }
+            },
         )
     }
 
     AnimatedVisibility(
         visible = loginState,
         enter = fadeIn() + expandVertically(),
-        exit = shrinkVertically() + fadeOut()
+        exit = fadeOut() + shrinkVertically(),
     ) {
-        CellSingleLineLawrenceSection(
-            listOf(
-                {
-                    HsSettingCell(
-                        R.string.Settings_Logout,
-                        R.drawable.ic_baseline_logout_24,
-                        showArrow = false,
-                        onClick = {
-                            viewModel.doLogout()
-                        }
-                    )
-                },
-                {
-                    HsSettingCell(
-                        R.string.Settings_Sync,
-                        R.drawable.ic_baseline_backup_24,
-                        showArrow = false,
-                        onClick = {
-                            viewModel.syncWallets()
-                        }
-                    )
-                }
-            )
+        OutlinedButtonDefault(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            title = stringResource(R.string.Settings_Logout), onClick = {
+                viewModel.doLogout()
+            },
+            enabled = snackBarState !is SnackBarState.Loading
         )
     }
 
     Spacer(Modifier.height(32.dp))
+
+    if (showNoWalletDialog.value) {
+        SimpleAlertDialog(
+            title = stringResource(R.string.Settings_No_Wallet_Title),
+            message = stringResource(id = R.string.Settings_No_Wallet_Description),
+            positiveOption = stringResource(id = R.string.Settings_No_Wallet_Confirm),
+            onPositiveClick = {
+                showNoWalletDialog.value = false
+                viewModel.setCurrentTab(MainModule.MainTab.Balance)
+            },
+            negativeOption = stringResource(id = R.string.Settings_No_Wallet_Cancel),
+            onNegativeClick = {
+                showNoWalletDialog.value = false
+            },
+            onDismiss = { showNoWalletDialog.value = false }
+        )
+    }
+}
+
+enum class CellValueType {
+    NORMAL,
+    POSITIVE,
+    NEGATIVE,
 }
 
 @Composable
@@ -358,6 +404,7 @@ fun HsSettingCell(
     @StringRes title: Int,
     @DrawableRes icon: Int,
     value: String? = null,
+    valueType: CellValueType = CellValueType.NORMAL,
     showAlert: Boolean = false,
     showArrow: Boolean = true,
     onClick: () -> Unit
@@ -381,11 +428,23 @@ fun HsSettingCell(
         )
         Spacer(Modifier.weight(1f))
         value?.let {
-            subhead1_grey(
-                text = it,
-                maxLines = 1,
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
+            when (valueType) {
+                CellValueType.POSITIVE -> subhead1_green(
+                    text = it,
+                    maxLines = 1,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+                CellValueType.NEGATIVE -> subhead1_red(
+                    text = it,
+                    maxLines = 1,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+                else -> subhead1_grey(
+                    text = it,
+                    maxLines = 1,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+            }
         }
         if (showAlert) {
             Image(
@@ -406,7 +465,8 @@ fun HsSettingCell(
 }
 
 @Composable
-private fun SettingsFooter(appVersion: String, companyWebPage: String) {
+private fun SettingsFooter(viewModel: MainSettingsViewModel) {
+    val loginState by viewModel.loginState.collectAsState()
     val context = LocalContext.current
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -415,9 +475,40 @@ private fun SettingsFooter(appVersion: String, companyWebPage: String) {
         caption_grey(
             text = stringResource(
                 R.string.Settings_InfoTitleWithVersion,
-                appVersion
-            ).uppercase()
+                viewModel.appVersion
+            )
         )
+
+        Spacer(Modifier.height(32.dp))
+
+        val showDeleteDialog = remember { mutableStateOf(false) }
+        if (loginState) {
+            Text(
+                text = stringResource(R.string.Settings_Delete_Account),
+                style = ComposeAppTheme.typography.micro,
+                color = ComposeAppTheme.colors.grey,
+                modifier = Modifier.clickable {
+                    showDeleteDialog.value = true
+                }
+            )
+        }
+
+        if (showDeleteDialog.value) {
+            SimpleAlertDialog(
+                title = stringResource(R.string.Settings_Delete_Account),
+                message = stringResource(R.string.Settings_Delete_Account_Description),
+                positiveOption = stringResource(id = R.string.Settings_Delete),
+                onPositiveClick = {
+                    showDeleteDialog.value = false
+                    viewModel.deleteAccount()
+                },
+                negativeOption = stringResource(id = R.string.Binding_Cancel),
+                onNegativeClick = {
+                    showDeleteDialog.value = false
+                },
+                onDismiss = { showDeleteDialog.value = false }
+            )
+        }
 //        Divider(
 //            modifier = Modifier
 //                .width(100.dp)

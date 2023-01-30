@@ -749,31 +749,6 @@
     <string name="SettingsAboutApp_Site">Website</string>
     <string name="SettingsAboutApp_WhatsNew">What\'s New</string>
 
-    <string name="Settings_Login" translatable="false">Login</string>
-    <string name="Settings_Logout" translatable="false">Logout</string>
-    <string name="Settings_Sync" translatable="false">Sync</string>
-    <string name="Settings_Sync_Success" translatable="false">Sync success</string>
-
-    <!-- Auth  -->
-    <string name="Auth_Email" translatable="false">Email</string>
-    <string name="Auth_Email_Hint" translatable="false">Email</string>
-    <string name="Auth_Invalid_Email" translatable="false">Invalid email format</string>
-    <string name="Auth_Password" translatable="false">Password</string>
-    <string name="Auth_Password_Hint" translatable="false">At least 8 characters</string>
-    <string name="Auth_Forget_Password" translatable="false">Forget password</string>
-    <string name="Auth_Logged_In" translatable="false">Logged In</string>
-    <string name="Auth_Logged_Out" translatable="false">Logged Out</string>
-    <string name="Auth_Reset_Password_Success" translatable="false">Send a password reset email.</string>
-    <string name="Auth_Reset_Password_Failed" translatable="false">Error! Please try again later.</string>
-
-    <!--  Version Check  -->
-    <string name="VersionCheck_Flexible_Title" translatable="false">Update OwlTing Wallet?</string>
-    <string name="VersionCheck_Immediate_Title" translatable="false">Update OwlTing Wallet</string>
-    <string name="VersionCheck_Flexible_Description" translatable="false">OwlTing Wallet recommends that you update to the latest version.</string>
-    <string name="VersionCheck_Immediate_Description" translatable="false">To use this app, please download the latest version.</string>
-    <string name="VersionCheck_Update" translatable="false">Update</string>
-    <string name="VersionCheck_No" translatable="false">Not now</string>
-
     <!-- Privacy  -->
 
     <string name="Privacy_Information">OwlTing Wallet doesn\'t collect any data or use analytics tools that may expose any data about its users. The wallet is designed to ensure a high level of privacy for its users.</string>
@@ -1423,4 +1398,89 @@
     <!--Biometric Auth texts-->
     <string name="BiometricAuth_DialogTitle">Biometrics Scanner</string>
 
+    <!--OwlTing -->
+    <string name="Intro_Wallet_Welcome" translatable="false">Welcome</string>
+    <string name="Intro_Wallet_Name" translatable="false">OwlTing Wallet</string>
+    <string name="Intro_Wallet_Option" translatable="false">I have read and agree to</string>
+    <string name="Intro_Wallet_Terms_Of_Use" translatable="false">OwlTing Wallet Terms of Use</string>
+    <string name="Intro_Wallet_Agree" translatable="false">Agree</string>
+    <string name="Binding_Policy_Title" translatable="false">OwlPay™ Privacy Policy</string>
+    <string name="Binding_Policy_Confirm_Description" translatable="false">I have read and agree to</string>
+    <string name="Register_Privacy_Policy" translatable="false">OwlTing Privacy Policy</string>
+    <string name="Register_Privacy_Hint" translatable="false">I have read and agree to </string>
+    <string name="Binding_Kyc_Nationality" translatable="false">Nationality</string>
+    <string name="Binding_Kyc_Nationality_Hint" translatable="false">Search</string>
+    <string name="Binding_Status_Bound" translatable="false">Successfully bound</string>
+    <string name="Binding_Status_Verifying" translatable="false">Reviewing</string>
+    <string name="Binding_Status_Unbound" translatable="false">Not bound</string>
+    <string name="Binding_Status_Reject" translatable="false">Rejected</string>
+    <string name="Binding_Description_Finished" translatable="false">Your personal information has been verified</string>
+    <string name="Binding_Description" translatable="false">Bind your OwlPay account to the OwlTing Wallet. Please fill in your real personal information for the binding audit.</string>
+    <string name="Binding_Title" translatable="false">Account binding</string>
+    <string name="Binding_Sent_Title" translatable="false">Send</string>
+    <string name="Binding_Sent_Description" translatable="false">We have received your information and will process your request shortly!</string>
+    <string name="Binding_Reject_Description" translatable="false">您的資料被判定駁回，請重新填寫</string>
+    <string name="Binding_Kyc_Nationality_All" translatable="false">All Countries</string>
+    <string name="Binding_Kyc_Nationality_Results" translatable="false">Search Results</string>
+    <string name="Binding_Confirm" translatable="false">Confirm</string>
+    <string name="Binding_Kyc_Name" translatable="false">Full Name</string>
+    <string name="Binding_Kyc_Birth" translatable="false">Birthday</string>
+    <string name="Binding_Wallet_Account_Title" translatable="false">Select the chain you want to bind:</string>
+    <string name="Binding_Status_Not_IN_Wallet" translatable="false">Does not exist in this wallet</string>
+    <string name="Binding_Unbind_Description" translatable="false">Are you sure to unbind?</string>
+    <string name="Binding_Unbind" translatable="false">Unbind</string>
+    <string name="Binding_Cancel" translatable="false">Cancel</string>
+    <string name="Binding_Rebind_Title" translatable="false">Bind again</string>
+    <string name="Binding_Rebind_Description" translatable="false">You will need to fill in the information and be verified again if you unbind the account. Are you sure to unbind?</string>
+    <string name="Binding_Back" translatable="false">Back</string>
+    <string name="Binding_Rebind" translatable="false">Bind your account again?</string>
+    <string name="Settings_Register" translatable="false">Register</string>
+    <string name="Settings_Register_Title" translatable="false">Register OwlTing Member</string>
+    <string name="Register_Display_Name" translatable="false">Display name</string>
+    <string name="Register_Display_Name_Hint" translatable="false">Display name after login</string>
+    <string name="Register_Email" translatable="false">Email</string>
+    <string name="Register_Email_Hint" translatable="false">Sign in to use the OwlTing Wallet app</string>
+    <string name="Auth_Invalid_Email" translatable="false">Invalid Email</string>
+    <string name="Register_Password" translatable="false">Password</string>
+    <string name="Register_Password_Hint" translatable="false">Sign-in password</string>
+    <string name="Register_Password_Hint2" translatable="false">Please enter the password again</string>
+    <string name="Register_Password_Description" translatable="false">At least 8 characters, including at least one number and one letter</string>
+    <string name="Register_Password_Invalid" translatable="false">The Password format is invalid</string>
+    <string name="Register_Birthday" translatable="false">Birthday</string>
+    <string name="Register_Gender" translatable="false">Gender</string>
+    <string name="Register_Gender_Male" translatable="false">Male</string>
+    <string name="Register_Gender_Female" translatable="false">Female</string>
+    <string name="Register_Gender_Rather_Not_Say" translatable="false">Prefer not to disclose</string>
+    <string name="Binding_Send" translatable="false">Submit</string>
+    <string name="Auth_Forgot_Password_Hint" translatable="false">Please enter the Email when you register</string>
+    <string name="Settings_Login" translatable="false">Log In</string>
+    <string name="Settings_Scan" translatable="false">Scan</string>
+    <string name="Auth_Email" translatable="false">Email</string>
+    <string name="Auth_Email_Hint" translatable="false">Email</string>
+    <string name="Auth_Password" translatable="false">Password</string>
+    <string name="Auth_Password_Hint" translatable="false">Password</string>
+    <string name="Auth_Forgot_Password" translatable="false">Forgot password</string>
+    <string name="Auth_Logged_In" translatable="false">Logged In</string>
+    <string name="Auth_Logged_Out" translatable="false">Logged Out</string>
+    <string name="Auth_Reset_Password_Failed" translatable="false">Error! Please try again later.</string>
+    <string name="Auth_Reset_Password_Success" translatable="false">Password reset instructions have been successfully sent to your Email</string>
+    <string name="Auth_Qrcode_expired" translatable="false">The validation code has expired, please refresh the validation QR code.</string>
+    <string name="Settings_Account_Deleted_Error" translatable="false">The user has terminated this service</string>
+    <string name="Settings_No_Wallet_Title" translatable="false">No wallet or token added</string>
+    <string name="Settings_No_Wallet_Description" translatable="false">Please set up the wallet and add the token,then retry again</string>
+    <string name="Settings_No_Wallet_Confirm" translatable="false">Go</string>
+    <string name="Settings_No_Wallet_Cancel" translatable="false">Cancel</string>
+    <string name="Settings_Delete_Account" translatable="false">Delete the account</string>
+    <string name="Settings_Delete_Account_Description" translatable="false">Upon deletion, user information cannot be restored. Are you sure to proceed with deletion?</string>
+    <string name="Settings_Delete" translatable="false">Delete</string>
+    <string name="Settings_Account_Deleted" translatable="false">Your account has been deleted</string>
+    <string name="Logged_Out_And_Redirected" translatable="false">You will now be logged out and returned to the homepage.</string>
+    <string name="Settings_Logout" translatable="false">Log Out</string>
+    <string name="Settings_Login_Binding" translatable="false">Sign in and bind</string>
+    <string name="VersionCheck_Flexible_Title" translatable="false">Update OwlTing Wallet?</string>
+    <string name="VersionCheck_Immediate_Title" translatable="false">Update OwlTing Wallet</string>
+    <string name="VersionCheck_Flexible_Description" translatable="false">OwlTing Wallet recommends that you update to the latest version.</string>
+    <string name="VersionCheck_Immediate_Description" translatable="false">To use this app, please download the latest version.</string>
+    <string name="VersionCheck_Update" translatable="false">Update</string>
+    <string name="VersionCheck_No" translatable="false">Not now</string>
 </resources>

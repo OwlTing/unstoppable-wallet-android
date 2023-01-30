@@ -44,6 +44,7 @@ import io.horizontalsystems.bankwallet.ui.compose.ComposeAppTheme
 fun FormsInput(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    isFinished: Boolean = false,
     initial: String? = null,
     hint: String,
     prefix: String? = null,
@@ -171,7 +172,7 @@ fun FormsInput(
                 }
             }
 
-            if (textState.text.isNotEmpty()) {
+            if (textState.text.isNotEmpty() && !isFinished) {
                 ButtonSecondaryCircle(
                     modifier = Modifier.padding(end = 16.dp),
                     icon = R.drawable.ic_delete_20,

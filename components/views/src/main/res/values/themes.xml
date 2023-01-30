@@ -5,7 +5,7 @@
     <!--Final, top-level theme-->
     <style name="Theme.AppTheme.DayNight" parent="Theme.AppTheme"/>
 
-    <style name="Theme.AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="Theme.AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorAccent">@color/yellow_l</item>
         <item name="buttonStyle">@style/Button</item>
         <item name="android:windowBackground">@color/light</item>
@@ -55,6 +55,28 @@
         <!--  Gradient colors-->
         <item name="ColorGradientWhite">@color/white</item>
         <item name="ColorWindowBackground">@color/light</item>
+
+<!--        <item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>-->
+<!--        <item name="materialCalendarFullscreenTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen</item>-->
+<!--        <item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar</item>-->
+        <item name="materialCalendarTheme">@style/ThemeOverlay.App.DatePicker</item>
+    </style>
+
+    <style name="ShapeAppearance.App.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">cut</item>
+    </style>
+
+    <style name="ShapeAppearance.App.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerSize">16dp</item>
+    </style>
+
+    <style name="ThemeOverlay.App.DatePicker" parent="@style/ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="colorPrimary">@color/yellow_d</item>
+        <item name="colorOnPrimary">@color/dark</item>
+<!--        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.App.SmallComponent</item>-->
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.App.MediumComponent</item>
+        <!-- Customize text field of the text input mode. -->
+<!--        <item name="textInputStyle">@style/Widget.App.TextInputLayout</item>-->
     </style>
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">

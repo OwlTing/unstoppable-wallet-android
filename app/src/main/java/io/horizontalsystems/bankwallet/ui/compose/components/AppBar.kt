@@ -2,19 +2,16 @@ package io.horizontalsystems.bankwallet.ui.compose.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import io.horizontalsystems.bankwallet.R
 import io.horizontalsystems.bankwallet.ui.compose.ComposeAppTheme
 import io.horizontalsystems.bankwallet.ui.compose.TranslatableString
 
@@ -23,6 +20,7 @@ data class MenuItem(
     @DrawableRes val icon: Int? = null,
     val enabled: Boolean = true,
     val tint: Color = Color.Unspecified,
+    val showIconAndTitle: Boolean = false,
     val onClick: () -> Unit,
 )
 
@@ -81,7 +79,30 @@ fun AppBar(
                 )
             }
             menuItems.forEach { menuItem ->
-                if (menuItem.icon != null) {
+                if (menuItem.showIconAndTitle && menuItem.icon != null) {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color.Transparent,
+                            contentColor = ComposeAppTheme.colors.leah,
+                        ),
+                        elevation = ButtonDefaults.elevation(
+                            defaultElevation = 0.dp,
+                            pressedElevation = 0.dp,
+                        ),
+                        onClick = menuItem.onClick,
+                    ) {
+                        Row {
+                            Icon(
+                                painter = painterResource(id = menuItem.icon),
+                                contentDescription = null,
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = menuItem.title.getString(),
+                            )
+                        }
+                    }
+                } else if (menuItem.icon != null) {
                     AppBarMenuButton(
                         icon = menuItem.icon,
                         onClick = menuItem.onClick,

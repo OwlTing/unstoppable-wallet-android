@@ -9,7 +9,7 @@ object IntroModule {
     class Factory : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return IntroViewModel(App.localStorage) as T
+            return IntroViewModel(App.localStorage, App.languageManager) as T
         }
     }
 

@@ -290,6 +290,21 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="io.horizontalsystems.bankwallet.owlwallet.login.LoginFragment" />
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="io.horizontalsystems.bankwallet.owlwallet.register.RegisterFragment" />
+    <fragment
+        android:id="@+id/forgotPasswordFragment"
+        android:name="io.horizontalsystems.bankwallet.owlwallet.forgotpassword.ForgotPasswordFragment" />
+    <fragment
+        android:id="@+id/bindingFormFragment"
+        android:name="io.horizontalsystems.bankwallet.owlwallet.bindingform.BindingFormFragment" />
+    <fragment
+        android:id="@+id/countryPickerFragment"
+        android:name="io.horizontalsystems.bankwallet.owlwallet.countrypicker.CountryPickerFragment" />
+    <fragment
+        android:id="@+id/bindingStatusFragment"
+        android:name="io.horizontalsystems.bankwallet.owlwallet.bindingstatus.BindingStatusFragment" />
 
     <dialog
         android:id="@+id/wcErrorNoAccountFragment"

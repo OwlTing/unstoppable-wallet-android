@@ -23,10 +23,12 @@ import io.horizontalsystems.bankwallet.core.providers.EvmLabelProvider
 import io.horizontalsystems.bankwallet.core.providers.FeeRateProvider
 import io.horizontalsystems.bankwallet.core.providers.FeeTokenProvider
 import io.horizontalsystems.bankwallet.core.storage.*
+import io.horizontalsystems.bankwallet.entities.Wallet
 import io.horizontalsystems.bankwallet.modules.balance.BalanceViewTypeManager
 import io.horizontalsystems.bankwallet.modules.keystore.KeyStoreActivity
 import io.horizontalsystems.bankwallet.modules.launcher.LauncherActivity
 import io.horizontalsystems.bankwallet.modules.lockscreen.LockScreenActivity
+import io.horizontalsystems.bankwallet.owlwallet.utils.MainTabManager
 import io.horizontalsystems.bankwallet.modules.market.favorites.MarketFavoritesMenuService
 import io.horizontalsystems.bankwallet.modules.market.topnftcollections.TopNftCollectionsRepository
 import io.horizontalsystems.bankwallet.modules.market.topnftcollections.TopNftCollectionsViewItemFactory
@@ -34,6 +36,7 @@ import io.horizontalsystems.bankwallet.modules.market.topplatforms.TopPlatformsR
 import io.horizontalsystems.bankwallet.modules.pin.PinComponent
 import io.horizontalsystems.bankwallet.modules.profeatures.ProFeaturesAuthorizationManager
 import io.horizontalsystems.bankwallet.modules.profeatures.storage.ProFeaturesStorage
+import io.horizontalsystems.bankwallet.modules.receive.ReceiveModule
 import io.horizontalsystems.bankwallet.modules.theme.ThemeType
 import io.horizontalsystems.bankwallet.modules.tor.TorConnectionActivity
 import io.horizontalsystems.bankwallet.modules.walletconnect.storage.WC1SessionStorage
@@ -45,12 +48,11 @@ import io.horizontalsystems.bankwallet.modules.walletconnect.version2.WC2Manager
 import io.horizontalsystems.bankwallet.modules.walletconnect.version2.WC2Service
 import io.horizontalsystems.bankwallet.modules.walletconnect.version2.WC2SessionManager
 import io.horizontalsystems.bankwallet.owlwallet.data.source.DefaultOTRepository
-import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.OTAuthRemoteDataSource
 import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.OTWalletApiClient
 import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.OTWalletRemoteDataSource
 import io.horizontalsystems.bankwallet.owlwallet.utils.PreferenceHelper
 import io.horizontalsystems.bankwallet.owlwallet.utils.VersionChecker
-import io.horizontalsystems.bankwallet.owlwallet.utils.WalletSyncHelper
+//import io.horizontalsystems.bankwallet.owlwallet.utils.WalletSyncHelper
 import io.horizontalsystems.bankwallet.widgets.MarketWidgetManager
 import io.horizontalsystems.bankwallet.widgets.MarketWidgetRepository
 import io.horizontalsystems.core.BackgroundManager
@@ -131,19 +133,31 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
 
         lateinit var owlTingRepo: DefaultOTRepository
         lateinit var preferenceHelper: PreferenceHelper
-        lateinit var walletSyncHelper: WalletSyncHelper
+        lateinit var mainTabManager: MainTabManager
         lateinit var versionChecker: VersionChecker
 
         fun initOwlTingRepo() {
             OTWalletApiClient.clear()
 
             owlTingRepo = DefaultOTRepository(
-                otAuthRemote = OTAuthRemoteDataSource(),
                 otWalletRemote = OTWalletRemoteDataSource(
                     OTWalletApiClient.getInstance(preferenceHelper),
                     preferenceHelper,
                 )
             )
+        }
+
+        fun getPrivacyPolicyUrl(): String {
+            return when (languageManager.currentLanguage) {
+                "tw", "zh" -> "https://www.owlting.com/owlpay/privacy?lang=zh_tw"
+                else -> "https://www.owlting.com/owlpay/privacy?lang=en"
+            }
+        }
+
+        fun getReceiveAddress(wallet: Wallet): String {
+            val receiveAdapter = adapterManager.getReceiveAdapterForWallet(wallet)
+                ?: throw ReceiveModule.NoReceiverAdapter()
+            return receiveAdapter.receiveAddress
         }
     }
 
@@ -343,10 +357,8 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
 
         preferenceHelper = PreferenceHelper(applicationContext)
         versionChecker = VersionChecker()
+        mainTabManager = MainTabManager()
         initOwlTingRepo()
-        walletSyncHelper =
-            WalletSyncHelper(accountManager, walletManager, owlTingRepo, preferenceHelper)
-
         setAppTheme()
 
         registerActivityLifecycleCallbacks(ActivityLifecycleCallbacks(torKitManager))

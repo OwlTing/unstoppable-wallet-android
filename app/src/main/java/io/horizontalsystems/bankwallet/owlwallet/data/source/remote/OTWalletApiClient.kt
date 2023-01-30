@@ -1,6 +1,7 @@
 package io.horizontalsystems.bankwallet.owlwallet.data.source.remote
 
 import com.google.gson.GsonBuilder
+import com.google.gson.annotations.SerializedName
 import io.horizontalsystems.bankwallet.BuildConfig
 import io.horizontalsystems.bankwallet.R
 import io.horizontalsystems.bankwallet.core.providers.Translator
@@ -12,9 +13,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
@@ -25,6 +24,11 @@ interface OTWalletApiClient {
         @Body request: LoginRequest
     ): LoginResponse
 
+    @POST("api/external/auth/register")
+    suspend fun register(
+        @Body request: RegisterRequest
+    ): RegisterResponse
+
     @POST("api/external/auth/logout")
     suspend fun logout(
     ): LogoutResponse
@@ -34,14 +38,42 @@ interface OTWalletApiClient {
         @Body request: RefreshTokenRequest
     ): RefreshTokenResponse
 
-    @GET("api/external/customer/wallet")
-    suspend fun getWallets(
-    ): GetWalletsResponse
+    @POST("api/external/auth/passwordForget")
+    suspend fun resetPassword(
+        @Body request: ResetPasswordRequest
+    ): ResetPasswordResponse
 
-    @POST("api/external/customer/wallet/create")
-    suspend fun syncWallets(
-        @Body request: SyncWalletsRequest
-    ): SyncWalletsResponse
+    @POST("api/external/auth/terminate")
+    suspend fun deleteAccount(
+    ): DeleteAccountResponse
+
+    @POST("api/external/customer/{uuid}/profile")
+    suspend fun loginByToken(
+        @Path("uuid") uuid: String,
+        @Body request: LoginByTokenRequest
+    ): LoginResponse
+
+    @GET("api/external/customer/aml/country")
+    suspend fun getCountries(
+        @Query("lang") lang: String = "en",
+        @Query("filterType") filterType: String = "eu",
+        @Query("nameFormat") nameFormat: String = "iso_code",
+    ): CountriesResponse
+
+    @GET("api/external/customer/aml/meta")
+    suspend fun getUserMeta(
+        @Query("lang") lang: String = "en",
+    ): UserMetaResponse
+
+    @POST("api/external/customer/aml/register")
+    suspend fun amlMetaRegister(
+        @Body request: AmlMetaRegisterRequest
+    ): UserMetaResponse
+
+    @POST("api/external/customer/aml/chain/binding")
+    suspend fun amlChainRegister(
+        @Body request: AmlChainRegisterRequest
+    ): UserMetaResponse
 
     companion object {
         @Volatile
@@ -77,6 +109,7 @@ interface OTWalletApiClient {
                     builder.addInterceptor(Interceptor { chain ->
                         val newRequest = chain.request().newBuilder()
                             .addHeader("Authorization", "Bearer $token")
+                            .addHeader("device", "Android")
                             .build()
                         chain.proceed(newRequest)
                     })
@@ -104,18 +137,61 @@ interface OTWalletApiClient {
 }
 
 data class LoginRequest(
-    val uuid: String,
-    val secret: String,
+    val email: String,
+    val password: String,
     val expire: Float? = /*if (BuildConfig.DEBUG) 0.0167f else*/ null,
+)
+
+data class LoginByTokenRequest(
+    val token: String,
 )
 
 data class LoginResponse(
     val status: Boolean,
+    val code: String = "",
     val token: Token,
+
+    @SerializedName("customer")
+    val user: User = User(),
     val msg: String = ""
 )
 
+data class RegisterRequest(
+    val email: String,
+    val password: String,
+    val name: String,
+    val gender: String?,
+    val birthday: String?,
+)
+
+data class RegisterResponse(
+    val status: Boolean,
+    val code: String = "",
+    val token: Token,
+
+    @SerializedName("customer")
+    val user: User = User(),
+    val msg: String = ""
+)
+
+data class User(
+    val uuid: String = "",
+    val name: String = "",
+    val email: String = "",
+    val avatar: String = "",
+
+    @SerializedName("created_at")
+    val createdAt: String = "",
+
+    @SerializedName("updated_at")
+    val updatedAt: String = "",
+)
+
 data class LogoutResponse(
+    val status: Boolean,
+)
+
+data class DeleteAccountResponse(
     val status: Boolean,
 )
 
@@ -133,34 +209,85 @@ data class Token(
     val refresh: String,
 )
 
-data class GetWalletsResponse(
+data class ResetPasswordRequest(
+    val email: String,
+)
+
+data class ResetPasswordResponse(
     val status: Boolean,
 )
 
-data class SyncWalletsRequest(
-    val wallet: List<OTWallet>
+data class CountriesResponse(
+    val status: Boolean,
+    val data: List<Country>,
 )
 
-data class OTWallet(
+data class Country(
+    val isoCode: String,
+    var name: String,
+    val flagUrl: String
+)
+
+data class UserMetaResponse(
+    val status: Boolean,
+    val code: Int = 0,
+    val data: UserMeta,
+)
+
+enum class VerifyState(val stateName: String) {
+    NOT_FOUND(""),
+    UNFINISHED("unfinished"),
+    UNVERIFIED("unverified"),
+    VERIFIED("verified"),
+    REJECTED("rejected"),
+}
+
+data class UserMeta(
+    val ssoUserId: Int = 0,
+    val ssoId: String = "",
+    val integratedStatus: String = "",
+    val ssoUserMeta: Meta,
+    val ssoUserChains: List<Chain> = listOf(),
+)
+
+data class Meta(
+    val ssoUserMetaId: Int = 0,
+    val ssoUserId: Int = 0,
+    val name: String = "",
+    val birthday: String = "",
+    val country: Country,
+    val email: String = "",
+)
+
+data class Chain(
+    val ssoUserChainId: Int = 0,
+    val ssoUserId: Int = 0,
+    val chainNetwork: String = "",
+    val chainAsset: String = "",
+    val chainAddress: String = "",
+    val chainIsBinding: Int = 0,
+)
+
+data class AmlMetaRegisterRequest(
+    val country: String,
+    val birthday: String,
+    val name: String,
+    val chains: List<AmlMetaRegisterChain>,
+)
+
+data class AmlMetaRegisterChain(
     val address: String,
-    val currency: String,
-    val symbol: String,
-    val decimals: String,
-    val vendor: String = "OwlTing",
-    val type: String = "Withdrawal",
-    val data: String? = null,
+    val network: String,
+    val asset: String,
 )
 
-data class SyncWalletsResponse(
-    val status: Boolean,
-    val data: List<SyncErrorData>,
+data class AmlChainRegisterRequest(
+    val chains: List<AmlChainRegisterChain>,
 )
 
-data class SyncErrorData(
-    val check: Boolean,
-    val code: Int,
-    val msg: String,
+data class AmlChainRegisterChain(
+    val address: String,
+    val network: String,
+    val asset: String,
+    val isBinding: Int,
 )
-
-
-

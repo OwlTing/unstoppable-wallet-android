@@ -1,6 +1,5 @@
 package io.horizontalsystems.bankwallet.modules.managewallets
 
-import io.horizontalsystems.bankwallet.BuildConfig
 import io.horizontalsystems.bankwallet.core.*
 import io.horizontalsystems.bankwallet.core.managers.MarketKitWrapper
 import io.horizontalsystems.bankwallet.core.managers.RestoreSettings
@@ -10,11 +9,7 @@ import io.horizontalsystems.bankwallet.entities.ConfiguredToken
 import io.horizontalsystems.bankwallet.entities.Wallet
 import io.horizontalsystems.bankwallet.modules.enablecoin.EnableCoinService
 import io.horizontalsystems.ethereumkit.core.AddressValidator
-import io.horizontalsystems.marketkit.models.BlockchainType
-import io.horizontalsystems.marketkit.models.Coin
-import io.horizontalsystems.marketkit.models.FullCoin
-import io.horizontalsystems.marketkit.models.Token
-import io.horizontalsystems.marketkit.models.TokenType
+import io.horizontalsystems.marketkit.models.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 
@@ -113,6 +108,16 @@ class ManageWalletsService(
                             it.tokens.filter { token -> token.blockchainType == BlockchainType.Avalanche }
                         )
                     }
+                    "USDC" -> {
+                        FullCoin(
+                            it.coin,
+                            it.tokens.filter { token ->
+                                token.blockchainType == BlockchainType.Ethereum
+                                        || token.blockchainType == BlockchainType.Polygon
+                                        || token.blockchainType == BlockchainType.Avalanche
+                            }
+                        )
+                    }
                     else -> it
                 }
             }.toMutableList()
@@ -208,14 +213,19 @@ class ManageWalletsService(
         val coin = configuredTokens.firstOrNull()?.token?.coin ?: return
 
         if (restoreSettings.isNotEmpty() && configuredTokens.size == 1) {
-            enableCoinService.save(restoreSettings, account, configuredTokens.first().token.blockchainType)
+            enableCoinService.save(
+                restoreSettings,
+                account,
+                configuredTokens.first().token.blockchainType
+            )
         }
 
         val existingWallets = wallets.filter { it.coin == coin }
         val existingConfiguredPlatformCoins = existingWallets.map { it.configuredToken }
         val newConfiguredPlatformCoins = configuredTokens.minus(existingConfiguredPlatformCoins)
 
-        val removedWallets = existingWallets.filter { !configuredTokens.contains(it.configuredToken) }
+        val removedWallets =
+            existingWallets.filter { !configuredTokens.contains(it.configuredToken) }
         val newWallets = newConfiguredPlatformCoins.map { Wallet(it, account) }
 
         if (newWallets.isNotEmpty() || removedWallets.isNotEmpty()) {

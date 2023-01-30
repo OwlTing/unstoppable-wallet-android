@@ -1,12 +1,17 @@
 package io.horizontalsystems.bankwallet.modules.intro
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import io.horizontalsystems.bankwallet.R
 import io.horizontalsystems.bankwallet.core.ILocalStorage
+import io.horizontalsystems.core.ILanguageManager
 
 class IntroViewModel(
-        private val localStorage: ILocalStorage
+    private val localStorage: ILocalStorage,
+    private val languageManager: ILanguageManager,
 ): ViewModel() {
+
+    val termsOfUseAgreement = mutableStateOf(false)
 
     val slides = listOf(
         IntroModule.IntroSliderData(
@@ -33,4 +38,10 @@ class IntroViewModel(
         localStorage.mainShowedOnce = true
     }
 
+    fun getTermsOfUseUrl(): String {
+        return when (languageManager.currentLanguage) {
+            "tw", "zh" -> "https://www.owlting.com/owlpay/wallet-terms?lang=zh_tw"
+            else -> "https://www.owlting.com/owlpay/wallet-terms?lang=en"
+        }
+    }
 }

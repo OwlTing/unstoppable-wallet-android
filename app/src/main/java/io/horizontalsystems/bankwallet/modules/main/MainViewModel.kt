@@ -11,14 +11,20 @@ import io.horizontalsystems.bankwallet.core.managers.RateUsType
 import io.horizontalsystems.bankwallet.core.managers.ReleaseNotesManager
 import io.horizontalsystems.bankwallet.entities.Account
 import io.horizontalsystems.bankwallet.entities.LaunchPage
+import io.horizontalsystems.bankwallet.modules.settings.main.SnackBarState
+import io.horizontalsystems.bankwallet.owlwallet.data.source.OTRepository
+import io.horizontalsystems.bankwallet.owlwallet.utils.MainTabManager
 import io.horizontalsystems.bankwallet.owlwallet.utils.VersionChecker
 import io.horizontalsystems.bankwallet.owlwallet.utils.UpdateAction
+import io.horizontalsystems.bankwallet.owlwallet.utils.getLangParam
+import io.horizontalsystems.core.ILanguageManager
 import io.horizontalsystems.core.IPinComponent
 import io.horizontalsystems.core.SingleLiveEvent
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class MainViewModel(
     private val pinComponent: IPinComponent,
@@ -29,6 +35,9 @@ class MainViewModel(
     private val releaseNotesManager: ReleaseNotesManager,
     private val service: MainService,
     private val versionHelper: VersionChecker,
+    val mainTabManager: MainTabManager,
+    private val repo: OTRepository,
+    private val languageManager: ILanguageManager,
 ) : ViewModel() {
 
     val showRootedDeviceWarningLiveEvent = SingleLiveEvent<Unit>()
@@ -116,10 +125,15 @@ class MainViewModel(
     }
 
     fun onResume() {
+        Timber.d("+++++ onResume ++++++++++")
         if (contentHidden != pinComponent.isLocked) {
             hideContentLiveData.postValue(pinComponent.isLocked)
         }
         contentHidden = pinComponent.isLocked
+
+        viewModelScope.launch {
+            repo.getUserMeta(getLangParam(languageManager.currentLanguage))
+        }
     }
 
     fun onTabSelect(tabIndex: Int) {

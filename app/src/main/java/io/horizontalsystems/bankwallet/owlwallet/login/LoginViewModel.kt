@@ -1,105 +1,164 @@
 package io.horizontalsystems.bankwallet.owlwallet.login
 
 import android.text.TextUtils
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
 import io.horizontalsystems.bankwallet.entities.DataState
+import io.horizontalsystems.bankwallet.modules.settings.main.SnackBarState
+import io.horizontalsystems.bankwallet.owlwallet.data.AccountDeletedException
 import io.horizontalsystems.bankwallet.owlwallet.data.OTResult
 import io.horizontalsystems.bankwallet.owlwallet.data.source.OTRepository
 import io.horizontalsystems.bankwallet.owlwallet.data.succeeded
-import kotlinx.coroutines.flow.*
+import io.horizontalsystems.bankwallet.owlwallet.utils.getLangParam
+import io.horizontalsystems.core.ILanguageManager
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-data class LoginUiState(
-    val emailState: DataState<String>? = null,
-    val passwordState: DataState<String>? = null,
-    val canLogin: Boolean = false,
-    val currentState: SnackBarState? = null,
+data class QRCodeData(
+    val token: String,
+    @SerializedName("owlting_uuid")
+    val uuid: String,
 )
 
-sealed class SnackBarState {
-    object Loading : SnackBarState()
-    class LoginSuccess(val msg: String) : SnackBarState()
-    class ResetPasswordSuccess(val msg: String) : SnackBarState()
-    class Failed(val msg: String) : SnackBarState()
+data class LoginUiState(
+    val emailState: DataState<String>?,
+    val passwordState: DataState<String>?,
+    val canLogin: Boolean,
+)
+
+sealed class ActionState {
+    object Loading : ActionState()
+    class LoginSuccess(val isBindingSent: Boolean) : ActionState()
+    object Failed : ActionState()
+    object AccountDeleted : ActionState()
 }
 
 class LoginViewModel(
-    private val repo: OTRepository
+    private val repo: OTRepository,
+    private val languageManager: ILanguageManager,
 ) : ViewModel() {
 
-    private val _emailState: MutableStateFlow<DataState<String>?> =
-        MutableStateFlow(null)
-    private val _passwordState: MutableStateFlow<DataState<String>?> =
-        MutableStateFlow(null)
-    private val _currentState: MutableStateFlow<SnackBarState?> = MutableStateFlow(null)
+    private var _emailState: DataState<String>? = null
+    private var _passwordState: DataState<String>? = null
+    private var _canLogin: Boolean = false
 
-    val uiState: StateFlow<LoginUiState> = combine(
-        _emailState, _passwordState, _currentState,
-    ) { emailState, passwordState, currentState ->
+    var uiState by mutableStateOf(
         LoginUiState(
-            emailState = emailState,
-            passwordState = passwordState,
-            canLogin = emailState is DataState.Success && passwordState is DataState.Success,
-            currentState = currentState
+            emailState = _emailState,
+            passwordState = _passwordState,
+            canLogin = _canLogin,
         )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = LoginUiState()
     )
+        private set
+
+    var actionState by mutableStateOf<ActionState?>(null)
+        private set
 
     fun onEmailChanged(email: String) {
-        _currentState.value = null
-        if (TextUtils.isEmpty(email)) {
-            _emailState.value = null
+        _emailState = if (TextUtils.isEmpty(email)) {
+            DataState.Error(Throwable())
         } else {
             val isValid = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
-            _emailState.value =
-                if (isValid) DataState.Success(email)
-                else DataState.Error(Throwable())
+            if (isValid) DataState.Success(email)
+            else DataState.Error(Throwable())
         }
+
+        emitState()
     }
 
     fun onPasswordChanged(password: String) {
-        _currentState.value = null
-        if (TextUtils.isEmpty(password)) {
-            _passwordState.value = null
+        _passwordState = if (TextUtils.isEmpty(password)) {
+            DataState.Error(Throwable())
         } else {
-            _passwordState.value = DataState.Success(password)
-//            _passwordState.value =
-//                if (password.length >= 6) DataState.Success(password)
-//                else DataState.Error(Throwable("Invalid password format"))
+            DataState.Success(password)
         }
+
+        emitState()
     }
 
-    fun doLogin(email: String, password: String) {
-        Timber.d("doLogin")
-        viewModelScope.launch {
-            _currentState.value = SnackBarState.Loading
-            val result = repo.doLogin(email, password)
-            if (result.succeeded) {
-                _currentState.value = SnackBarState.LoginSuccess("Logged In")
-            } else {
-                _currentState.value =
-                    SnackBarState.Failed((result as OTResult.Error).exception.message!!)
+    fun doLogin() {
+        if (_emailState is DataState.Success && _passwordState is DataState.Success) {
+            viewModelScope.launch {
+                val email = (_emailState as DataState.Success).data
+                val password = (_passwordState as DataState.Success).data
+                actionState = ActionState.Loading
+
+                val result = repo.login(email, password)
+
+                if (result.succeeded) {
+                    val metaResult = repo.getUserMeta(getLangParam(languageManager.currentLanguage))
+                    Timber.d("meta result: $metaResult")
+                    if (metaResult.succeeded) {
+                        val meta = metaResult as OTResult.Success
+                        Timber.d("meta result: ${metaResult.data}")
+                        if (meta.data.status) {
+                            actionState = ActionState.LoginSuccess(true)
+                            return@launch
+                        } else if (meta.data.code == 10032) {
+                            actionState = ActionState.LoginSuccess(false)
+                            return@launch
+                        }
+                    }
+                } else {
+                    if ((result as OTResult.Error).exception is AccountDeletedException) {
+                        actionState = ActionState.AccountDeleted
+                        return@launch
+                    }
+                }
+                actionState = ActionState.Failed
             }
         }
     }
 
-    fun resetPassword(email: String) {
-        Timber.d("resetPassword")
+    fun doLoginByToken(scannedText: String) {
+        Timber.d("scannedText: $scannedText")
         viewModelScope.launch {
-            _currentState.value = SnackBarState.Loading
-            val result = repo.resetPassword(email)
-
-            if (result.succeeded) {
-                _currentState.value = SnackBarState.ResetPasswordSuccess((result as OTResult.Success).data.msg)
-            } else {
-                _currentState.value =
-                    SnackBarState.Failed((result as OTResult.Error).exception.message!!)
+            actionState = ActionState.Loading
+            try {
+                val qrCodeData = Gson().fromJson(scannedText, QRCodeData::class.java)
+                val result = repo.loginByToken(qrCodeData.uuid, qrCodeData.token)
+                if (result.succeeded) {
+                    val metaResult = repo.getUserMeta(getLangParam(languageManager.currentLanguage))
+                    Timber.d("meta result: $metaResult")
+                    if (metaResult.succeeded) {
+                        val meta = metaResult as OTResult.Success
+                        Timber.d("meta result: ${metaResult.data}")
+                        if (meta.data.status) {
+                            actionState = ActionState.LoginSuccess(true)
+                            return@launch
+                        } else if (meta.data.code == 10032) {
+                            actionState = ActionState.LoginSuccess(false)
+                            return@launch
+                        }
+                    }
+                } else {
+                    if ((result as OTResult.Error).exception is AccountDeletedException) {
+                        actionState = ActionState.AccountDeleted
+                        return@launch
+                    }
+                }
+                actionState = ActionState.Failed
+            } catch (e: Exception) {
+                actionState = ActionState.Failed
             }
         }
+    }
+
+    private fun emitState() {
+        _canLogin = _emailState is DataState.Success && _passwordState is DataState.Success
+        uiState = LoginUiState(
+            emailState = _emailState,
+            passwordState = _passwordState,
+            canLogin = _canLogin,
+        )
+    }
+
+    fun resetActionState() {
+        actionState = null
     }
 }

@@ -3,27 +3,24 @@ package io.horizontalsystems.bankwallet.modules.settings.main
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.horizontalsystems.bankwallet.core.App
 import io.horizontalsystems.bankwallet.core.IAccountManager
 import io.horizontalsystems.bankwallet.core.IWalletManager
 import io.horizontalsystems.bankwallet.core.subscribeIO
-import io.horizontalsystems.bankwallet.entities.Account
-import io.horizontalsystems.bankwallet.entities.AccountType
-import io.horizontalsystems.bankwallet.entities.Wallet
+import io.horizontalsystems.bankwallet.modules.main.MainModule
+import io.horizontalsystems.bankwallet.owlwallet.utils.MainTabManager
 import io.horizontalsystems.bankwallet.modules.walletconnect.version1.WC1Manager
+import io.horizontalsystems.bankwallet.owlwallet.bindingstatus.ActionState
 import io.horizontalsystems.bankwallet.owlwallet.data.OTResult
 import io.horizontalsystems.bankwallet.owlwallet.data.RefreshTokenExpiredException
 import io.horizontalsystems.bankwallet.owlwallet.data.source.OTRepository
-import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.OTWallet
-import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.SyncWalletsRequest
+import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.AmlChainRegisterChain
+import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.AmlChainRegisterRequest
+import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.Chain
+import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.VerifyState
 import io.horizontalsystems.bankwallet.owlwallet.data.succeeded
 import io.horizontalsystems.bankwallet.owlwallet.utils.PreferenceHelper
-import io.horizontalsystems.bankwallet.owlwallet.utils.WalletSyncHelper
-import io.horizontalsystems.ethereumkit.core.EthereumKit
-import io.horizontalsystems.ethereumkit.crypto.CryptoUtils
-import io.horizontalsystems.ethereumkit.models.Address
-import io.horizontalsystems.ethereumkit.models.Chain
-import io.horizontalsystems.hdwalletkit.Mnemonic
-import io.horizontalsystems.marketkit.models.BlockchainType
+import io.horizontalsystems.bankwallet.owlwallet.utils.getBlockchainTypeByNetwork
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,12 +28,11 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 sealed class SnackBarState {
     object Loading : SnackBarState()
     class LogoutSuccess(val msg: String) : SnackBarState()
-    class SyncSuccess(val msg: String) : SnackBarState()
+    class DeleteSuccess(val msg: String) : SnackBarState()
     class Failed(val msg: String) : SnackBarState()
 }
 
@@ -44,13 +40,11 @@ class MainSettingsViewModel(
     private val service: MainSettingsService,
     val companyWebPage: String,
     private val repo: OTRepository,
-    preferenceHelper: PreferenceHelper,
-    private val walletSyncHelper: WalletSyncHelper
+    private val preferenceHelper: PreferenceHelper,
+    private val accountManager: IAccountManager,
+    private val walletManager: IWalletManager,
+    private val mainTabManager: MainTabManager,
 ) : ViewModel() {
-
-    init {
-        Timber.d("init")
-    }
 
     private var disposables: CompositeDisposable = CompositeDisposable()
 
@@ -65,8 +59,15 @@ class MainSettingsViewModel(
     val loginState: StateFlow<Boolean> = repo.loginStateFlow()
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.Eagerly,
             initialValue = preferenceHelper.getLoginState()
+        )
+
+    val verifyState: StateFlow<VerifyState> = repo.verifyStateFlow()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = preferenceHelper.getVerifyState()
         )
 
     private val _snackBarState: MutableStateFlow<SnackBarState?> = MutableStateFlow(null)
@@ -102,33 +103,6 @@ class MainSettingsViewModel(
     }
     // ViewModel
 
-    fun syncWallets() {
-        viewModelScope.launch {
-            _snackBarState.value = SnackBarState.Loading
-            delay(100)
-            val result = walletSyncHelper.sync()
-            if (result.succeeded) {
-                _snackBarState.value = SnackBarState.SyncSuccess("Sync success")
-            } else {
-                _snackBarState.value =
-                    SnackBarState.Failed((result as OTResult.Error).exception.message!!)
-            }
-            delay(100)
-            _snackBarState.value = null
-        }
-    }
-
-    fun doLogout() {
-        viewModelScope.launch {
-            _snackBarState.value = SnackBarState.Loading
-            delay(100)
-            repo.doLogout()
-            _snackBarState.value = SnackBarState.LogoutSuccess("Logged out")
-            delay(100)
-            _snackBarState.value = null
-        }
-    }
-
     override fun onCleared() {
         service.stop()
         disposables.clear()
@@ -136,5 +110,38 @@ class MainSettingsViewModel(
 
     fun getWalletConnectSupportState(): WC1Manager.SupportState {
         return service.getWalletConnectSupportState()
+    }
+
+    fun canLogin(): Boolean {
+        return accountManager.accounts.isNotEmpty() && walletManager.activeWallets.isNotEmpty();
+    }
+
+    fun doLogout() {
+        viewModelScope.launch {
+            _snackBarState.value = SnackBarState.Loading
+            delay(100)
+            repo.logout()
+            _snackBarState.value = SnackBarState.LogoutSuccess("Logged out")
+            delay(100)
+            _snackBarState.value = null
+        }
+    }
+
+    fun deleteAccount() {
+        viewModelScope.launch {
+            _snackBarState.value = SnackBarState.Loading
+            val result = repo.deleteAccount()
+            if (result.succeeded) {
+                _snackBarState.value = SnackBarState.DeleteSuccess("Account Deleted")
+            } else {
+                _snackBarState.value = SnackBarState.Failed("Delete account failed")
+            }
+            delay(100)
+            _snackBarState.value = null
+        }
+    }
+
+    fun setCurrentTab(tab: MainModule.MainTab) {
+        mainTabManager.setCurrentTab(tab)
     }
 }

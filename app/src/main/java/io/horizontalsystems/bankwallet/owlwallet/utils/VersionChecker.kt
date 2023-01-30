@@ -13,8 +13,13 @@ enum class UpdateAction { Nothing, Flexible, Immediate }
 class VersionChecker(
     private val s3: OTS3DataSource = OTS3RemoteDataSource()
 ) {
+    var isChecked = false
     suspend fun check(): UpdateAction {
         Timber.d("check ${BuildConfig.VERSION_NAME} ${BuildConfig.VERSION_CODE}")
+        if (isChecked) {
+            return UpdateAction.Nothing
+        }
+        isChecked = true
 
         try {
             val currentVersion = Version(BuildConfig.VERSION_NAME)
@@ -56,8 +61,6 @@ class VersionChecker(
                 Timber.e("Failed to get version data ${(result as OTResult.Error).exception}")
                 return UpdateAction.Nothing
             }
-
-
         } catch (e: Exception) {
             Timber.e(e)
             return UpdateAction.Nothing
