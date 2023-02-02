@@ -15,7 +15,7 @@ class BaseTokenManager(
     private val localStorage: ILocalStorage,
 ) {
     val tokens = listOf(
-//        TokenQuery(BlockchainType.Bitcoin, TokenType.Native),
+        TokenQuery(BlockchainType.Bitcoin, TokenType.Native),
         TokenQuery(BlockchainType.Ethereum, TokenType.Native),
 //        TokenQuery(BlockchainType.BinanceSmartChain, TokenType.Native),
     ).mapNotNull {

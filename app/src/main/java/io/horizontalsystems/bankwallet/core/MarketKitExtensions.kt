@@ -102,7 +102,7 @@ val TokenQuery.customCoinUid: String
 
 val TokenQuery.isSupported: Boolean
     get() = when (blockchainType) {
-//        BlockchainType.Bitcoin,
+        BlockchainType.Bitcoin,
 //        BlockchainType.BitcoinCash,
 //        BlockchainType.Litecoin,
 //        BlockchainType.Dash,
@@ -125,7 +125,8 @@ val TokenQuery.isSupported: Boolean
 
 val Blockchain.description: String
     get() = when (type) {
-        BlockchainType.Bitcoin -> "BTC (BIP44, BIP49, BIP84)"
+//        BlockchainType.Bitcoin -> "BTC (BIP44, BIP49, BIP84)"
+        BlockchainType.Bitcoin -> "BTC (BIP44, BIP49)"
         BlockchainType.BitcoinCash -> "BCH (Legacy, CashAddress)"
         BlockchainType.Zcash -> "ZEC"
         BlockchainType.Litecoin -> "LTC (BIP44, BIP49, BIP84)"

@@ -87,6 +87,7 @@ class ManageWalletsService(
                     "matic-network",
                     "avalanche-2",
                     "usd-coin",
+                    "bitcoin",
                 )
             ).map {
                 when (it.coin.code) {
@@ -140,6 +141,7 @@ class ManageWalletsService(
                     "matic-network",
                     "avalanche-2",
                     "usd-coin",
+                    "bitcoin",
                 ).contains(it.coin.uid)
             }
         }

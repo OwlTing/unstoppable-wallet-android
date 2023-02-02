@@ -1,5 +1,6 @@
 package io.horizontalsystems.bankwallet.core.managers
 
+import io.horizontalsystems.bankwallet.BuildConfig
 import io.horizontalsystems.bankwallet.core.storage.BlockchainSettingsStorage
 import io.horizontalsystems.bankwallet.entities.AccountOrigin
 import io.horizontalsystems.bankwallet.entities.BtcRestoreMode
@@ -22,7 +23,7 @@ class BtcBlockchainManager(
         transactionSortModeUpdatedSubject
 
     private val blockchainTypes : List<BlockchainType> = listOf(
-//        BlockchainType.Bitcoin,
+        BlockchainType.Bitcoin,
 //        BlockchainType.BitcoinCash,
 //        BlockchainType.Litecoin,
 //        BlockchainType.Dash,
@@ -38,13 +39,17 @@ class BtcBlockchainManager(
     }
 
     fun syncMode(blockchainType: BlockchainType, accountOrigin: AccountOrigin): BitcoinCore.SyncMode {
-        if (accountOrigin == AccountOrigin.Created) {
+        if (BuildConfig.DEBUG) {
             return BitcoinCore.SyncMode.NewWallet()
-        }
+        } else {
+            if (accountOrigin == AccountOrigin.Created) {
+                return BitcoinCore.SyncMode.NewWallet()
+            }
 
-        return when (restoreMode(blockchainType)) {
-            BtcRestoreMode.Api -> BitcoinCore.SyncMode.Api()
-            BtcRestoreMode.Blockchain -> BitcoinCore.SyncMode.Full()
+            return when (restoreMode(blockchainType)) {
+                BtcRestoreMode.Api -> BitcoinCore.SyncMode.Api()
+                BtcRestoreMode.Blockchain -> BitcoinCore.SyncMode.Full()
+            }
         }
     }
 

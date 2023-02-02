@@ -1,6 +1,7 @@
 package io.horizontalsystems.bankwallet.core.factories
 
 import android.content.Context
+import io.horizontalsystems.bankwallet.BuildConfig
 import io.horizontalsystems.bankwallet.core.IAdapter
 import io.horizontalsystems.bankwallet.core.ICoinManager
 import io.horizontalsystems.bankwallet.core.ITransactionsAdapter
@@ -49,7 +50,11 @@ class AdapterFactory(
         TokenType.Native -> when (wallet.token.blockchainType) {
             BlockchainType.Bitcoin -> {
                 val syncMode = btcBlockchainManager.syncMode(BlockchainType.Bitcoin, wallet.account.origin)
-                BitcoinAdapter(wallet, syncMode, testMode, backgroundManager)
+                if (BuildConfig.DEBUG) {
+                    BitcoinAdapter(wallet, syncMode, true, backgroundManager)
+                } else {
+                    BitcoinAdapter(wallet, syncMode, testMode, backgroundManager)
+                }
             }
             BlockchainType.BitcoinCash -> {
                 val syncMode = btcBlockchainManager.syncMode(BlockchainType.BitcoinCash, wallet.account.origin)

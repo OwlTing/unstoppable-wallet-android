@@ -166,7 +166,8 @@ sealed class AccountType : Parcelable {
     val supportedDerivations: List<Derivation>
         get() = when (this) {
             is Mnemonic -> {
-                listOf(Derivation.bip44, Derivation.bip49, Derivation.bip84)
+//                listOf(Derivation.bip44, Derivation.bip49, Derivation.bip84)
+                listOf(Derivation.bip44, Derivation.bip49)
             }
             is HdExtendedKey -> {
                 listOf(this.hdExtendedKey.info.purpose.derivation)

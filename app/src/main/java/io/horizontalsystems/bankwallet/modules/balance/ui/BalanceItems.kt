@@ -172,8 +172,8 @@ fun BalanceItems(
                         HudHelper.vibrate(context)
                     },
                     onClickBody = {
-//                        viewModel.toggleTotalType()
-//                        HudHelper.vibrate(context)
+                        viewModel.toggleTotalType()
+                        HudHelper.vibrate(context)
                     }
                 )
             }

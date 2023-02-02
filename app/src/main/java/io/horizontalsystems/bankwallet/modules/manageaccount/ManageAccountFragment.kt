@@ -186,6 +186,7 @@ fun ManageAccountScreen(navController: NavController, accountId: String) {
                                     }
                                 }
                             }
+
                             if (viewModel.bip32RootKey != null || viewModel.accountExtendedPrivateKey != null) {
                                 add {
                                     AccountActionItem(

@@ -15,6 +15,7 @@ import io.horizontalsystems.bitcoinkit.BitcoinKit
 import io.horizontalsystems.bitcoinkit.BitcoinKit.NetworkType
 import io.horizontalsystems.core.BackgroundManager
 import io.horizontalsystems.marketkit.models.BlockchainType
+import timber.log.Timber
 import java.math.BigDecimal
 
 class BitcoinAdapter(
@@ -28,6 +29,7 @@ class BitcoinAdapter(
     constructor(wallet: Wallet, syncMode: BitcoinCore.SyncMode, testMode: Boolean, backgroundManager: BackgroundManager) : this(createKit(wallet, syncMode, testMode), syncMode, backgroundManager, wallet, testMode)
 
     init {
+        Timber.d("init with testMode: $testMode")
         kit.listener = this
     }
 
