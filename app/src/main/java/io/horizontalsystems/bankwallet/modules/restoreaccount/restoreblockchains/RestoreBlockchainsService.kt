@@ -199,7 +199,12 @@ class RestoreBlockchainsService(
 
         val wallets = enabledCoins.map { Wallet(it, account) }.toMutableList()
 
-        wallets.addAll(USDCWalletCreator.create(account, enableCoinService))
+        val blockchains = mutableSetOf<BlockchainType>()
+        wallets.forEach { wallet ->
+            blockchains.add(wallet.token.blockchainType)
+        }
+
+        wallets.addAll(USDCWalletCreator.create(account, blockchains.toList(), enableCoinService))
 
         walletManager.save(wallets)
     }

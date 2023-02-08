@@ -5,6 +5,7 @@ import io.horizontalsystems.bankwallet.core.defaultSettingsArray
 import io.horizontalsystems.bankwallet.entities.Account
 import io.horizontalsystems.bankwallet.entities.ConfiguredToken
 import io.horizontalsystems.bankwallet.entities.Wallet
+import io.horizontalsystems.marketkit.models.BlockchainType
 import io.horizontalsystems.marketkit.models.TokenQuery
 
 class WalletActivator(
@@ -30,7 +31,12 @@ class WalletActivator(
             }
         }
 
-        wallets.addAll(USDCWalletCreator.create(account))
+        val blockchains = mutableSetOf<BlockchainType>()
+        wallets.forEach { wallet ->
+            blockchains.add(wallet.token.blockchainType)
+        }
+
+        wallets.addAll(USDCWalletCreator.create(account, blockchains.toList()))
 
         walletManager.save(wallets)
     }

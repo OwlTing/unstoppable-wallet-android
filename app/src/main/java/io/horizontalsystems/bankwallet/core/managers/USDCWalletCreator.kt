@@ -9,10 +9,11 @@ import io.horizontalsystems.bankwallet.modules.enablecoin.coinplatforms.CoinToke
 import io.horizontalsystems.bankwallet.modules.enablecoin.coinsettings.CoinSettingsService
 import io.horizontalsystems.bankwallet.modules.enablecoin.restoresettings.RestoreSettingsService
 import io.horizontalsystems.bankwallet.modules.managewallets.ManageWalletsService
+import io.horizontalsystems.marketkit.models.BlockchainType
 
 class USDCWalletCreator {
     companion object {
-        fun create(account: Account): List<Wallet> {
+        fun create(account: Account, blockchains: List<BlockchainType>): List<Wallet> {
             val wallets = mutableListOf<Wallet>()
 
             val restoreSettingsService =
@@ -31,12 +32,14 @@ class USDCWalletCreator {
             )
 
             manageWalletsService.getUSDCFullCoin()?.tokens?.forEach { token ->
-                wallets.add(Wallet(token, account))
+                if (blockchains.contains(token.blockchainType)) {
+                    wallets.add(Wallet(token, account))
+                }
             }
             return wallets
         }
 
-        fun create(account: Account, enableCoinService: EnableCoinService): List<Wallet> {
+        fun create(account: Account, blockchains: List<BlockchainType>, enableCoinService: EnableCoinService): List<Wallet> {
             val wallets = mutableListOf<Wallet>()
             val manageWalletsService = ManageWalletsService(
                 App.marketKit,
@@ -48,7 +51,9 @@ class USDCWalletCreator {
             )
 
             manageWalletsService.getUSDCFullCoin()?.tokens?.forEach { token ->
-                wallets.add(Wallet(token, account))
+                if (blockchains.contains(token.blockchainType)) {
+                    wallets.add(Wallet(token, account))
+                }
             }
             return wallets
         }
