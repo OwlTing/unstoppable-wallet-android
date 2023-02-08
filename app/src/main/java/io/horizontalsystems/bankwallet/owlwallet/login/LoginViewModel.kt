@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
+import io.horizontalsystems.bankwallet.core.managers.LanguageManager
 import io.horizontalsystems.bankwallet.entities.DataState
 import io.horizontalsystems.bankwallet.modules.settings.main.SnackBarState
 import io.horizontalsystems.bankwallet.owlwallet.data.AccountDeletedException
@@ -15,7 +16,6 @@ import io.horizontalsystems.bankwallet.owlwallet.data.OTResult
 import io.horizontalsystems.bankwallet.owlwallet.data.source.OTRepository
 import io.horizontalsystems.bankwallet.owlwallet.data.succeeded
 import io.horizontalsystems.bankwallet.owlwallet.utils.getLangParam
-import io.horizontalsystems.core.ILanguageManager
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -40,7 +40,7 @@ sealed class ActionState {
 
 class LoginViewModel(
     private val repo: OTRepository,
-    private val languageManager: ILanguageManager,
+    private val languageManager: LanguageManager,
 ) : ViewModel() {
 
     private var _emailState: DataState<String>? = null

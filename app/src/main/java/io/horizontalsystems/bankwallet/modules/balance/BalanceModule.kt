@@ -30,12 +30,17 @@ object BalanceModule {
                 App.accountManager
             )
 
+            val totalService = TotalService(
+                App.currencyManager,
+                App.marketKit,
+                App.baseTokenManager,
+                App.balanceHiddenManager
+            )
             return BalanceViewModel(
                 balanceService,
                 BalanceViewItemFactory(),
-                TotalService(App.currencyManager, App.marketKit, App.baseTokenManager, App.balanceHiddenManager),
                 App.balanceViewTypeManager,
-                App.balanceHiddenManager,
+                TotalBalance(totalService, App.balanceHiddenManager),
                 App.localStorage,
                 App.languageManager,
                 FaqManager

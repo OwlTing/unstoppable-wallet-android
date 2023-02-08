@@ -17,10 +17,7 @@ import io.horizontalsystems.bankwallet.core.iconPlaceholder
 import io.horizontalsystems.bankwallet.core.iconUrl
 import io.horizontalsystems.bankwallet.entities.Wallet
 import io.horizontalsystems.bankwallet.ui.compose.ComposeAppTheme
-import io.horizontalsystems.bankwallet.ui.compose.components.CellLawrence
-import io.horizontalsystems.bankwallet.ui.compose.components.CoinImage
-import io.horizontalsystems.bankwallet.ui.compose.components.HsCheckbox
-import io.horizontalsystems.bankwallet.ui.compose.components.headline2_leah
+import io.horizontalsystems.bankwallet.ui.compose.components.*
 import timber.log.Timber
 
 @Composable
@@ -51,10 +48,10 @@ fun WalletOption(
 
     val checked = viewModel.walletSelections[index]
 
-    CellLawrence(
-        onClick = {
-            viewModel.onToggleWalletOption(index, !checked)
-        }
+    CellSingleLineLawrence(
+//        onClick = {
+//            viewModel.onToggleWalletOption(index, !checked)
+//        }
     ) {
         HsCheckbox(
             checked = checked,

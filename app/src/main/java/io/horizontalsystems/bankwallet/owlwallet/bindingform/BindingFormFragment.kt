@@ -32,7 +32,7 @@ import io.horizontalsystems.bankwallet.ui.compose.TranslatableString
 import io.horizontalsystems.bankwallet.ui.compose.components.*
 import io.horizontalsystems.core.findNavController
 import io.horizontalsystems.core.helpers.HudHelper
-import io.horizontalsystems.snackbar.SnackbarDuration
+import io.horizontalsystems.core.SnackbarDuration
 
 class BindingFormFragment : BaseFragment() {
 

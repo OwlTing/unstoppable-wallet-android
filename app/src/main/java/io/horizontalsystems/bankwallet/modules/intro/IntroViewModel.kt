@@ -4,11 +4,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import io.horizontalsystems.bankwallet.R
 import io.horizontalsystems.bankwallet.core.ILocalStorage
-import io.horizontalsystems.core.ILanguageManager
+import io.horizontalsystems.bankwallet.core.managers.LanguageManager
 
 class IntroViewModel(
     private val localStorage: ILocalStorage,
-    private val languageManager: ILanguageManager,
+    private val languageManager: LanguageManager,
 ): ViewModel() {
 
     val termsOfUseAgreement = mutableStateOf(false)
@@ -40,7 +40,7 @@ class IntroViewModel(
 
     fun getTermsOfUseUrl(): String {
         return when (languageManager.currentLanguage) {
-            "tw", "zh" -> "https://www.owlting.com/owlpay/wallet-terms?lang=zh_tw"
+            "zh-TW", "zh-CN" -> "https://www.owlting.com/owlpay/wallet-terms?lang=zh_tw"
             else -> "https://www.owlting.com/owlpay/wallet-terms?lang=en"
         }
     }

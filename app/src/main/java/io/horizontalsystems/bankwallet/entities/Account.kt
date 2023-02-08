@@ -24,6 +24,7 @@ data class Account(
     val isWatchAccount: Boolean
         get() = when (this.type) {
             is AccountType.EvmAddress -> true
+            is AccountType.SolanaAddress -> true
             is AccountType.HdExtendedKey -> this.type.hdExtendedKey.info.isPublic
             else -> false
         }
@@ -79,6 +80,9 @@ data class Account(
 sealed class AccountType : Parcelable {
     @Parcelize
     data class EvmAddress(val address: String) : AccountType()
+
+    @Parcelize
+    data class SolanaAddress(val address: String) : AccountType()
 
     @Parcelize
     data class Mnemonic(val words: List<String>, val passphrase: String) : AccountType() {
@@ -146,6 +150,7 @@ sealed class AccountType : Parcelable {
                 }
             }
             is EvmAddress -> "EVM Address"
+            is SolanaAddress -> "Solana Address"
             is EvmPrivateKey -> "EVM Private Key"
             is HdExtendedKey -> {
                 when (this.hdExtendedKey.derivedType) {
@@ -160,14 +165,12 @@ sealed class AccountType : Parcelable {
                     else -> ""
                 }
             }
-            else -> ""
         }
 
     val supportedDerivations: List<Derivation>
         get() = when (this) {
             is Mnemonic -> {
-//                listOf(Derivation.bip44, Derivation.bip49, Derivation.bip84)
-                listOf(Derivation.bip44, Derivation.bip49)
+                listOf(Derivation.bip44, Derivation.bip49, Derivation.bip84)
             }
             is HdExtendedKey -> {
                 listOf(this.hdExtendedKey.info.purpose.derivation)
@@ -175,11 +178,13 @@ sealed class AccountType : Parcelable {
             else -> emptyList()
         }
 
-    val hideZeroBalances = this is EvmAddress
+    val hideZeroBalances: Boolean
+        get() = this is EvmAddress || this is SolanaAddress
 
     val detailedDescription: String
         get() = when (this) {
             is EvmAddress -> this.address.shorten()
+            is SolanaAddress -> this.address.shorten()
             else -> this.description
         }
 
@@ -217,18 +222,11 @@ val AccountType.Derivation.rawName: String
         AccountType.Derivation.bip84 -> "BIP 84"
     }
 
-val AccountType.Derivation.title: String
+val AccountType.Derivation.description: String
     get() = when (this) {
         AccountType.Derivation.bip44 -> Translator.getString(R.string.CoinOption_bip44_Title)
         AccountType.Derivation.bip49 -> Translator.getString(R.string.CoinOption_bip49_Title)
         AccountType.Derivation.bip84 -> Translator.getString(R.string.CoinOption_bip84_Title)
-    }
-
-val AccountType.Derivation.description: String
-    get() = when (this) {
-        AccountType.Derivation.bip44 -> rawName
-        AccountType.Derivation.bip84,
-        AccountType.Derivation.bip49 -> "$rawName - $addressType"
     }
 
 @Parcelize

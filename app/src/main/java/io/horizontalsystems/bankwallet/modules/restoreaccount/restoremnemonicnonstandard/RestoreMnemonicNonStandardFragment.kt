@@ -25,9 +25,8 @@ class RestoreMnemonicNonStandardFragment : BaseFragment() {
             )
             setContent {
                 ComposeAppTheme {
-                    val popUpToInclusiveId = arguments?.getInt(
-                        ManageAccountsModule.popOffOnSuccessKey, R.id.restoreMnemonicFragment
-                    ) ?: R.id.restoreMnemonicFragment
+                    val popUpToInclusiveId =
+                        arguments?.getInt(ManageAccountsModule.popOffOnSuccessKey, R.id.restoreAccountAdvancedFragment) ?: R.id.restoreAccountAdvancedFragment
 
                     RestorePhraseNonStandard(findNavController(), popUpToInclusiveId)
                 }

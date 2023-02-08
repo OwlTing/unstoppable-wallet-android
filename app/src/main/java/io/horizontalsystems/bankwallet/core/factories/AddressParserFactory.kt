@@ -10,7 +10,8 @@ class AddressParserFactory {
         BlockchainType.Litecoin -> AddressParser("litecoin", true)
         BlockchainType.Dash -> AddressParser("dash", true)
         BlockchainType.Zcash -> AddressParser("zcash", true)
-        BlockchainType.Ethereum -> AddressParser("ethereum", true)
+        BlockchainType.Ethereum,
+        BlockchainType.EthereumGoerli -> AddressParser("ethereum", true)
         BlockchainType.BinanceSmartChain -> AddressParser("", true)
         BlockchainType.BinanceChain -> AddressParser("binance", true)
         BlockchainType.Polygon,
@@ -18,7 +19,7 @@ class AddressParserFactory {
         BlockchainType.Optimism,
         BlockchainType.ArbitrumOne,
         BlockchainType.Solana,
+        BlockchainType.Gnosis,
         is BlockchainType.Unsupported -> AddressParser("", false)
     }
-
 }

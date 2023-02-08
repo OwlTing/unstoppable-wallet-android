@@ -30,6 +30,7 @@ import io.horizontalsystems.bankwallet.ui.compose.TranslatableString
 import io.horizontalsystems.bankwallet.ui.compose.components.*
 import io.horizontalsystems.core.findNavController
 import io.horizontalsystems.core.helpers.HudHelper
+import io.horizontalsystems.core.SnackbarDuration
 
 class ForgotPasswordFragment : BaseFragment() {
 
@@ -66,13 +67,13 @@ fun ForgotPasswordScreen(
                 HudHelper.showInProcessMessage(
                     LocalView.current,
                     R.string.Alert_Loading,
-                    io.horizontalsystems.snackbar.SnackbarDuration.INDEFINITE
+                    SnackbarDuration.INDEFINITE
                 )
             is ActionState.ResetPasswordSuccess -> {
                 HudHelper.showSuccessMessage(
                     LocalView.current,
                     stringResource(id = R.string.Auth_Reset_Password_Success),
-                    io.horizontalsystems.snackbar.SnackbarDuration.SHORT
+                    SnackbarDuration.SHORT
                 )
                 navController.popBackStack()
             }

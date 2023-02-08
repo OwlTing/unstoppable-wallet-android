@@ -5,13 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.ComposeView
@@ -26,7 +24,10 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import io.horizontalsystems.bankwallet.R
-import io.horizontalsystems.bankwallet.core.*
+import io.horizontalsystems.bankwallet.core.BaseFragment
+import io.horizontalsystems.bankwallet.core.authorizedAction
+import io.horizontalsystems.bankwallet.core.slideFromBottom
+import io.horizontalsystems.bankwallet.core.slideFromRight
 import io.horizontalsystems.bankwallet.modules.backupkey.BackupKeyModule
 import io.horizontalsystems.bankwallet.modules.balance.HeaderNote
 import io.horizontalsystems.bankwallet.modules.balance.ui.NoteError
@@ -67,7 +68,6 @@ fun ManageAccountScreen(navController: NavController, accountId: String) {
     val viewModel = viewModel<ManageAccountViewModel>(factory = ManageAccountModule.Factory(accountId))
 
     val saveEnabled by viewModel.saveEnabledLiveData.observeAsState(false)
-    val additionalViewItems by viewModel.additionalViewItemsLiveData.observeAsState(listOf())
     val finish by viewModel.finishLiveEvent.observeAsState()
 
     if (finish != null) {
@@ -137,23 +137,25 @@ fun ManageAccountScreen(navController: NavController, accountId: String) {
                     KeyActionState.ShowRecoveryPhrase -> {
                         if (viewModel.showRecoveryPhrase) {
                             Spacer(modifier = Modifier.height(32.dp))
-                            CellSingleLineLawrenceSection {
-                                AccountActionItem(
-                                    title = stringResource(id = R.string.RecoveryPhrase_Title),
-                                    icon = painterResource(id = R.drawable.icon_paper_contract_20)
-                                ) {
-                                    navController.authorizedAction {
-                                        navController.slideFromRight(
-                                            R.id.recoveryPhraseFragment,
-                                            RecoveryPhraseModule.prepareParams(viewModel.account)
-                                        )
+                            CellUniversalLawrenceSection(
+                                listOf {
+                                    AccountActionItem(
+                                        title = stringResource(id = R.string.RecoveryPhrase_Title),
+                                        icon = painterResource(id = R.drawable.icon_paper_contract_20)
+                                    ) {
+                                        navController.authorizedAction {
+                                            navController.slideFromRight(
+                                                R.id.recoveryPhraseFragment,
+                                                RecoveryPhraseModule.prepareParams(viewModel.account)
+                                            )
+                                        }
                                     }
-                                }
-                            }
+                                })
                         }
                         if (viewModel.showEvmPrivateKey) {
                             Spacer(modifier = Modifier.height(32.dp))
-                            CellSingleLineLawrenceSection {
+                            CellUniversalLawrenceSection(
+                                listOf {
                                 AccountActionItem(
                                     title = stringResource(id = R.string.EvmPrivateKey_Title),
                                     icon = painterResource(id = R.drawable.ic_key_20)
@@ -165,7 +167,7 @@ fun ManageAccountScreen(navController: NavController, accountId: String) {
                                         )
                                     }
                                 }
-                            }
+                            })
                         }
                         val keyActions = buildList<@Composable () -> Unit> {
                             if (viewModel.bip32RootKey != null) {
@@ -186,7 +188,6 @@ fun ManageAccountScreen(navController: NavController, accountId: String) {
                                     }
                                 }
                             }
-
                             if (viewModel.bip32RootKey != null || viewModel.accountExtendedPrivateKey != null) {
                                 add {
                                     AccountActionItem(
@@ -250,52 +251,34 @@ fun ManageAccountScreen(navController: NavController, accountId: String) {
                                 }
                             }
                         }
-//                        if (keyActions.isNotEmpty()) {
-//                            Spacer(modifier = Modifier.height(32.dp))
-//                            CellSingleLineLawrenceSection(keyActions)
-//                        }
+                        if (keyActions.isNotEmpty()) {
+                            Spacer(modifier = Modifier.height(32.dp))
+                            CellUniversalLawrenceSection(keyActions)
+                        }
                     }
                     KeyActionState.BackupRecoveryPhrase -> {
                         Spacer(modifier = Modifier.height(32.dp))
-                        CellSingleLineLawrenceSection {
-                            RedActionItem(
-                                title = stringResource(id = R.string.ManageAccount_RecoveryPhraseBackup),
-                                icon = painterResource(id = R.drawable.icon_warning_2_20)
-                            ) {
-                                navController.authorizedAction {
-                                    navController.slideFromBottom(
-                                        R.id.backupKeyFragment,
-                                        BackupKeyModule.prepareParams(viewModel.account)
-                                    )
+                        CellUniversalLawrenceSection(
+                            listOf {
+                                RedActionItem(
+                                    title = stringResource(id = R.string.ManageAccount_RecoveryPhraseBackup),
+                                    icon = painterResource(id = R.drawable.icon_warning_2_20)
+                                ) {
+                                    navController.authorizedAction {
+                                        navController.slideFromBottom(
+                                            R.id.backupKeyFragment,
+                                            BackupKeyModule.prepareParams(viewModel.account)
+                                        )
+                                    }
                                 }
-                            }
-                        }
+                            })
                     }
                     KeyActionState.None -> Unit
                 }
 
-                val additionalItems = mutableListOf<@Composable () -> Unit>()
-
-                additionalViewItems.forEach { additionViewItem ->
-                    val token = additionViewItem.token
-                    additionalItems.add {
-                        AccountActionItem(
-                            title = additionViewItem.title,
-                            coinIconUrl = token.coin.iconUrl,
-                            coinIconPlaceholder = token.iconPlaceholder,
-                            badge = additionViewItem.value
-                        )
-                    }
-                }
-
-                if (additionalItems.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(32.dp))
-                    CellSingleLineLawrenceSection(additionalItems)
-                }
-
                 Spacer(modifier = Modifier.height(32.dp))
-                CellSingleLineLawrenceSection {
-                    CellSingleLineLawrence {
+                CellUniversalLawrenceSection(
+                    listOf {
                         RedActionItem(
                             title = stringResource(id = R.string.ManageAccount_Unlink),
                             icon = painterResource(id = R.drawable.ic_delete_20)
@@ -305,8 +288,7 @@ fun ManageAccountScreen(navController: NavController, accountId: String) {
                                 UnlinkAccountDialog.prepareParams(viewModel.account)
                             )
                         }
-                    }
-                }
+                    })
                 Spacer(modifier = Modifier.height(32.dp))
             }
         }
@@ -337,15 +319,9 @@ private fun AccountActionItem(
     badge: String? = null,
     onClick: (() -> Unit)? = null
 ) {
-    val modifier = if (onClick != null) {
-        Modifier.clickable(onClick = onClick)
-    } else {
-        Modifier
-    }
 
-    Row(
-        modifier = modifier.fillMaxSize(),
-        verticalAlignment = Alignment.CenterVertically
+    RowUniversal(
+        onClick = onClick
     ) {
         icon?.let {
             Icon(
@@ -413,11 +389,8 @@ private fun RedActionItem(
     onClick: () -> Unit
 ) {
 
-    Row(
-        modifier = Modifier
-            .fillMaxSize()
-            .clickable(onClick = onClick),
-        verticalAlignment = Alignment.CenterVertically
+    RowUniversal(
+        onClick = onClick
     ) {
         Icon(
             modifier = Modifier.padding(horizontal = 16.dp),

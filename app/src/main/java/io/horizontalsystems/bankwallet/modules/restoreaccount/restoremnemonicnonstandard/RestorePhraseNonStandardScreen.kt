@@ -119,8 +119,17 @@ fun RestorePhraseNonStandard(
                 Spacer(Modifier.height(12.dp))
 
                 InfoText(text = stringResource(R.string.Restore_NonStandard_Description))
+                Spacer(Modifier.height(12.dp))
 
-                Spacer(Modifier.height(20.dp))
+                HeaderText(stringResource(id = R.string.ManageAccount_Name))
+                FormsInput(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    initial = viewModel.accountName,
+                    pasteEnabled = false,
+                    hint = viewModel.defaultName,
+                    onValueChange = viewModel::onEnterName
+                )
+                Spacer(Modifier.height(32.dp))
 
                 Column(
                     modifier = Modifier
@@ -253,14 +262,9 @@ fun RestorePhraseNonStandard(
 
                 Spacer(Modifier.height(24.dp))
 
-                BottomSection(
-                    navController,
-                    viewModel,
-                    uiState,
-                    coroutineScope
-                )
+                BottomSection(viewModel, uiState, coroutineScope)
 
-                Spacer(Modifier.height(32.dp))
+                Spacer(Modifier.height(44.dp))
             }
 
             if (isMnemonicPhraseInputFocused && keyboardState == Keyboard.Opened) {
@@ -292,7 +296,7 @@ fun RestorePhraseNonStandard(
         navController.slideFromRight(
             R.id.restoreSelectCoinsFragment,
             bundleOf(
-                RestoreBlockchainsFragment.ACCOUNT_NAME_KEY to viewModel.defaultName,
+                RestoreBlockchainsFragment.ACCOUNT_NAME_KEY to viewModel.accountName,
                 RestoreBlockchainsFragment.ACCOUNT_TYPE_KEY to accountType,
                 ManageAccountsModule.popOffOnSuccessKey to popUpToInclusiveId,
             )
@@ -324,13 +328,13 @@ fun RestorePhraseNonStandard(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun BottomSection(
-    navController: NavController,
     viewModel: RestoreMnemonicNonStandardViewModel,
     uiState: RestoreMnemonicNonStandardModule.UiState,
     coroutineScope: CoroutineScope,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     var showLanguageSelectorDialog by remember { mutableStateOf(false) }
+    var hidePassphrase by remember { mutableStateOf(true) }
 
     if (showLanguageSelectorDialog) {
         SelectorDialogCompose(
@@ -395,16 +399,23 @@ private fun BottomSection(
     )
 
     if (uiState.passphraseEnabled) {
-        Spacer(modifier = Modifier.height(12.dp))
-        FormsInput(
+        Spacer(modifier = Modifier.height(24.dp))
+        FormsInputPassword(
             modifier = Modifier.padding(horizontal = 16.dp),
             hint = stringResource(R.string.Passphrase),
             state = uiState.passphraseError?.let { DataState.Error(Exception(it)) },
-            pasteEnabled = false,
-            singleLine = true,
             onValueChange = viewModel::onEnterPassphrase,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            hide = hidePassphrase,
+            onToggleHide = {
+                hidePassphrase = !hidePassphrase
+            }
         )
-        InfoText(text = stringResource(R.string.Restore_PassphraseDescription))
+        Spacer(modifier = Modifier.height(16.dp))
+        TextImportantWarning(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = stringResource(R.string.Restore_PassphraseDescription)
+        )
     }
+
 }

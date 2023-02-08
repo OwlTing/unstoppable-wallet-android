@@ -99,7 +99,7 @@ fun TransactionInfoSection(
     navController: NavController,
     getRawTransaction: () -> String?
 ) {
-    CellSingleLineLawrenceSection(
+    CellUniversalLawrenceSection(
         buildList {
             for (viewItem in section) {
                 when (viewItem) {
@@ -125,7 +125,7 @@ fun TransactionInfoSection(
                     }
                     is TransactionInfoViewItem.Address -> {
                         add {
-                            TransactionInfoAddressCell(title = viewItem.title, value = viewItem.value, valueTitle = viewItem.valueTitle)
+                            TransactionInfoAddressCell(title = viewItem.title, value = viewItem.value)
                         }
                     }
                     is TransactionInfoViewItem.Status -> {

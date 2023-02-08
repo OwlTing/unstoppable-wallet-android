@@ -6,13 +6,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.horizontalsystems.bankwallet.core.managers.LanguageManager
 import io.horizontalsystems.bankwallet.entities.DataState
 import io.horizontalsystems.bankwallet.owlwallet.data.OTResult
 import io.horizontalsystems.bankwallet.owlwallet.data.source.OTRepository
 import io.horizontalsystems.bankwallet.owlwallet.data.succeeded
 import io.horizontalsystems.bankwallet.owlwallet.utils.getLangParam
 import io.horizontalsystems.bankwallet.owlwallet.utils.passwordRegex
-import io.horizontalsystems.core.ILanguageManager
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.text.SimpleDateFormat
@@ -39,7 +39,7 @@ sealed class ActionState {
 }
 
 class RegisterViewModel(
-    private val languageManager: ILanguageManager,
+    private val languageManager: LanguageManager,
     private val repo: OTRepository,
 ) : ViewModel() {
 

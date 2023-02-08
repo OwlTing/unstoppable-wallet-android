@@ -39,6 +39,8 @@ class BitcoinAdapter(
 
     override val satoshisInBitcoin: BigDecimal = BigDecimal.valueOf(Math.pow(10.0, decimal.toDouble()))
 
+    override val isMainnet = !testMode
+
     //
     // BitcoinKit Listener
     //

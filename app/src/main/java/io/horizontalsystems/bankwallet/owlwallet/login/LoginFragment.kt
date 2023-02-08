@@ -39,6 +39,7 @@ import io.horizontalsystems.bankwallet.ui.compose.TranslatableString
 import io.horizontalsystems.bankwallet.ui.compose.components.*
 import io.horizontalsystems.core.findNavController
 import io.horizontalsystems.core.helpers.HudHelper
+import io.horizontalsystems.core.SnackbarDuration
 import timber.log.Timber
 
 class LoginFragment : BaseFragment() {
@@ -76,13 +77,13 @@ fun LoginScreen(
                 HudHelper.showInProcessMessage(
                     LocalView.current,
                     R.string.Alert_Loading,
-                    io.horizontalsystems.snackbar.SnackbarDuration.INDEFINITE
+                    SnackbarDuration.INDEFINITE
                 )
             is ActionState.LoginSuccess -> {
                 HudHelper.showSuccessMessage(
                     LocalView.current,
                     stringResource(id = R.string.Auth_Logged_In),
-                    io.horizontalsystems.snackbar.SnackbarDuration.SHORT
+                    SnackbarDuration.SHORT
                 )
                 navController.popBackStack()
                 if (!actionState.isBindingSent) {

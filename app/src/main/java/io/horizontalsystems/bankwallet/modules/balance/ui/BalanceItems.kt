@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import io.horizontalsystems.bankwallet.R
 import io.horizontalsystems.bankwallet.core.slideFromRight
 import io.horizontalsystems.bankwallet.modules.balance.*
@@ -134,7 +133,8 @@ fun BalanceItems(
     viewModel: BalanceViewModel,
     accountViewItem: AccountViewItem,
     navController: NavController,
-    uiState: BalanceUiState
+    uiState: BalanceUiState,
+    totalState: TotalUIState
 ) {
     val rateAppViewModel = viewModel<RateAppViewModel>(factory = RateAppModule.Factory())
     DisposableEffect(true) {
@@ -147,34 +147,35 @@ fun BalanceItems(
     Column {
         val context = LocalContext.current
 
-        when (val totalState = uiState.totalState) {
+        when (totalState) {
             TotalUIState.Hidden -> {
                 DoubleText(
                     title = "*****",
                     body = "*****",
                     dimmed = false,
                     onClickTitle = {
-                        viewModel.onBalanceClick()
+                        viewModel.toggleBalanceVisibility()
                         HudHelper.vibrate(context)
                     },
-                    onClickBody = {
-
+                    onClickSubtitle = {
+                        viewModel.toggleTotalType()
+                        HudHelper.vibrate(context)
                     }
                 )
             }
             is TotalUIState.Visible -> {
                 DoubleText(
-                    title = totalState.currencyValueStr,
-                    body = totalState.coinValueStr,
+                    title = totalState.primaryAmountStr,
+                    body = totalState.secondaryAmountStr,
                     dimmed = totalState.dimmed,
                     onClickTitle = {
-                        viewModel.onBalanceClick()
+                        viewModel.toggleBalanceVisibility()
                         HudHelper.vibrate(context)
                     },
-                    onClickBody = {
+                    onClickSubtitle = {
                         viewModel.toggleTotalType()
                         HudHelper.vibrate(context)
-                    }
+                    },
                 )
             }
         }
@@ -212,9 +213,7 @@ fun BalanceItems(
                     painter = painterResource(R.drawable.icon_binocule_24),
                     contentDescription = "binoculars icon"
                 )
-            }
-
-            if (accountViewItem.manageCoinsAllowed) {
+            } else {
                 ButtonSecondaryCircle(
                     icon = R.drawable.ic_manage_2,
                     onClick = {
@@ -289,7 +288,7 @@ fun Wallets(
     }
 
     HSSwipeRefresh(
-        state = rememberSwipeRefreshState(uiState.isRefreshing),
+        refreshing = uiState.isRefreshing,
         onRefresh = {
             viewModel.onRefresh()
         }

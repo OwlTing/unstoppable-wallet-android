@@ -1,8 +1,10 @@
 package io.horizontalsystems.bankwallet.modules.managewallets
 
 import io.horizontalsystems.bankwallet.core.*
+import io.horizontalsystems.bankwallet.core.managers.EvmTestnetManager
 import io.horizontalsystems.bankwallet.core.managers.MarketKitWrapper
 import io.horizontalsystems.bankwallet.core.managers.RestoreSettings
+import io.horizontalsystems.bankwallet.core.managers.RestoreSettingsManager
 import io.horizontalsystems.bankwallet.entities.Account
 import io.horizontalsystems.bankwallet.entities.AccountType
 import io.horizontalsystems.bankwallet.entities.ConfiguredToken
@@ -17,7 +19,9 @@ class ManageWalletsService(
     private val marketKit: MarketKitWrapper,
     private val walletManager: IWalletManager,
     accountManager: IAccountManager,
-    private val enableCoinService: EnableCoinService
+    private val enableCoinService: EnableCoinService,
+    private val restoreSettingsManager: RestoreSettingsManager,
+    private val evmTestnetManager: EvmTestnetManager,
 ) : Clearable {
 
     val itemsObservable = PublishSubject.create<List<Item>>()
@@ -27,7 +31,6 @@ class ManageWalletsService(
             itemsObservable.onNext(value)
         }
 
-    val cancelEnableCoinObservable = PublishSubject.create<Coin>()
     val accountType: AccountType?
         get() = account?.type
 
@@ -55,12 +58,6 @@ class ManageWalletsService(
                 disposables.add(it)
             }
 
-        enableCoinService.cancelEnableCoinObservable
-            .subscribeIO { fullCoin ->
-                handleCancelEnable(fullCoin)
-            }.let { disposables.add(it) }
-
-
         sync(walletManager.activeWallets)
         syncFullCoins()
         sortFullCoins()
@@ -78,9 +75,10 @@ class ManageWalletsService(
     private fun fetchFullCoins(): List<FullCoin> {
         return if (filter.isBlank()) {
 //            val account = this.account ?: return emptyList()
-//            val featuredFullCoins =
-//                marketKit.fullCoins("", 100).toMutableList()
-//                    .filter { it.eligibleTokens(account.type).isNotEmpty() }
+            val testnetFullCoins = evmTestnetManager.nativeTokens(filter).map { it.fullCoin }
+//            val featuredFullCoins = marketKit.fullCoins("", 100).toMutableList()
+//                .filter { it.eligibleTokens(account.type).isNotEmpty() }
+
             val featuredFullCoins = marketKit.fullCoins(
                 listOf(
                     "ethereum",
@@ -122,19 +120,23 @@ class ManageWalletsService(
                     else -> it
                 }
             }.toMutableList()
+
             val featuredCoins = featuredFullCoins.map { it.coin }
 
             val enabledFullCoins = marketKit.fullCoins(
                 coinUids = wallets.filter { !featuredCoins.contains(it.coin) }.map { it.coin.uid }
             )
             val customFullCoins = wallets.filter { it.token.isCustom }.map { it.token.fullCoin }
-            featuredFullCoins + enabledFullCoins + customFullCoins
+
+            featuredFullCoins + enabledFullCoins + customFullCoins + testnetFullCoins
+
         } else if (isContractAddress(filter)) {
-            val tokens = marketKit.tokens(filter)
+            val tokens = marketKit.tokens(filter) + evmTestnetManager.nativeTokens(filter)
             val coinUids = tokens.map { it.coin.uid }
 
             marketKit.fullCoins(coinUids).toMutableList()
         } else {
+//            marketKit.fullCoins(filter, 20).toMutableList() + evmTestnetManager.nativeTokens(filter).map { it.fullCoin }
             marketKit.fullCoins(filter, 20).toMutableList().filter {
                 listOf(
                     "ethereum",
@@ -143,7 +145,7 @@ class ManageWalletsService(
                     "usd-coin",
                     "bitcoin",
                 ).contains(it.coin.uid)
-            }
+            } + evmTestnetManager.nativeTokens(filter).map { it.fullCoin }
         }
     }
 
@@ -164,23 +166,27 @@ class ManageWalletsService(
         }
     }
 
-    private fun item(fullCoin: FullCoin): Item {
-        val account = account ?: return Item(fullCoin, ItemState.Unsupported)
-
-        val eligibleTokens = fullCoin.eligibleTokens(account.type)
-        val fullCoinWithEligibleTokens = FullCoin(fullCoin.coin, eligibleTokens)
-
-        val itemState = if (eligibleTokens.isEmpty()) {
-            ItemState.Unsupported
-        } else {
-            val enabled = isEnabled(fullCoin.coin)
-            ItemState.Supported(
-                enabled = enabled,
-                hasSettings = enabled && hasSettingsOrPlatforms(eligibleTokens)
-            )
+    private fun item(fullCoin: FullCoin): Item? {
+        if (fullCoin.tokens.isNotEmpty() &&
+            fullCoin.tokens.all { it.blockchain.type is BlockchainType.Unsupported }
+        ) {
+            return null
         }
 
-        return Item(fullCoinWithEligibleTokens, itemState)
+        val accountType = account?.type ?: return null
+
+        val eligibleTokens = fullCoin.eligibleTokens(accountType)
+        if (eligibleTokens.isEmpty()) {
+            return null
+        }
+
+        val enabled = isEnabled(fullCoin.coin)
+        return Item(
+            fullCoin = FullCoin(fullCoin.coin, eligibleTokens),
+            enabled = enabled,
+            hasSettings = enabled && hasSettingsOrPlatforms(eligibleTokens),
+            hasInfo = enabled && fullCoin.tokens.firstOrNull()?.blockchainType == BlockchainType.Zcash
+        )
     }
 
     private fun hasSettingsOrPlatforms(tokens: List<Token>): Boolean {
@@ -193,7 +199,7 @@ class ManageWalletsService(
     }
 
     private fun syncState() {
-        items = fullCoins.map { item(it) }
+        items = fullCoins.mapNotNull { item(it) }
     }
 
     private fun handleUpdated(wallets: List<Wallet>) {
@@ -235,12 +241,6 @@ class ManageWalletsService(
         }
     }
 
-    private fun handleCancelEnable(fullCoin: FullCoin) {
-        if (!isEnabled(fullCoin.coin)) {
-            cancelEnableCoinObservable.onNext(fullCoin.coin)
-        }
-    }
-
     fun setFilter(filter: String) {
         this.filter = filter
 
@@ -271,6 +271,16 @@ class ManageWalletsService(
         enableCoinService.configure(fullCoin, account.type, coinWallets.map { it.configuredToken })
     }
 
+    fun birthdayHeight(uid: String): Pair<Blockchain, Long>? {
+        val token = fullCoins.firstOrNull { it.coin.uid == uid }?.tokens?.firstOrNull() ?: return null
+        val account = this.account ?: return null
+        val settings = restoreSettingsManager.settings(account, token.blockchainType)
+
+        return settings.birthdayHeight?.let {
+            Pair(token.blockchain, it)
+        }
+    }
+
     override fun clear() {
         disposables.clear()
     }
@@ -281,11 +291,8 @@ class ManageWalletsService(
 
     data class Item(
         val fullCoin: FullCoin,
-        val state: ItemState
+        val enabled: Boolean,
+        val hasSettings: Boolean,
+        val hasInfo: Boolean
     )
-
-    sealed class ItemState {
-        object Unsupported : ItemState()
-        class Supported(val enabled: Boolean, val hasSettings: Boolean) : ItemState()
-    }
 }

@@ -120,12 +120,12 @@ fun CountryPickerScreen(
                 ) {
                     items(viewModel.uiState.value.size) { index ->
                         val country = viewModel.uiState.value[index]
-                        CellLawrence(
+                        CellSingleLineLawrence(
                             borderBottom = true,
-                            onClick = {
-                                viewModel.selectCountry(country)
-                                navController.popBackStack()
-                            }
+//                            onClick = {
+//                                viewModel.selectCountry(country)
+//                                navController.popBackStack()
+//                            }
                         ) {
                             AsyncImage(
                                 model = country.flagUrl,

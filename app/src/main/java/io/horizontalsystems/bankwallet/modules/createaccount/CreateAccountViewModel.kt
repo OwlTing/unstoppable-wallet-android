@@ -32,6 +32,11 @@ class CreateAccountViewModel(
 
     val mnemonicKinds = CreateAccountModule.Kind.values().toList()
 
+    val defaultAccountName = accountFactory.getNextAccountName()
+    var accountName: String = defaultAccountName
+        get() = field.ifBlank { defaultAccountName }
+        private set
+
     var selectedKind: CreateAccountModule.Kind = Mnemonic12
         private set
 
@@ -54,7 +59,7 @@ class CreateAccountViewModel(
 
         val accountType = mnemonicAccountType(selectedKind.wordsCount)
         val account = accountFactory.account(
-            accountFactory.getNextAccountName(),
+            accountName,
             accountType,
             AccountOrigin.Created,
             false
@@ -64,6 +69,10 @@ class CreateAccountViewModel(
         activateDefaultWallets(account)
         predefinedBlockchainSettingsProvider.prepareNew(account, BlockchainType.Zcash)
         successMessage = R.string.Hud_Text_Created
+    }
+
+    fun onChangeAccountName(name: String) {
+        accountName = name
     }
 
     fun onChangePassphrase(v: String) {
@@ -129,11 +138,8 @@ class CreateAccountViewModel(
             TokenQuery(BlockchainType.Bitcoin, TokenType.Native),
             TokenQuery(BlockchainType.Ethereum, TokenType.Native),
 //            TokenQuery(BlockchainType.BinanceSmartChain, TokenType.Native),
-            TokenQuery(BlockchainType.Polygon, TokenType.Native),
-            TokenQuery(BlockchainType.Avalanche, TokenType.Native),
-//            TokenQuery(BlockchainType.Optimism, TokenType.Native),
-//            TokenQuery(BlockchainType.ArbitrumOne, TokenType.Native),
-//            TokenQuery(BlockchainType.Zcash, TokenType.Native)
+            TokenQuery(BlockchainType.Ethereum, TokenType.Eip20("0xdac17f958d2ee523a2206206994597c13d831ec7")),
+//            TokenQuery(BlockchainType.BinanceSmartChain, TokenType.Eip20("0xe9e7cea3dedca5984780bafc599bd69add087d56")),
         )
         walletActivator.activateWallets(account, tokenQueries)
     }

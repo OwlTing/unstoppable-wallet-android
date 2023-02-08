@@ -25,7 +25,9 @@ class USDCWalletCreator {
                 App.marketKit,
                 App.walletManager,
                 App.accountManager,
-                enableCoinService
+                enableCoinService,
+                App.restoreSettingsManager,
+                App.evmTestnetManager,
             )
 
             manageWalletsService.getUSDCFullCoin()?.tokens?.forEach { token ->
@@ -40,7 +42,9 @@ class USDCWalletCreator {
                 App.marketKit,
                 App.walletManager,
                 App.accountManager,
-                enableCoinService
+                enableCoinService,
+                App.restoreSettingsManager,
+                App.evmTestnetManager,
             )
 
             manageWalletsService.getUSDCFullCoin()?.tokens?.forEach { token ->

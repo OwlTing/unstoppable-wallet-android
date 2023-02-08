@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
@@ -131,19 +132,16 @@ fun ManageAccountsScreen(navController: NavController, mode: ManageAccountsModul
                         },
                         ActionViewItem(R.drawable.ic_download_20, R.string.ManageAccounts_ImportWallet) {
                             navController.navigateWithTermsAccepted {
-                                navController.slideFromRight(R.id.restoreMnemonicFragment, args)
+                                navController.slideFromRight(R.id.restoreAccountFragment, args)
                             }
                         },
 //                        ActionViewItem(R.drawable.icon_binocule_20, R.string.ManageAccounts_WatchAddress) {
 //                            navController.slideFromRight(R.id.watchAddressFragment, args)
 //                        }
                     )
-                    CellSingleLineLawrenceSection(actions) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clickable(onClick = it.callback),
-                            verticalAlignment = Alignment.CenterVertically
+                    CellUniversalLawrenceSection(actions) {
+                        RowUniversal(
+                            onClick = it.callback
                         ) {
                             Icon(
                                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -155,10 +153,6 @@ fun ManageAccountsScreen(navController: NavController, mode: ManageAccountsModul
                         }
                     }
 
-                    InfoText(
-                        text = stringResource(id = R.string.ManageAccounts_Hint),
-                    )
-
                     Spacer(modifier = Modifier.height(32.dp))
                 }
             }
@@ -168,14 +162,9 @@ fun ManageAccountsScreen(navController: NavController, mode: ManageAccountsModul
 
 @Composable
 private fun AccountsSection(accounts: List<AccountViewItem>, viewModel: ManageAccountsViewModel, navController: NavController) {
-    CellMultilineLawrenceSection(items = accounts) { accountViewItem ->
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .clickable {
-                    viewModel.onSelect(accountViewItem)
-                },
-            verticalAlignment = Alignment.CenterVertically
+    CellUniversalLawrenceSection(items = accounts) { accountViewItem ->
+        RowUniversal(
+            onClick = { viewModel.onSelect(accountViewItem) }
         ) {
             if (accountViewItem.selected) {
                 Icon(

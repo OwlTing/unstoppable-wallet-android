@@ -9,6 +9,7 @@ import io.horizontalsystems.bankwallet.core.IWalletManager
 import io.horizontalsystems.bankwallet.core.subscribeIO
 import io.horizontalsystems.bankwallet.modules.main.MainModule
 import io.horizontalsystems.bankwallet.owlwallet.utils.MainTabManager
+import io.horizontalsystems.bankwallet.modules.settings.main.MainSettingsModule.CounterType
 import io.horizontalsystems.bankwallet.modules.walletconnect.version1.WC1Manager
 import io.horizontalsystems.bankwallet.owlwallet.bindingstatus.ActionState
 import io.horizontalsystems.bankwallet.owlwallet.data.OTResult
@@ -51,10 +52,13 @@ class MainSettingsViewModel(
     val manageWalletShowAlertLiveData = MutableLiveData(shouldShowAlertForManageWallet(service.allBackedUp, service.hasNonStandardAccount))
     val securityCenterShowAlertLiveData = MutableLiveData(!service.isPinSet)
     val aboutAppShowAlertLiveData = MutableLiveData(!service.termsAccepted)
-    val walletConnectSessionCountLiveData = MutableLiveData(service.walletConnectSessionCount)
+    val wcCounterLiveData = MutableLiveData<CounterType?>(null)
     val baseCurrencyLiveData = MutableLiveData(service.baseCurrency)
     val languageLiveData = MutableLiveData(service.currentLanguageDisplayName)
     val appVersion by service::appVersion
+
+    private var wcSessionsCount = service.walletConnectSessionCount
+    private var wc2PendingRequestCount = 0
 
     val loginState: StateFlow<Boolean> = repo.loginStateFlow()
         .stateIn(
@@ -93,9 +97,19 @@ class MainSettingsViewModel(
             .let { disposables.add(it) }
 
         service.walletConnectSessionCountObservable
-            .subscribeIO { walletConnectSessionCountLiveData.postValue(it) }
+            .subscribeIO {
+                wcSessionsCount = it
+                syncCounter()
+            }
             .let { disposables.add(it) }
 
+        viewModelScope.launch {
+            service.pendingRequestCountFlow.collect {
+                wc2PendingRequestCount = it
+                syncCounter()
+            }
+        }
+        syncCounter()
         service.start()
     }
     private fun shouldShowAlertForManageWallet(allBackedUp: Boolean, hasNonStandardAccount: Boolean): Boolean {
@@ -110,6 +124,16 @@ class MainSettingsViewModel(
 
     fun getWalletConnectSupportState(): WC1Manager.SupportState {
         return service.getWalletConnectSupportState()
+    }
+
+    private fun syncCounter() {
+        if (wc2PendingRequestCount > 0) {
+            wcCounterLiveData.postValue(CounterType.PendingRequestCounter(wc2PendingRequestCount))
+        } else if (wcSessionsCount > 0) {
+            wcCounterLiveData.postValue(CounterType.SessionCounter(wcSessionsCount))
+        } else {
+            wcCounterLiveData.postValue(null)
+        }
     }
 
     fun canLogin(): Boolean {

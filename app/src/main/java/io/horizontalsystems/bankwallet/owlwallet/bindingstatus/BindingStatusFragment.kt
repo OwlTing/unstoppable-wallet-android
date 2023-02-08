@@ -29,6 +29,7 @@ import io.horizontalsystems.bankwallet.ui.compose.TranslatableString
 import io.horizontalsystems.bankwallet.ui.compose.components.*
 import io.horizontalsystems.core.findNavController
 import io.horizontalsystems.core.helpers.HudHelper
+import io.horizontalsystems.core.SnackbarDuration
 
 class BindingStatusFragment : BaseFragment() {
 
@@ -61,13 +62,13 @@ fun BindingStatusScreen(
                 HudHelper.showInProcessMessage(
                     LocalView.current,
                     R.string.Alert_Loading,
-                    io.horizontalsystems.snackbar.SnackbarDuration.INDEFINITE
+                    SnackbarDuration.INDEFINITE
                 )
             is ActionState.UnbindAllSuccess -> {
                 HudHelper.showSuccessMessage(
                     LocalView.current,
                     stringResource(id = R.string.Binding_Unbind),
-                    io.horizontalsystems.snackbar.SnackbarDuration.SHORT
+                    SnackbarDuration.SHORT
                 )
                 navController.popBackStack()
             }

@@ -3,13 +3,13 @@ package io.horizontalsystems.bankwallet.owlwallet.countrypicker
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.horizontalsystems.bankwallet.core.managers.LanguageManager
 import io.horizontalsystems.bankwallet.owlwallet.data.OTResult
 import io.horizontalsystems.bankwallet.owlwallet.data.source.OTRepository
 import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.Country
 import io.horizontalsystems.bankwallet.owlwallet.data.succeeded
 import io.horizontalsystems.bankwallet.owlwallet.utils.PreferenceHelper
 import io.horizontalsystems.bankwallet.owlwallet.utils.getLangParam
-import io.horizontalsystems.core.ILanguageManager
 import kotlinx.coroutines.launch
 
 sealed class ActionState {
@@ -18,7 +18,7 @@ sealed class ActionState {
 }
 
 class CountryPickerViewModel(
-    private val languageManager: ILanguageManager,
+    private val languageManager: LanguageManager,
     private val repo: OTRepository,
     private val prefs: PreferenceHelper,
 ) : ViewModel() {
