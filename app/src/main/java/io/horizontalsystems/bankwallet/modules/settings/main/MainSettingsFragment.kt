@@ -86,7 +86,7 @@ private fun SettingsScreen(
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 Spacer(modifier = Modifier.height(12.dp))
                 SettingSections(viewModel, navController)
-//                OwlTingSections(viewModel, navController)
+                OwlTingSections(viewModel, navController)
                 SettingsFooter(viewModel)
             }
         }
@@ -304,6 +304,7 @@ private fun OwlTingSections(
     }
 
     val showNoWalletDialog = remember { mutableStateOf(false) }
+    val showNoEvmDialog = remember { mutableStateOf(false) }
     val stateString = when (verifyState) {
         VerifyState.VERIFIED -> stringResource(id = R.string.Binding_Status_Bound)
         VerifyState.UNVERIFIED -> stringResource(id = R.string.Binding_Status_Verifying)
@@ -323,16 +324,20 @@ private fun OwlTingSections(
                 valueType = stateType,
                 onClick = {
                     if (viewModel.canLogin()) {
-                        if (loginState) {
-                            when (verifyState) {
-                                VerifyState.VERIFIED -> navController.slideFromRight(R.id.bindingStatusFragment)
-                                VerifyState.REJECTED, VerifyState.UNFINISHED, VerifyState.NOT_FOUND -> navController.slideFromRight(
-                                    R.id.bindingFormFragment
-                                )
-                                else -> {}
+                        if (viewModel.canBind()) {
+                            if (loginState) {
+                                when (verifyState) {
+                                    VerifyState.VERIFIED -> navController.slideFromRight(R.id.bindingStatusFragment)
+                                    VerifyState.REJECTED, VerifyState.UNFINISHED, VerifyState.NOT_FOUND -> navController.slideFromRight(
+                                        R.id.bindingFormFragment
+                                    )
+                                    else -> {}
+                                }
+                            } else {
+                                navController.slideFromRight(R.id.loginFragment)
                             }
                         } else {
-                            navController.slideFromRight(R.id.loginFragment)
+                            showNoEvmDialog.value = true
                         }
                     } else {
                         showNoWalletDialog.value = true
@@ -357,7 +362,11 @@ private fun OwlTingSections(
             title = stringResource(R.string.Settings_Login_Binding),
             onClick = {
                 if (viewModel.canLogin()) {
-                    navController.slideFromRight(R.id.loginFragment)
+                    if (viewModel.canBind()) {
+                        navController.slideFromRight(R.id.loginFragment)
+                    } else {
+                        showNoEvmDialog.value = true
+                    }
                 } else {
                     showNoWalletDialog.value = true
                 }
@@ -397,6 +406,22 @@ private fun OwlTingSections(
                 showNoWalletDialog.value = false
             },
             onDismiss = { showNoWalletDialog.value = false }
+        )
+    }
+    if (showNoEvmDialog.value) {
+        SimpleAlertDialog(
+            title = stringResource(R.string.Settings_No_Evm_Wallet_Title),
+            message = stringResource(id = R.string.Settings_No_Evm_Wallet_Description),
+            positiveOption = stringResource(id = R.string.Settings_No_Wallet_Confirm),
+            onPositiveClick = {
+                showNoEvmDialog.value = false
+                viewModel.setCurrentTab(MainModule.MainTab.Balance)
+            },
+            negativeOption = stringResource(id = R.string.Settings_No_Wallet_Cancel),
+            onNegativeClick = {
+                showNoEvmDialog.value = false
+            },
+            onDismiss = { showNoEvmDialog.value = false }
         )
     }
 }

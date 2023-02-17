@@ -1231,12 +1231,13 @@
     <string name="Binding_Rebind_Description">需重新填写审核\n包含已确认的你确定进行？</string>
     <string name="Binding_Back">返回</string>
     <string name="Binding_Rebind">将帐号重新绑定？</string>
+    <string name="Binding_Only_Support_Evm">目前仅支援兼容乙太坊虚拟机(EVM)之项目同步至 OwlTing，因此部分选项无法选取</string>
     <string name="Settings_Register">註册</string>
     <string name="Settings_Register_Title">註册 OwlTing 会员</string>
     <string name="Register_Display_Name">会员显示名称</string>
     <string name="Register_Display_Name_Hint">登入后的显示</string>
     <string name="Register_Email">Email</string>
-    <string name="Register_Email_Hint">登入使用</string>
+    <string name="Register_Email_Hint">您注册的 Email</string>
     <string name="Auth_Invalid_Email">Email 格式错误</string>
     <string name="Register_Password">密码</string>
     <string name="Register_Password_Hint">登入密码</string>
@@ -1265,6 +1266,8 @@
     <string name="Settings_Account_Deleted_Error">该用户已终止使用此服务</string>
     <string name="Settings_No_Wallet_Title">尚未创建或新增代币</string>
     <string name="Settings_No_Wallet_Description">请先创建钱包并新增代币后再次尝试</string>
+    <string name="Settings_No_Evm_Wallet_Title">无法进行绑定</string>
+    <string name="Settings_No_Evm_Wallet_Description">目前仅支援兼容乙太坊虚拟机(EVM)之项目同步至 OwlTing，请先新增后再次操作</string>
     <string name="Settings_No_Wallet_Confirm">前往</string>
     <string name="Settings_No_Wallet_Cancel">取消</string>
     <string name="Settings_Delete_Account">删除帐号</string>

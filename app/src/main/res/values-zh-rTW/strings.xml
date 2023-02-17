@@ -1231,12 +1231,13 @@
     <string name="Binding_Rebind_Description">需重新填寫審核\n包含已確認的你確定進行？ </string>
     <string name="Binding_Back">返回</string>
     <string name="Binding_Rebind">將帳號重新綁定？ </string>
+    <string name="Binding_Only_Support_Evm">目前僅支援兼容乙太坊虛擬機(EVM)之項目同步至 OwlTing，因此部分選項無法選取</string>
     <string name="Settings_Register">註冊</string>
     <string name="Settings_Register_Title">註冊OwlTing 會員</string>
     <string name="Register_Display_Name">會員顯示名稱</string>
     <string name="Register_Display_Name_Hint">登入後的顯示</string>
     <string name="Register_Email"> Email </string>
-    <string name="Register_Email_Hint">登入使用</string>
+    <string name="Register_Email_Hint">您註冊的 Email</string>
     <string name="Auth_Invalid_Email"> Email 格式錯誤</string>
     <string name="Register_Password">密碼</string>
     <string name="Register_Password_Hint">登入密碼</string>
@@ -1265,6 +1266,8 @@
     <string name="Settings_Account_Deleted_Error">該用戶已終止使用此服務</string>
     <string name="Settings_No_Wallet_Title">尚未創建或新增代幣</string>
     <string name="Settings_No_Wallet_Description">請先創建錢包並新增代幣後再次嘗試</string>
+    <string name="Settings_No_Evm_Wallet_Title">無法進行綁定</string>
+    <string name="Settings_No_Evm_Wallet_Description">目前僅支援兼容乙太坊虛擬機(EVM)之項目同步至 OwlTing，請先新增後再次操作</string>
     <string name="Settings_No_Wallet_Confirm">前往</string>
     <string name="Settings_No_Wallet_Cancel">取消</string>
     <string name="Settings_Delete_Account">刪除帳號</string>

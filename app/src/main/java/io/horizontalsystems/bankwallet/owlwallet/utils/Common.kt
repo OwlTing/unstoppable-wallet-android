@@ -1,5 +1,6 @@
 package io.horizontalsystems.bankwallet.owlwallet.utils
 
+import io.horizontalsystems.bankwallet.entities.Wallet
 import io.horizontalsystems.marketkit.models.BlockchainType
 
 val passwordRegex = Regex("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}\$")
@@ -16,4 +17,8 @@ fun getBlockchainTypeByNetwork(network: String) = when (network) {
     "Avalanche" -> BlockchainType.Avalanche
     "Polygon" -> BlockchainType.Polygon
     else -> throw IllegalArgumentException("Unsupported network type $network")
+}
+
+fun isWalletSupported(wallet: Wallet): Boolean {
+    return wallet.coin.code == "ETH" || wallet.coin.code == "MATIC" || wallet.coin.code == "AVAX" || wallet.coin.code == "USDC"
 }

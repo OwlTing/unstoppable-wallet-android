@@ -1446,7 +1446,7 @@
     <string name="Register_Privacy_Hint" translatable="false">I have read and agree to </string>
     <string name="Binding_Kyc_Nationality" translatable="false">Nationality</string>
     <string name="Binding_Kyc_Nationality_Hint" translatable="false">Search</string>
-    <string name="Binding_Status_Bound" translatable="false">Successfully bound</string>
+    <string name="Binding_Status_Bound" translatable="false">Bound</string>
     <string name="Binding_Status_Verifying" translatable="false">Reviewing</string>
     <string name="Binding_Status_Unbound" translatable="false">Not bound</string>
     <string name="Binding_Status_Reject" translatable="false">Rejected</string>
@@ -1455,14 +1455,14 @@
     <string name="Binding_Title" translatable="false">Account binding</string>
     <string name="Binding_Sent_Title" translatable="false">Send</string>
     <string name="Binding_Sent_Description" translatable="false">We have received your information and will process your request shortly!</string>
-    <string name="Binding_Reject_Description" translatable="false">您的資料被判定駁回，請重新填寫</string>
+    <string name="Binding_Reject_Description" translatable="false">Your account binding submission has been rejected. Please re-submit the information.</string>
     <string name="Binding_Kyc_Nationality_All" translatable="false">All Countries</string>
     <string name="Binding_Kyc_Nationality_Results" translatable="false">Search Results</string>
     <string name="Binding_Confirm" translatable="false">Confirm</string>
     <string name="Binding_Kyc_Name" translatable="false">Full Name</string>
     <string name="Binding_Kyc_Birth" translatable="false">Birthday</string>
     <string name="Binding_Wallet_Account_Title" translatable="false">Select the chain you want to bind:</string>
-    <string name="Binding_Status_Not_IN_Wallet" translatable="false">Does not exist in this wallet</string>
+    <string name="Binding_Status_Not_IN_Wallet" translatable="false">Not in wallet</string>
     <string name="Binding_Unbind_Description" translatable="false">Are you sure to unbind?</string>
     <string name="Binding_Unbind" translatable="false">Unbind</string>
     <string name="Binding_Cancel" translatable="false">Cancel</string>
@@ -1470,12 +1470,13 @@
     <string name="Binding_Rebind_Description" translatable="false">You will need to fill in the information and be verified again if you unbind the account. Are you sure to unbind?</string>
     <string name="Binding_Back" translatable="false">Back</string>
     <string name="Binding_Rebind" translatable="false">Bind your account again?</string>
+    <string name="Binding_Only_Support_Evm" translatable="false">Currently, only Ethereum Virtual Machine (EVM) supported blockchain can be synced to OwlTing. Some blockchains are not available now</string>
     <string name="Settings_Register" translatable="false">Register</string>
     <string name="Settings_Register_Title" translatable="false">Register OwlTing Member</string>
     <string name="Register_Display_Name" translatable="false">Display name</string>
     <string name="Register_Display_Name_Hint" translatable="false">Display name after login</string>
     <string name="Register_Email" translatable="false">Email</string>
-    <string name="Register_Email_Hint" translatable="false">Sign in to use the OwlTing Wallet app</string>
+    <string name="Register_Email_Hint" translatable="false">Your registered email</string>
     <string name="Auth_Invalid_Email" translatable="false">Invalid Email</string>
     <string name="Register_Password" translatable="false">Password</string>
     <string name="Register_Password_Hint" translatable="false">Sign-in password</string>
@@ -1504,6 +1505,8 @@
     <string name="Settings_Account_Deleted_Error" translatable="false">The user has terminated this service</string>
     <string name="Settings_No_Wallet_Title" translatable="false">No wallet or token added</string>
     <string name="Settings_No_Wallet_Description" translatable="false">Please set up the wallet and add the token,then retry again</string>
+    <string name="Settings_No_Evm_Wallet_Title" translatable="false">Unable to bind the account</string>
+    <string name="Settings_No_Evm_Wallet_Description" translatable="false">Currently, only Ethereum Virtual Machine (EVM) supported blockchain can be synced to OwlTing. Please add another blockchain and try again.</string>
     <string name="Settings_No_Wallet_Confirm" translatable="false">Go</string>
     <string name="Settings_No_Wallet_Cancel" translatable="false">Cancel</string>
     <string name="Settings_Delete_Account" translatable="false">Delete the account</string>
