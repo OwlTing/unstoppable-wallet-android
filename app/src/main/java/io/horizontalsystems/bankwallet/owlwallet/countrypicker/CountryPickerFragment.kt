@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.ComposeView
@@ -29,7 +31,10 @@ import io.horizontalsystems.bankwallet.R
 import io.horizontalsystems.bankwallet.core.BaseFragment
 import io.horizontalsystems.bankwallet.ui.compose.ComposeAppTheme
 import io.horizontalsystems.bankwallet.ui.compose.TranslatableString
-import io.horizontalsystems.bankwallet.ui.compose.components.*
+import io.horizontalsystems.bankwallet.ui.compose.components.AppBar
+import io.horizontalsystems.bankwallet.ui.compose.components.FormsInput
+import io.horizontalsystems.bankwallet.ui.compose.components.HsIconButton
+import io.horizontalsystems.bankwallet.ui.compose.components.subhead2_leah
 import io.horizontalsystems.core.findNavController
 
 class CountryPickerFragment : BaseFragment() {
@@ -120,24 +125,44 @@ fun CountryPickerScreen(
                 ) {
                     items(viewModel.uiState.value.size) { index ->
                         val country = viewModel.uiState.value[index]
-                        CellSingleLineLawrence(
-                            borderBottom = true,
-//                            onClick = {
-//                                viewModel.selectCountry(country)
-//                                navController.popBackStack()
-//                            }
-                        ) {
-                            AsyncImage(
-                                model = country.flagUrl,
-                                contentDescription = "",
-                                modifier = Modifier.size(32.dp)
-                            )
 
-                            Spacer(modifier = Modifier.width(16.dp))
-                            subhead2_leah(
-                                text = country.name,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp)
+                                .clickable {
+                                    viewModel.selectCountry(country)
+                                    navController.popBackStack()
+                                }
+                                .background(color = ComposeAppTheme.colors.lawrence)
+                        ) {
+                            Box(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxSize(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Spacer(modifier = Modifier.width(16.dp))
+                                    AsyncImage(
+                                        model = country.flagUrl,
+                                        contentDescription = "",
+                                        modifier = Modifier.size(32.dp)
+                                    )
+
+                                    Spacer(modifier = Modifier.width(16.dp))
+                                    subhead2_leah(
+                                        text = country.name,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+
+                                }
+                            }
+                            Divider(
+                                thickness = 1.dp,
+                                color = ComposeAppTheme.colors.steel10,
+//                                modifier = Modifier.align(Alignment.Bottom)
                             )
                         }
                     }

@@ -1212,7 +1212,7 @@
     <string name="Binding_Status_Unbound">未綁定</string>
     <string name="Binding_Status_Reject">駁回</string>
     <string name="Binding_Description_Finished">您的個人真實基本資料已驗證</string>
-    <string name="Binding_Description">將你的OwlPay 帳號綁定Wallet\n請填寫您個人真實基本資料提供綁定審核</string>
+    <string name="Binding_Description">將你的OwlPay 帳號綁定 OwlTing Wallet\n請填寫您個人真實基本資料提供綁定審核</string>
     <string name="Binding_Title">帳號綁定</string>
     <string name="Binding_Sent_Title">送出審核</string>
     <string name="Binding_Sent_Description">請耐心等待審核，我們將儘速處理</string>

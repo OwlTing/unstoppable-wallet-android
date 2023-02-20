@@ -23,7 +23,8 @@ fun GenderOptionsSection(
 
         Row(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .height(40.dp)
                 .clickable {
                     viewModel.onGenderOptionChanged(GenderOption.MALE)
                 }
@@ -44,7 +45,8 @@ fun GenderOptionsSection(
 
         Row(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .height(40.dp)
                 .clickable {
                     viewModel.onGenderOptionChanged(GenderOption.FEMALE)
                 }
@@ -65,7 +67,8 @@ fun GenderOptionsSection(
 
         Row(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .height(40.dp)
                 .clickable {
                     viewModel.onGenderOptionChanged(GenderOption.RATHER_NOT_SAY)
                 }

@@ -20,6 +20,7 @@ import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.Chain
 import io.horizontalsystems.bankwallet.owlwallet.data.succeeded
 import io.horizontalsystems.bankwallet.owlwallet.utils.PreferenceHelper
 import io.horizontalsystems.bankwallet.owlwallet.utils.getBlockchainTypeByNetwork
+import io.horizontalsystems.bankwallet.owlwallet.utils.isWalletSupported
 import io.horizontalsystems.marketkit.models.BlockchainType
 import io.horizontalsystems.marketkit.models.FullCoin
 import io.horizontalsystems.marketkit.models.Token
@@ -66,7 +67,9 @@ class BindingStatusViewModel(
             fullCoins.addAll(fetchFullCoins())
             val account = accountManager.activeAccount
             if (account != null) {
-                val wallets = walletManager.getWallets(account)
+                val wallets = walletManager.getWallets(account).filter {
+                    isWalletSupported(it)
+                }
 
                 if (wallets.isNotEmpty()) {
                     val userChains: MutableList<Chain> =
