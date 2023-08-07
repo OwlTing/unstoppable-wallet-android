@@ -178,7 +178,7 @@ class MainSettingsViewModel(
         }
     }
 
-    fun setCurrentTab(tab: MainModule.MainTab) {
+    fun setCurrentTab(tab: MainModule.MainNavigation) {
         mainTabManager.setCurrentTab(tab)
     }
 }

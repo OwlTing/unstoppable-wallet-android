@@ -13,23 +13,27 @@ import io.horizontalsystems.bitcoincore.models.BlockInfo
 import io.horizontalsystems.bitcoincore.models.TransactionInfo
 import io.horizontalsystems.bitcoinkit.BitcoinKit
 import io.horizontalsystems.bitcoinkit.BitcoinKit.NetworkType
+import io.horizontalsystems.bitcoinkit.BuildConfig
 import io.horizontalsystems.core.BackgroundManager
 import io.horizontalsystems.marketkit.models.BlockchainType
 import timber.log.Timber
 import java.math.BigDecimal
 
 class BitcoinAdapter(
-        override val kit: BitcoinKit,
-        syncMode: BitcoinCore.SyncMode,
-        backgroundManager: BackgroundManager,
-        wallet: Wallet,
-        testMode: Boolean
-) : BitcoinBaseAdapter(kit, syncMode, backgroundManager, wallet, testMode), BitcoinKit.Listener, ISendBitcoinAdapter {
+    override val kit: BitcoinKit,
+    syncMode: BitcoinCore.SyncMode,
+    backgroundManager: BackgroundManager,
+    wallet: Wallet,
+) : BitcoinBaseAdapter(kit, syncMode, backgroundManager, wallet, confirmationsThreshold), BitcoinKit.Listener, ISendBitcoinAdapter {
 
-    constructor(wallet: Wallet, syncMode: BitcoinCore.SyncMode, testMode: Boolean, backgroundManager: BackgroundManager) : this(createKit(wallet, syncMode, testMode), syncMode, backgroundManager, wallet, testMode)
+    constructor(wallet: Wallet, syncMode: BitcoinCore.SyncMode, backgroundManager: BackgroundManager) : this(
+        createKit(wallet, syncMode),
+        syncMode,
+        backgroundManager,
+        wallet
+    )
 
     init {
-        Timber.d("init with testMode: $testMode")
         kit.listener = this
     }
 
@@ -39,8 +43,6 @@ class BitcoinAdapter(
 
     override val satoshisInBitcoin: BigDecimal = BigDecimal.valueOf(Math.pow(10.0, decimal.toDouble()))
 
-    override val isMainnet = !testMode
-
     //
     // BitcoinKit Listener
     //
@@ -49,8 +51,8 @@ class BitcoinAdapter(
         get() = "blockchair.com"
 
 
-    override fun getTransactionUrl(transactionHash: String): String? =
-        if (testMode) null else "https://blockchair.com/bitcoin/transaction/$transactionHash"
+    override fun getTransactionUrl(transactionHash: String): String =
+        "https://blockchair.com/bitcoin/transaction/$transactionHash"
 
     override fun onBalanceUpdate(balance: BalanceInfo) {
         balanceUpdatedSubject.onNext(Unit)
@@ -86,22 +88,22 @@ class BitcoinAdapter(
 
 
     companion object {
+        private const val confirmationsThreshold = 3
 
-        private fun getNetworkType(testMode: Boolean) =
-                if (testMode) NetworkType.TestNet else NetworkType.MainNet
-
-        private fun createKit(wallet: Wallet, syncMode: BitcoinCore.SyncMode, testMode: Boolean): BitcoinKit {
+        private fun createKit(wallet: Wallet, syncMode: BitcoinCore.SyncMode): BitcoinKit {
             val account = wallet.account
-            val accountType = account.type
 
-            when (accountType) {
+            when (val accountType = account.type) {
                 is AccountType.HdExtendedKey -> {
+                    val derivation = wallet.coinSettings.derivation ?: throw AdapterErrorWrongParameters("Derivation not set")
+
                     return BitcoinKit(
                         context = App.instance,
                         extendedKey = accountType.hdExtendedKey,
+                        purpose = derivation.purpose,
                         walletId = account.id,
                         syncMode = syncMode,
-                        networkType = getNetworkType(testMode),
+                        networkType = if (BuildConfig.DEBUG) NetworkType.TestNet else NetworkType.MainNet,
                         confirmationsThreshold = confirmationsThreshold
                     )
                 }
@@ -114,9 +116,9 @@ class BitcoinAdapter(
                         passphrase = accountType.passphrase,
                         walletId = account.id,
                         syncMode = syncMode,
-                        networkType = getNetworkType(testMode),
+                        networkType = if (BuildConfig.DEBUG) NetworkType.TestNet else NetworkType.MainNet,
                         confirmationsThreshold = confirmationsThreshold,
-                        purpose = getPurpose(derivation)
+                        purpose = derivation.purpose
                     )
                 }
                 else -> throw UnsupportedAccountException()
@@ -124,8 +126,8 @@ class BitcoinAdapter(
 
         }
 
-        fun clear(walletId: String, testMode: Boolean) {
-            BitcoinKit.clear(App.instance, getNetworkType(testMode), walletId)
+        fun clear(walletId: String) {
+            BitcoinKit.clear(App.instance, NetworkType.MainNet, walletId)
         }
     }
 }

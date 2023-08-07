@@ -26,9 +26,7 @@ class USDCWalletCreator {
                 App.marketKit,
                 App.walletManager,
                 App.accountManager,
-                enableCoinService,
-                App.restoreSettingsManager,
-                App.evmTestnetManager,
+                restoreSettingsService,
             )
 
             manageWalletsService.getUSDCFullCoin()?.tokens?.forEach { token ->
@@ -41,13 +39,14 @@ class USDCWalletCreator {
 
         fun create(account: Account, blockchains: List<BlockchainType>, enableCoinService: EnableCoinService): List<Wallet> {
             val wallets = mutableListOf<Wallet>()
+
+            val restoreSettingsService =
+                RestoreSettingsService(App.restoreSettingsManager, App.zcashBirthdayProvider)
             val manageWalletsService = ManageWalletsService(
                 App.marketKit,
                 App.walletManager,
                 App.accountManager,
-                enableCoinService,
-                App.restoreSettingsManager,
-                App.evmTestnetManager,
+                restoreSettingsService,
             )
 
             manageWalletsService.getUSDCFullCoin()?.tokens?.forEach { token ->

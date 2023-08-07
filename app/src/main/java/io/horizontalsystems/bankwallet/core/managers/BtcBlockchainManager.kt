@@ -27,6 +27,7 @@ class BtcBlockchainManager(
 //        BlockchainType.BitcoinCash,
 //        BlockchainType.Litecoin,
 //        BlockchainType.Dash,
+//        BlockchainType.ECash,
     )
 
     val allBlockchains = marketKit.blockchains(blockchainTypes.map { it.uid })

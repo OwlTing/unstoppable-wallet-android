@@ -103,11 +103,12 @@ fun WalletOption(
                 },
             )
             Spacer(Modifier.width(20.dp))
-            CoinImage(
-                iconUrl = wallet.coin.iconUrl,
-                placeholder = wallet.token.iconPlaceholder,
-                modifier = Modifier.size(24.dp)
-            )
+            // wallet.coin.iconUrl is missing
+//            CoinImage(
+//                iconUrl = wallet.coin.iconUrl,
+//                placeholder = wallet.token.iconPlaceholder,
+//                modifier = Modifier.size(24.dp)
+//            )
             Spacer(Modifier.width(10.dp))
             headline2_leah(
                 text = wallet.coin.code,

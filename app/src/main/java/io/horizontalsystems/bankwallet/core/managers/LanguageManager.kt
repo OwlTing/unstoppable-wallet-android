@@ -2,11 +2,12 @@ package io.horizontalsystems.bankwallet.core.managers
 
 import io.horizontalsystems.bankwallet.core.App
 import timber.log.Timber
+import io.horizontalsystems.core.helpers.LocaleHelper
 import java.util.*
 
 class LanguageManager {
 
-    var fallbackLocale: Locale = Locale.ENGLISH
+    val fallbackLocale by LocaleHelper::fallbackLocale
 
     var currentLocale: Locale = App.instance.getLocale()
         set(value) {

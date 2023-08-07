@@ -33,11 +33,12 @@ fun BindingStatusItem(
             .background(ComposeAppTheme.colors.lawrence)
             .padding(16.dp)
     ) {
-        CoinImage(
-            iconUrl = item.wallet.coin.iconUrl,
-            placeholder = item.wallet.token.iconPlaceholder,
-            modifier = Modifier.size(24.dp)
-        )
+        // wallet.coin.iconUrl is missing
+//        CoinImage(
+//            iconUrl = item.wallet.coin.iconUrl,
+//            placeholder = item.wallet.token.iconPlaceholder,
+//            modifier = Modifier.size(24.dp)
+//        )
         Spacer(Modifier.width(10.dp))
         headline2_leah(
             text = item.wallet.coin.code,
