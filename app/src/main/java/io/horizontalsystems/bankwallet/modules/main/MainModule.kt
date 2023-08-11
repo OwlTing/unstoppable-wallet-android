@@ -11,6 +11,7 @@ import io.horizontalsystems.bankwallet.R
 import io.horizontalsystems.bankwallet.core.App
 import io.horizontalsystems.bankwallet.entities.Account
 import io.horizontalsystems.bankwallet.modules.walletconnect.version1.WC1Manager
+import io.horizontalsystems.bankwallet.owlwallet.utils.UpdateAction
 import kotlinx.parcelize.Parcelize
 
 object MainModule {
@@ -85,6 +86,7 @@ object MainModule {
         val showWhatsNew: Boolean,
         val activeWallet: Account?,
         val torEnabled: Boolean,
-        val wcSupportState: WC1Manager.SupportState?
+        val wcSupportState: WC1Manager.SupportState?,
+        val versionCheckAction: UpdateAction,
     )
 }

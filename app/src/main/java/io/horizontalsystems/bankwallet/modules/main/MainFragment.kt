@@ -39,7 +39,6 @@ import io.horizontalsystems.bankwallet.modules.manageaccount.dialogs.BackupRequi
 import io.horizontalsystems.bankwallet.modules.market.MarketScreen
 import io.horizontalsystems.bankwallet.modules.rateapp.RateApp
 import io.horizontalsystems.bankwallet.modules.releasenotes.ReleaseNotesFragment
-import io.horizontalsystems.bankwallet.ui.VersionCheckDialogFragment
 import io.horizontalsystems.bankwallet.owlwallet.utils.UpdateAction
 import io.horizontalsystems.bankwallet.modules.rooteddevice.RootedDeviceModule
 import io.horizontalsystems.bankwallet.modules.rooteddevice.RootedDeviceScreen
@@ -49,6 +48,7 @@ import io.horizontalsystems.bankwallet.modules.tor.TorStatusView
 import io.horizontalsystems.bankwallet.modules.transactions.TransactionsModule
 import io.horizontalsystems.bankwallet.modules.transactions.TransactionsScreen
 import io.horizontalsystems.bankwallet.modules.transactions.TransactionsViewModel
+import io.horizontalsystems.bankwallet.modules.versioncheck.VersionCheck
 import io.horizontalsystems.bankwallet.modules.walletconnect.WCAccountTypeNotSupportedDialog
 import io.horizontalsystems.bankwallet.modules.walletconnect.version1.WC1Manager.SupportState
 import io.horizontalsystems.bankwallet.ui.compose.ComposeAppTheme
@@ -58,9 +58,8 @@ import io.horizontalsystems.bankwallet.ui.compose.components.HsBottomNavigationI
 import io.horizontalsystems.bankwallet.ui.extensions.WalletSwitchBottomSheet
 import io.horizontalsystems.core.findNavController
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
-class MainFragment : BaseFragment(), VersionCheckDialogFragment.Listener {
+class MainFragment : BaseFragment() {
 
     private val transactionsViewModel by navGraphViewModels<TransactionsViewModel>(R.id.mainFragment) { TransactionsModule.Factory() }
 
@@ -102,12 +101,6 @@ class MainFragment : BaseFragment(), VersionCheckDialogFragment.Listener {
             RateAppManager.openPlayMarket(context)
         }
     }
-
-    override fun onVersionCheckUpdateClick() {
-        openAppInPlayMarket()
-    }
-
-    override fun onVersionCheckCancelClick() {}
 }
 
 @Composable
@@ -290,6 +283,20 @@ private fun MainScreen(
         viewModel.wcSupportStateHandled()
     }
 
+    if (uiState.versionCheckAction != UpdateAction.Nothing) {
+        val context = LocalContext.current
+        VersionCheck(
+            updateAction = uiState.versionCheckAction,
+            onUpdateClick = {
+                RateAppManager.openPlayMarket(context)
+                if (uiState.versionCheckAction == UpdateAction.Flexible) {
+                    viewModel.closeVersionCheckDialog()
+                }
+            },
+            onCancelClick = { viewModel.closeVersionCheckDialog() }
+        )
+    }
+
     DisposableLifecycleCallbacks(
         onResume = viewModel::onResume,
     )
@@ -302,7 +309,10 @@ private fun HideContentBox(contentHidden: Boolean) {
     } else {
         Modifier
     }
-    Box(Modifier.fillMaxSize().then(backgroundModifier))
+    Box(
+        Modifier
+            .fillMaxSize()
+            .then(backgroundModifier))
 }
 
 @Composable

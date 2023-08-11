@@ -1,23 +1,15 @@
-package io.horizontalsystems.bankwallet.ui
+package io.horizontalsystems.bankwallet.modules.versioncheck
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
+import androidx.compose.ui.window.Dialog
 import io.horizontalsystems.bankwallet.R
 import io.horizontalsystems.bankwallet.owlwallet.utils.UpdateAction
 import io.horizontalsystems.bankwallet.ui.compose.ComposeAppTheme
@@ -26,68 +18,15 @@ import io.horizontalsystems.bankwallet.ui.compose.components.ButtonPrimaryYellow
 import io.horizontalsystems.bankwallet.ui.compose.components.body_leah
 import io.horizontalsystems.bankwallet.ui.compose.components.title3_leah
 
-class VersionCheckDialogFragment(
-    private val updateAction: UpdateAction,
-    private var listener: Listener? = null
-) : DialogFragment() {
-
-    interface Listener {
-        fun onVersionCheckUpdateClick()
-        fun onVersionCheckCancelClick()
-    }
-
-    override fun getTheme(): Int {
-        return R.style.AlertDialog
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        isCancelable = updateAction != UpdateAction.Immediate
-        return ComposeView(requireContext()).apply {
-            setViewCompositionStrategy(
-                ViewCompositionStrategy.DisposeOnLifecycleDestroyed(viewLifecycleOwner)
-            )
-            setContent {
-                VersionCheck(
-                    updateAction = updateAction,
-                    onUpdateClick = {
-                        listener?.onVersionCheckUpdateClick()
-                        dismiss()
-                    },
-                    onCancelClick = {
-                        listener?.onVersionCheckCancelClick()
-                        dismiss()
-                    }
-                )
-            }
-        }
-    }
-
-    companion object {
-        fun show(
-            activity: FragmentActivity,
-            updateAction: UpdateAction,
-            listener: Listener? = null
-        ) {
-            val fragmentManager: FragmentManager = activity.supportFragmentManager
-            VersionCheckDialogFragment(updateAction, listener).show(
-                fragmentManager,
-                "VersionCheck"
-            )
-        }
-    }
-}
-
 @Composable
-private fun VersionCheck(
+fun VersionCheck(
     updateAction: UpdateAction,
     onUpdateClick: () -> Unit,
     onCancelClick: () -> Unit,
 ) {
-    ComposeAppTheme {
+    Dialog(
+        onDismissRequest = onCancelClick
+    ) {
         Column(
             modifier = Modifier
                 .clip(RoundedCornerShape(16.dp))
@@ -102,7 +41,6 @@ private fun VersionCheck(
                         R.string.VersionCheck_Flexible_Title
                 )
             )
-
             Spacer(Modifier.height(12.dp))
             body_leah(
                 text = stringResource(
@@ -137,6 +75,8 @@ private fun VersionCheck(
 
 @Preview
 @Composable
-private fun Preview_VersionCheck() {
-    VersionCheck(UpdateAction.Immediate, {}, {})
+private fun Preview_RateApp() {
+    ComposeAppTheme {
+        VersionCheck(UpdateAction.Immediate, {}, {})
+    }
 }

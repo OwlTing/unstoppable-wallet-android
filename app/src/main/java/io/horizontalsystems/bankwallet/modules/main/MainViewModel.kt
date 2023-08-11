@@ -11,6 +11,7 @@ import io.horizontalsystems.bankwallet.core.managers.ActiveAccountState
 import io.horizontalsystems.bankwallet.core.managers.LanguageManager
 import io.horizontalsystems.bankwallet.core.managers.ReleaseNotesManager
 import io.horizontalsystems.bankwallet.entities.Account
+import io.horizontalsystems.bankwallet.entities.DataState
 import io.horizontalsystems.bankwallet.entities.LaunchPage
 import io.horizontalsystems.bankwallet.modules.main.MainModule.MainNavigation
 import io.horizontalsystems.bankwallet.owlwallet.data.source.OTRepository
@@ -23,6 +24,8 @@ import io.horizontalsystems.bankwallet.modules.walletconnect.version2.WC2Session
 import io.horizontalsystems.core.IPinComponent
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -87,6 +90,7 @@ class MainViewModel(
     private var activeWallet = accountManager.activeAccount
     private var wcSupportState: WC1Manager.SupportState? = null
     private var torEnabled = localStorage.torEnabled
+    private var versionCheckAction = UpdateAction.Nothing
 
     val wallets: List<Account>
         get() = accountManager.accounts.filter { !it.isWatchAccount }
@@ -103,12 +107,11 @@ class MainViewModel(
             showWhatsNew = showWhatsNew,
             activeWallet = activeWallet,
             wcSupportState = wcSupportState,
-            torEnabled = torEnabled
+            torEnabled = torEnabled,
+            versionCheckAction = versionCheckAction
         )
     )
         private set
-
-//    val versionHelperLiveEvent = SingleLiveEvent<UpdateAction>()
 
     init {
         localStorage.marketsTabEnabledFlow.collectWith(viewModelScope) {
@@ -165,9 +168,13 @@ class MainViewModel(
             onSelect(it)
         }
 
-//        viewModelScope.launch {
-//            versionHelperLiveEvent.postValue(versionHelper.check())
-//        }
+        viewModelScope.launch {
+            val newAction = versionHelper.check()
+            if (newAction != versionCheckAction) {
+                versionCheckAction = newAction
+                syncState()
+            }
+        }
     }
 
     override fun onCleared() {
@@ -181,6 +188,11 @@ class MainViewModel(
 
     fun closeRateDialog() {
         showRateAppDialog = false
+        syncState()
+    }
+
+    fun closeVersionCheckDialog() {
+        versionCheckAction = UpdateAction.Nothing
         syncState()
     }
 
@@ -226,7 +238,8 @@ class MainViewModel(
             showWhatsNew = showWhatsNew,
             activeWallet = activeWallet,
             wcSupportState = wcSupportState,
-            torEnabled = torEnabled
+            torEnabled = torEnabled,
+            versionCheckAction = versionCheckAction,
         )
     }
 
