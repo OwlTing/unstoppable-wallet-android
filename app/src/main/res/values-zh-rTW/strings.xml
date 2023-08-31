@@ -8,11 +8,15 @@
     <string name="Alert_Close">關閉</string>
     <string name="Alert_Loading">正在加載...</string>
     <string name="Alert_Restart">重啟</string>
+    <string name="Suspended">已發送</string>
     <string name="Action_Undo">撤消</string>
+    <string name="Button_Show">查看</string>
+    <string name="Button_Hide">隱藏</string>
     <string name="Button_Cancel">取消</string>
     <string name="Button_Next">繼續</string>
     <string name="Button_Enable">啟用</string>
     <string name="Button_Disable">禁用</string>
+    <string name="Button_ScanQr">掃描二維碼</string>
     <string name="Button_Close">關閉</string>
     <string name="Button_Ok">確定</string>
     <string name="Button_Done">完成</string>
@@ -47,6 +51,13 @@
     <string name="Button_Activate">啟用</string>
     <string name="Button_Sign">簽名</string>
     <string name="Button_Activating">正在啟用</string>
+    <string name="Button_GetApiKeys">獲取 API 密鑰</string>
+    <string name="Button_Login">登錄</string>
+    <string name="Button_SignUp">註冊</string>
+    <string name="Button_Submit">提交</string>
+    <string name="Button_TryAgain">再試一次</string>
+    <string name="Error_OutOfRange">不能小於 %1$s 或大於 %2$s</string>
+    <string name="Error_NotInteger">錯誤的整數</string>
     <string name="Error">出錯</string>
     <string name="NotAvailable">不可用</string>
     <string name="Any">任何</string>
@@ -129,6 +140,11 @@
     <string name="Restore_ZCash_OldWallet">現有錢包</string>
     <string name="Restore_ZCash_OldWallet_Description">有交易</string>
     <string name="Restore_ZCash_SlowSyncWarningText">初始化與區塊鏈的同步可以消耗大量的網絡流量。</string>
+    <string name="ImportCexAccount_SelectCex">選擇CEX</string>
+    <string name="ImportCexAccount_SelectCexDescription">選擇您想要連接的中央交易所。 </string>
+    <string name="ImportCexAccountBinance_Description">請提供 API 密鑰和 API 密鑰鏈接您的交換。 </string>
+    <string name="ImportCexAccountBinance_ApiKey">API 密鑰</string>
+    <string name="ImportCexAccountBinance_SecretKey">密鑰</string>
     <!--Backup-->
     <string name="Backup_Confirmation_CheckTitle">檢查...</string>
     <!--Market-->
@@ -264,8 +280,10 @@
     <string name="TvlRank_Field_Mat">Polygon</string>
     <string name="TvlRank_Filters_PopupTitle">過濾器</string>
     <!--Balance-->
+    <string name="Balance_Withdraw">提取</string>
     <string name="Balance_Title">餘額</string>
     <string name="Balance_Send">發送​​</string>
+    <string name="Balance_Deposit">接收</string>
     <string name="Balance_Receive">接收</string>
     <string name="Balance_Address">地址</string>
     <string name="Balance_RatePerCoin">%s / %s</string>
@@ -341,8 +359,11 @@
     <string name="Send_FeeRate">費率</string>
     <string name="Send_Token_InsufficientFeeAlert">%1$s（%2$s）的交易費用以%3$s支付。您需要%4$s。 </string>
     <string name="Send_Warning_LowFee">警告！有被騙的風險</string>
+    <string name="Send_Error_LowFee">手續費錯誤</string>
+    <string name="Send_Error_LowFee_Description">費用率太低。 </string>
     <string name="Send_Warning_LowFee_Description">交易可能被卡或失敗</string>
-    <string name="Send_Error_FetchFeeRateFailed">獲取收費率時出錯</string>
+    <string name="Send_Error_FetchFeeRateFailed">手續費錯誤</string>
+    <string name="Send_Error_FetchFeeRateFailed_Description">與服務器的連接已丟失。要繼續，請手動使用網站上的數據設置費用。 </string>
     <!-- Send Evm Settings -->
     <string name="SendEvmSettings_Title">高級</string>
     <string name="SendEvmSettings_Nonce">交易nonce</string>
@@ -399,6 +420,7 @@
     <string name="Tron_AddressNotActive_Title">未激活的地址</string>
     <string name="Tron_AddressNotActive_Info">新創建的 TRON 區塊鏈上的帳戶是不活動的，無法查詢或探索。它們需要激活。 \n\n正在將TRX或 TRC-10令牌傳輸到一個不活動的帳戶地址將激活該帳戶。激活Tron鏈上的一個新帳戶需要1TRX</string>
     <string name="Tron_SelfSendTrxNotAllowed">無法將 TRX 轉移給自己</string>
+    <string name="Tron_ZeroAmountTrxNotAllowed">無法傳輸 0 %s</string>
     <!--WalletConnect-->
     <string name="WalletConnect_Request">請求</string>
     <string name="WalletConnect_SendRequest_Title">發送​​</string>
@@ -671,6 +693,21 @@
     <string name="Settings_RateUs">評價我們</string>
     <string name="Settings_LaunchScreen">啟動分頁</string>
     <string name="Settings_Appearance">外觀</string>
+    <string name="Settings_Contact_ViaTelegram">通過 Telegram</string>
+    <string name="Settings_Contact_ViaEmail">通過電子郵件</string>
+    <string name="Settings_PersonalSupport">個人支持</string>
+    <string name="Settings_PersonalSupport_EnterTelegramAccountDescription">請輸入您的 Telegram 帳號名稱，開始與我們的團隊的個人支援聊天。一旦我們看到這個問題，我們就會回到您的面前。 </string>
+    <string name="Settings_PersonalSupport_YouAlreadyRequestedSupportDescription">您已經請求了一個私聊，在Telegram 上找到它</string>
+    <string name="Settings_PersonalSupport_Account">賬戶</string>
+    <string name="Settings_PersonalSupport_UsernameHint">\@username</string>
+    <string name="Settings_PersonalSupport_Requested">已申請</string>
+    <string name="Settings_PersonalSupport_Request">請求</string>
+    <string name="Settings_PersonalSupport_NewRequest">新建請求</string>
+    <string name="Settings_PersonalSupport_Requestfailed">請求失敗</string>
+    <string name="Settings_PersonalSupport_OpenTelegram">打開 Telegram</string>
+    <string name="Settings_Donate_Info">在你的支持下，我們可以使這個應用更好！ </string>
+    <string name="Settings_Donate">捐助</string>
+    <string name="Settings_Donate_CoinAddress">%s 地址</string>
     <string name="Appearance_Theme">主題</string>
     <string name="Appearance_Tab">TAB設置</string>
     <string name="Appearance_LaunchScreen">局域網SCREEN</string>
@@ -802,6 +839,7 @@
     <string name="Hud_Text_EmailAddressCopied">電子郵件地址已復制</string>
     <string name="Hud_Added_To_Watchlist">添加到關注列表</string>
     <string name="Hud_Added_To_Wallet">加入錢包</string>
+    <string name="Hud_Removed_From_Wallet">已從錢包刪除</string>
     <string name="Hud_Already_In_Wallet">已經加入錢包</string>
     <string name="Hud_Removed_from_Watchlist">從關注列表移除</string>
     <string name="Hud_Removed">已刪除</string>
@@ -811,7 +849,14 @@
     <string name="ManageCoins_Search">姓名、代碼或合同地址</string>
     <string name="ManageCoins_AddToken">添加代幣</string>
     <string name="ManageCoins_NoResults">找不到結果。如果您知道智能合約地址，請嘗試手動添加代幣。 </string>
-    <string name="ManageCoins_BipsDescription">有4種%s錢包可用於接收應收款的常見地址格式：\n\n- BIP44（較舊）\n- BIP49\n- BIP84（較新）\n- BIP86（最新）\n\n雖然Unstoppable錢包支持全部4種格式，但是我們建議使用以BIP84格式運作的%s錢包。 </string>
+    <string name="ManageCoins_BipsDescription">有四種常見的地址格式 %1$s 錢包可以用來接收收到的付款：
+\n
+\n- BIP-44 (老)
+\n- BIP-49
+\n- BIP-84 (推薦)
+\n- BIP-86 (新建)
+\n
+\n雖然無法阻擋的錢包支持他們中的所有4個，但它建議使用 BIP-84 格式操作的 %2$s 錢包。以此格式操作的錢包在發送 %3$s 交易時可以支付最低費用。 </string>
     <string name="ManageCoins_BchTypeDescription">有2種比特幣現金錢包可用於接收應收款的常見地址格式：\n\n- TYPE 0（較舊）\n- TYPE 145（較新）\n\n雖然Unstoppable錢包支持全部兩種格式，但是我們建議使用以TYPE 145格式運作的比特幣現金錢包。 </string>
     <string name="ManageCoins_ContractAddress">聯繫地址</string>
     <!-- Experimental Feature -->
@@ -828,9 +873,11 @@
     <string name="ManageAccounts_WatchAddress">觀察地址</string>
     <!-- Import Wallet -->
     <string name="ImportWallet_BackupFile">從文件</string>
-    <string name="ImportWallet_BackupFile_Description">從備份文件導入</string>
+    <string name="ImportWallet_BackupFile_Description">從備份文件導入.</string>
     <string name="ImportWallet_RecoveryPhrase">恢復短語</string>
     <string name="ImportWallet_RecoveryPhrase_Description">使用恢復短語或私鑰導入。 </string>
+    <string name="ImportWallet_ExchangeWallet">來自Exchange 錢包</string>
+    <string name="ImportWallet_ExchangeWallet_Description">在集中交易所上連接到錢包。 </string>
     <string name="ImportWallet_WatchAddress">觀察地址</string>
     <string name="ImportWallet_WatchAddress_Description">觀測 EVM-Chain、BTC、LTC 和 DASH 地址的模式</string>
     <string name="ImportWallet_WarningInvalidJson">無效的 Json 文件</string>
@@ -1128,6 +1175,21 @@
     <string name="CoinPage_NftBannerTitle">Unstoppable NFT</string>
     <string name="CoinPage_NftBannerDescription">通過持有不可阻擋的 NFT 獲取高級錢包功能。 </string>
     <string name="CoinPage_CoinNotFound">[%s]\n未找到</string>
+    <string name="CoinPage_Indicators">指標</string>
+    <string name="CoinPage_MovingAverages">移動平均線</string>
+    <string name="CoinPage_OscillatorsSettings">震盪指標</string>
+    <string name="CoinPage_EmaSettingsDescription">在技術分析中，EMA、SMA和WMA正在移動平均值：\n\nEMA強調最近的價格以便更快的反應。 \n一般趨勢視圖的SMA平均價格數據。 \nWMA 通過線性加權最近數據平衡敏感度和噪聲減少.</string>
+    <string name="CoinPage_RsiSettingsDescription">相對力量指數（RSI）是一種衡量價格速度和變化的動力，能夠識別出已經購買(超過70)或出售過量(低於30)市場條件。它還能夠通過差異發現價格逆轉。 </string>
+    <string name="CoinPage_MacdSettingsDescription">移動平均趨同差(MACD)是一個動態指標，它追踪兩種證券價格的環境管理協議之間的關係。它表明當MACD線(12期間EMA 減26期EMA)跨越9期EMA時即信號線時有機會購買或出售。 </string>
+    <string name="CoinPage_InsufficientData">數據不足</string>
+    <string name="CoinPage_InsufficientDataError">沒有足夠的數據點顯示EMA 1指標。請調整時間段以生成移動平均行的視圖。沒有足夠的點來顯示EMA 1。 </string>
+    <string name="CoinPage_Type">類型</string>
+    <string name="CoinPage_Period">句號</string>
+    <string name="CoinPage_RsiLength">RSI 長度</string>
+    <string name="CoinPage_FastLength">快速長度</string>
+    <string name="CoinPage_SlowLength">慢長度</string>
+    <string name="CoinPage_SignalSmoothing">信號平滑化</string>
+    <string name="CoinPage_IndicatorsAlertText">指標僅適用於不可阻止的錢包高級用戶。 </string>
     <string name="CoinAnalytics_CexVolume_Info1">Total trading volume for the token on leading centralized exchanges over 30-day period.</string>
     <string name="CoinAnalytics_CexVolume_Info2">Chart showing variation in daily trading volume for the token on leading centralized exchanges over 1 year period.</string>
     <string name="CoinAnalytics_CexVolume_Info3">Token\'s rank based on trading volume on leading centralized exchanges over 30-day period.</string>
@@ -1166,8 +1228,9 @@
     <string name="CoinAnalytics_ProjectRevenue_Info1">Total revenue generated for the token holders over 30-day period. Typically, fees are collected by token stakers or though a token burn mechanism.</string>
     <string name="CoinAnalytics_ProjectRevenue_Info2">Token\'s rank based on the revenue generated over 30-day period for token stakers.</string>
     <string name="CoinAnalytics_ProjectRevenue_Info3">List of all tokens ranked based on the revenue generated for token stakers over 24h / 7D / 1M intervals.</string>
-    <string name="CoinAnalytics_PageLocked">此頁面僅對Unstoppable錢包的高級用戶開放</string>
-    <string name="CoinAnalytics_ActivateSubscription">請激活您的訂閱以獲取分析權限</string>
+    <string name="CoinAnalytics_TechIndicators_Info1">概述：這是對資產技術手段的一般概述，考慮到各種技術指標和時間框架。它根據這些指標提供了一個協商一致的觀點(購買、出售或中立)。 </string>
+    <string name="CoinAnalytics_TechIndicators_Info2">移動平均值：這些是通用的技術指標，可使價格數據平滑使用，從而產生一個趨勢跟踪指標。它們顯示了特定時期內的平均價格。多個類型的MA：\n\n簡單移動平均值(SMA)：這個計算了選定的價格範圍的平均值。通常按該範圍內的周期數結算價格。 \n\n指數移動平均值(EMA)：這使得對最近的價格更加權重，從而對最近的價格變化作出更快的反應。 </string>
+    <string name="CoinAnalytics_TechIndicators_Info3">Oscillators：這些是技術指標，隨著時間的推移在波段內(在中心線以下或在設定的層次之間)波動。它們的目的是幫助查明市場上買賣過多和銷售過剩的條件。這裡有一些常見的顧問：\n\n相對力量指數(RSI)：這將衡量價格變動的速度和變化。它通常被用來查明買入或賣出過多的情況。 \n\n移動平均匯合差(MACD)：用於識別潛在的買賣信號。它在其信號線上方(購買)或下方(出售)時，會觸發技術信號。 </string>
     <string name="CoinAnalytics_ProjectNoAnalyticData">此項目沒有分析數據</string>
     <string name="CoinAnalytics_CexVolume">CEX交易量</string>
     <string name="CoinAnalytics_CexVolumeRank">CEX交易量排名</string>
@@ -1189,9 +1252,12 @@
     <string name="CoinAnalytics_ProjectTvl_FullTitle">項目TVL（鎖定總價值)</string>
     <string name="CoinAnalytics_TvlRatio">市值 / TVL比率</string>
     <string name="CoinAnalytics_ProjectRevenue">項目收入</string>
+    <string name="CoinAnalytics_ProjectFee">項目費用</string>
     <string name="CoinAnalytics_ProjectRevenueRank">項目收入排名</string>
+    <string name="CoinAnalytics_ProjectFeeRank">項目收費等級</string>
     <string name="CoinAnalytics_HoldersRank">股東排名</string>
     <string name="CoinAnalytics_ProjectRevenueRank_Description">按通過如質押或代幣銷毀等機制為持有者生成的收入排名的代幣。 </string>
+    <string name="CoinAnalytics_ProjectFeeRank_Description">按各項目產生的費用排列的代幣。收取費用的方式因項目而異。 </string>
     <string name="CoinAnalytics_HoldersRank_Description">通過在多個區塊鏈上持有它們的獨特地址來排名令牌。 </string>
     <string name="CoinAnalytics_OtherData">其它數據</string>
     <string name="CoinAnalytics_Reports">報告</string>
@@ -1204,11 +1270,48 @@
     <string name="Coin_Analytics_30DayRank">30天排名</string>
     <string name="Coin_Analytics_30DayUniqueAddress">30天唯一地址</string>
     <string name="Coin_Analytics_30DayVolume">30天交易量</string>
+    <string name="Coin_Analytics_OverallScore">總體得分</string>
+    <string name="Coin_Analytics_OverallScore_Excellent">極好的</string>
+    <string name="Coin_Analytics_OverallScore_Good">好</string>
+    <string name="Coin_Analytics_OverallScore_Fair">公平的</string>
+    <string name="Coin_Analytics_OverallScore_Poor">差的</string>
+    <string name="Coin_Analytics_OverallScore_CexVolume">總的分數是根據過去7天中央交易所的平均每日交易量計算的。 </string>
+    <string name="Coin_Analytics_OverallScore_DexVolume">總的分數是根據過去7天分散交易所的平均每日交易量計算的。 </string>
+    <string name="Coin_Analytics_OverallScore_DexLiquidity">總分數是根據分散交易所的可用流動資金總額計算的。 </string>
+    <string name="Coin_Analytics_OverallScore_ActiveAddresses">總得分是根據過去7天中每日平均活動地址計算的。 </string>
+    <string name="Coin_Analytics_OverallScore_ProjectTvl">總體分數是根據給定令牌所代表的項目的總值鎖定(管理中的資產)計算的。 </string>
+    <string name="Coin_Analytics_OverallScore_TransactionCount">總的分數是根據過去7天的平均每日交易數計算的。 </string>
+    <string name="Coin_Analytics_OverallScore_Holders">總的分數是根據持有相應代幣的地址總數計算的。 </string>
+    <string name="Coin_Analytics_TechnicalIndicators">技術指標</string>
+    <string name="Coin_Analytics_Details">詳細信息</string>
+    <string name="Coin_Analytics_SelectPeriod">選擇時間段</string>
+    <string name="Coin_Analytics_Period_30m">30 分鐘</string>
+    <string name="Coin_Analytics_Period_1h">1 小時</string>
+    <string name="Coin_Analytics_Period_4h">4 小時</string>
+    <string name="Coin_Analytics_Period_8h">8 小時</string>
+    <string name="Coin_Analytics_Period_1d">1天</string>
+    <string name="Coin_Analytics_Period_1w">1週</string>
+    <string name="Coin_Analytics_Indicators_StrongBuy">強烈建議買入</string>
+    <string name="Coin_Analytics_Indicators_StrongSell">強烈建議賣出</string>
+    <string name="Coin_Analytics_Indicators_Sell">出售</string>
+    <string name="Coin_Analytics_Indicators_Buy">購買</string>
+    <string name="Coin_Analytics_Indicators_Neutral">中性</string>
+    <string name="Coin_Analytics_Indicators_NoData">無數據</string>
     <string name="ActivateSubscription_Title">激活</string>
     <string name="ActivateSubscription_Wallet">錢包</string>
     <string name="ActivateSubscription_Address">地址</string>
     <string name="ActivateSubscription_MessageToSign">待簽名消息</string>
     <string name="ActivateSubscription_SignMessageDescription">您需要簽署此消息以激活您的訂閱</string>
+    <string name="ActivateSubscription_NoSubscriptionError">您的錢包地址沒有高級功能的訂閱，您需要購買它才能激活訂閱。 </string>
+    <string name="SubscriptionInfo_Title">高級功能</string>
+    <string name="SubscriptionInfo_Analytics_Title">加密貨幣分析</string>
+    <string name="SubscriptionInfo_Analytics_Info">訪問每個令牌的全面市場和鏈上的統計信息。 </string>
+    <string name="SubscriptionInfo_Indicators_Title">價格趨勢指標</string>
+    <string name="SubscriptionInfo_Indicators_Info">根據技術分析指標發現呈上升態的代幣。 </string>
+    <string name="SubscriptionInfo_PersonalSupport_Title">個人支持</string>
+    <string name="SubscriptionInfo_PersonalSupport_Info">通過 Telegram 直接聯繫我們的團隊以獲取個人幫助。 </string>
+    <string name="SubscriptionInfo_GetPremium">成為付費會員</string>
+    <string name="SubscriptionInfo_HavePremium">我已經有高級版</string>
     <string name="Nfts_Title">NFT</string>
     <string name="Nfts_PriceType_Days_7">平均7天</string>
     <string name="Nfts_PriceType_Days_30">平均30天</string>
@@ -1326,6 +1429,7 @@
     <string name="Unlock_BiometricScannerDisabled_Description">輸入密碼或稍後再試</string>
     <string name="Unlock_BiometricScannerDisabled_Info">生物認證被禁用</string>
     <string name="Unlock_WalletDisabledUntil">禁用至：%s</string>
+    <string name="Unlock_AttemptsLeft">剩余嘗試次數: %s</string>
     <!--Set Pin-->
     <string name="PinSet_Title">設置密碼</string>
     <string name="PinSet_Info">您的密碼將用於解鎖錢包和發送資金</string>
@@ -1365,6 +1469,42 @@
     <string name="Contacts_ActionMore">更多</string>
     <string name="Contacts_Error_DefinedAddress">此地址已用於 %s</string>
     <string name="Contacts_Error_DefinedName">該名稱已存在</string>
+    <string name="Hud_Text_Connected">已連接</string>
+    <!--Cex Deposit Module-->
+    <string name="Cex_ChooseCoin">選擇代幣</string>
+    <string name="Cex_ChooseNetwork">選擇網絡</string>
+    <string name="Cex_ChooseNetwork_Description">選擇一個網絡並獲得一個地址存取。 </string>
+    <string name="Cex_SelectCoin_Search">名稱或代碼</string>
+    <string name="CexDeposit_Title">存款 %s</string>
+    <string name="CexDeposit_CopyAddress">複製地址</string>
+    <string name="CexDeposit_ShareAddress">共享地址</string>
+    <string name="CexDeposit_Memo">Memo (Tag)</string>
+    <string name="CexDeposit_Network">網絡</string>
+    <string name="CexDeposit_AddressDescription">您存放 %s 的地址</string>
+    <string name="CexDeposit_DepositWarning">只發送 %s 到此地址。向此地址發送其他類型的令牌將導致其最終丟失。 </string>
+    <string name="CexDeposit_MemoWarning">需要備註（標籤），否則您將丟失您的硬幣。 \n\n僅將 %s 發送到此地址。將其他類型的代幣發送到該地址將導致其最終損失。 </string>
+    <string name="CexDeposit_Important">重要信息</string>
+    <string name="CexDeposit_MemoAlertText">需要填寫備註(標籤)和地址以確保收到資產。否則您的資金將丟失。 </string>
+    <string name="Cex_Error_FailedToConnectApiKey">連接您的 API 密鑰失敗</string>
+    <!--Cex Withdraw Module-->
+    <string name="CexWithdraw_Title">發送%s</string>
+    <string name="CexWithdraw_Network">網絡</string>
+    <string name="CexWithdraw_FeeFromAmount">費用金額</string>
+    <string name="CexWithdraw_Fee">費用</string>
+    <string name="CexWithdraw_NetworkDescription">確保網絡匹配提款地址和存款平台支持它，否則資產可能丟失。 </string>
+    <string name="CexWithdraw_SecurityVerification">安全驗證</string>
+    <string name="CexWithdraw_EmailVerificationCode">驗證碼</string>
+    <string name="CexWithdraw_GoogleAuthenticationCode">Google 身份驗證器代碼</string>
+    <string name="CexWithdraw_GetCode">重新發送</string>
+    <string name="CexWithdraw_GetCodeSeconds">%s秒</string>
+    <string name="CexWithdraw_EmailVerificationInfo">輸入驗證碼發送到您的電子郵件.</string>
+    <string name="CexWithdraw_GoogleAuthenticationInfo">從您的 Google 身份驗證器應用程序中輸入代碼。 </string>
+    <string name="CexWithdraw_Withdraw">提取</string>
+    <string name="CexWithdraw_WithdrawSuccess">成功</string>
+    <string name="CexWithdraw_Error_NotEnoughBalance">現有餘額不足</string>
+    <string name="CexWithdraw_Error_MinimumAmount">您可以提取的最低金額是 %s</string>
+    <string name="CexWithdraw_Error_MaximumAmount">您可以提取的最大金額是 %s</string>
+    <string name="CexWithdraw_Error_WithdrawTitle">提取失敗</string>
 
     <!--OwlTing -->
     <string name="Intro_Wallet_Welcome">歡迎使用</string>

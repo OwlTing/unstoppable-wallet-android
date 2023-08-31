@@ -5,7 +5,13 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
@@ -40,7 +46,15 @@ import io.horizontalsystems.core.SnackbarDuration
 import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.VerifyState
 import io.horizontalsystems.bankwallet.ui.compose.ComposeAppTheme
 import io.horizontalsystems.bankwallet.ui.compose.TranslatableString
-import io.horizontalsystems.bankwallet.ui.compose.components.*
+import io.horizontalsystems.bankwallet.ui.compose.components.AppBar
+import io.horizontalsystems.bankwallet.ui.compose.components.BadgeCount
+import io.horizontalsystems.bankwallet.ui.compose.components.CellSingleLineLawrenceSection
+import io.horizontalsystems.bankwallet.ui.compose.components.CellUniversalLawrenceSection
+import io.horizontalsystems.bankwallet.ui.compose.components.RowUniversal
+import io.horizontalsystems.bankwallet.ui.compose.components.VSpacer
+import io.horizontalsystems.bankwallet.ui.compose.components.body_leah
+import io.horizontalsystems.bankwallet.ui.compose.components.caption_grey
+import io.horizontalsystems.bankwallet.ui.compose.components.subhead1_grey
 import io.horizontalsystems.bankwallet.ui.helpers.LinkHelper
 import io.horizontalsystems.core.helpers.HudHelper
 
@@ -77,6 +91,20 @@ private fun SettingSections(
     val wcCounter by viewModel.wcCounterLiveData.observeAsState()
     val baseCurrency by viewModel.baseCurrencyLiveData.observeAsState()
     val language by viewModel.languageLiveData.observeAsState()
+
+    CellUniversalLawrenceSection(
+        listOf {
+            HsSettingCell(
+                R.string.Settings_Donate,
+                R.drawable.ic_heart_jacob_48,
+                onClick = {
+                    navController.slideFromRight(R.id.donateFragment)
+                }
+            )
+        }
+    )
+
+    VSpacer(32.dp)
 
     CellUniversalLawrenceSection(
         listOf({
@@ -154,19 +182,19 @@ private fun SettingSections(
             },
             {
                 HsSettingCell(
-                    R.string.Settings_Appearance,
-                    R.drawable.ic_brush_20,
+                    R.string.Contacts,
+                    R.drawable.ic_user_20,
                     onClick = {
-                        navController.slideFromRight(R.id.appearanceFragment)
+                        navController.slideFromRight(R.id.contactsFragment, ContactsFragment.prepareParams(Mode.Full))
                     }
                 )
             },
             {
                 HsSettingCell(
-                    R.string.Contacts,
-                    R.drawable.ic_user_20,
+                    R.string.Settings_Appearance,
+                    R.drawable.ic_brush_20,
                     onClick = {
-                        navController.slideFromRight(R.id.contactsFragment, ContactsFragment.prepareParams(Mode.Full))
+                        navController.slideFromRight(R.id.appearanceFragment)
                     }
                 )
             },

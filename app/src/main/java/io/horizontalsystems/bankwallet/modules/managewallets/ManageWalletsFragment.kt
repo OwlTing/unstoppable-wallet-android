@@ -40,6 +40,7 @@ import io.horizontalsystems.bankwallet.ui.compose.TranslatableString
 import io.horizontalsystems.bankwallet.ui.compose.components.*
 import io.horizontalsystems.core.findNavController
 import io.horizontalsystems.core.getNavigationResult
+import io.horizontalsystems.core.parcelable
 
 class ManageWalletsFragment : BaseFragment() {
 
@@ -85,7 +86,7 @@ private fun ManageWalletsScreen(
             val requestResult = bundle.getInt(ZcashConfigure.requestResultKey)
 
             if (requestResult == ZcashConfigure.RESULT_OK) {
-                val zcashConfig = bundle.getParcelable<ZCashConfig>(ZcashConfigure.zcashConfigKey)
+                val zcashConfig = bundle.parcelable<ZCashConfig>(ZcashConfigure.zcashConfigKey)
                 zcashConfig?.let { config ->
                     restoreSettingsViewModel.onEnter(config)
                 }
@@ -103,7 +104,6 @@ private fun ManageWalletsScreen(
 //        SearchBar(
 //            title = stringResource(R.string.ManageCoins_title),
 //            searchHintText = stringResource(R.string.ManageCoins_Search),
-//            navController = navController,
 //            menuItems = if (viewModel.addTokenEnabled) {
 //                listOf(
 //                    MenuItem(
@@ -116,10 +116,11 @@ private fun ManageWalletsScreen(
 //            } else {
 //                listOf()
 //            },
+//            onClose = { navController.popBackStack() },
 //            onSearchTextChanged = { text ->
 //                viewModel.updateFilter(text)
 //            }
-//        }
+//        )
         AppBar(
             title = TranslatableString.ResString(R.string.ManageCoins_title),
             navigationIcon = {

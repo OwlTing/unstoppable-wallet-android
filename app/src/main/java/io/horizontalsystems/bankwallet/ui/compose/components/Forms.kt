@@ -262,6 +262,7 @@ fun FormsInputPassword(
     maxLength: Int? = null,
     hide: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    enabled: Boolean = true,
     onValueChange: (String) -> Unit,
     onToggleHide: () -> Unit
 ) {
@@ -333,6 +334,7 @@ fun FormsInputPassword(
                 },
                 visualTransformation = if (hide) PasswordVisualTransformation() else VisualTransformation.None,
                 keyboardOptions = keyboardOptions,
+                enabled = enabled,
             )
 
             when (state) {

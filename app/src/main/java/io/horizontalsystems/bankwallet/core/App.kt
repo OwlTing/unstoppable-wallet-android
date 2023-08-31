@@ -23,13 +23,11 @@ import io.horizontalsystems.bankwallet.core.factories.AdapterFactory
 import io.horizontalsystems.bankwallet.core.factories.AddressParserFactory
 import io.horizontalsystems.bankwallet.core.factories.EvmAccountManagerFactory
 import io.horizontalsystems.bankwallet.core.managers.*
-import io.horizontalsystems.bankwallet.core.providers.AppConfigProvider
-import io.horizontalsystems.bankwallet.core.providers.EvmLabelProvider
-import io.horizontalsystems.bankwallet.core.providers.FeeRateProvider
-import io.horizontalsystems.bankwallet.core.providers.FeeTokenProvider
+import io.horizontalsystems.bankwallet.core.providers.*
 import io.horizontalsystems.bankwallet.core.storage.*
 import io.horizontalsystems.bankwallet.entities.Wallet
 import io.horizontalsystems.bankwallet.modules.balance.BalanceViewTypeManager
+import io.horizontalsystems.bankwallet.modules.chart.ChartIndicatorManager
 import io.horizontalsystems.bankwallet.modules.contacts.ContactsRepository
 import io.horizontalsystems.bankwallet.modules.keystore.KeyStoreActivity
 import io.horizontalsystems.bankwallet.modules.launcher.LauncherActivity
@@ -145,6 +143,9 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
         lateinit var marketWidgetRepository: MarketWidgetRepository
         lateinit var contactsRepository: ContactsRepository
         lateinit var subscriptionManager: SubscriptionManager
+        lateinit var cexProviderManager: CexProviderManager
+        lateinit var cexAssetManager: CexAssetManager
+        lateinit var chartIndicatorManager: ChartIndicatorManager
 
         lateinit var owlTingRepo: DefaultOTRepository
         lateinit var preferenceHelper: PreferenceHelper
@@ -206,7 +207,7 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
         }
 
         torKitManager = TorManager(instance, localStorage)
-        subscriptionManager = SubscriptionManager(localStorage)
+        subscriptionManager = SubscriptionManager()
 
         marketKit = MarketKitWrapper(
             context = this,
@@ -214,7 +215,7 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
             hsApiKey = appConfig.marketApiKey,
             cryptoCompareApiKey = appConfig.cryptoCompareApiKey,
             defiYieldApiKey = appConfig.defiyieldProviderApiKey,
-            subscriptionManager = App.subscriptionManager
+            subscriptionManager = subscriptionManager
         )
         marketKit.sync()
 
@@ -393,6 +394,9 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
         balanceHiddenManager = BalanceHiddenManager(localStorage, backgroundManager)
 
         contactsRepository = ContactsRepository(marketKit)
+        cexProviderManager = CexProviderManager(accountManager)
+        cexAssetManager = CexAssetManager(marketKit, appDatabase.cexAssetsDao())
+        chartIndicatorManager = ChartIndicatorManager(appDatabase.chartIndicatorSettingsDao(), localStorage)
 
         startTasks()
     }
@@ -416,10 +420,10 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
         val serverUrl = "wss://${appConfig.walletConnectUrl}?projectId=$projectId"
         val connectionType = ConnectionType.AUTOMATIC
         val appMetaData = Core.Model.AppMetaData(
-            name = "Unstoppable",
+            name = appConfig.walletConnectAppMetaDataName,
             description = "",
-            url = "unstoppable.money",
-            icons = listOf("https://raw.githubusercontent.com/horizontalsystems/HS-Design/master/PressKit/UW-AppIcon-on-light.png"),
+            url = appConfig.walletConnectAppMetaDataUrl,
+            icons = listOf(appConfig.walletConnectAppMetaDataIcon),
             redirect = null,
         )
 

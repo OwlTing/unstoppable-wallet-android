@@ -118,10 +118,7 @@ class MainSettingsViewModel(
         service.start()
     }
 
-    private fun shouldShowAlertForManageWallet(
-        allBackedUp: Boolean,
-        hasNonStandardAccount: Boolean
-    ): Boolean {
+    private fun shouldShowAlertForManageWallet(allBackedUp: Boolean, hasNonStandardAccount: Boolean): Boolean {
         return !allBackedUp || hasNonStandardAccount
     }
     // ViewModel
