@@ -8,6 +8,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
+import timber.log.Timber
 import java.util.concurrent.CopyOnWriteArrayList
 
 class TransactionAdapterWrapper(
@@ -65,7 +66,6 @@ class TransactionAdapterWrapper(
                 .map {
                     allLoaded = it.size < numberOfRecordsToRequest
                     transactionRecords.addAll(it)
-
                     transactionRecords
                 }
         }

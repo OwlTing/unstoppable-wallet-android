@@ -12,6 +12,7 @@ import io.horizontalsystems.marketkit.models.BlockchainType
 import io.horizontalsystems.marketkit.models.TokenQuery
 import io.horizontalsystems.marketkit.models.TokenType
 import io.horizontalsystems.tronkit.account.AddressHandler
+import org.stellar.sdk.KeyPair
 import org.web3j.ens.EnsResolver
 
 interface IAddressHandler {
@@ -108,6 +109,7 @@ class AddressHandlerUdn(private val tokenQuery: TokenQuery, private val coinCode
             BlockchainType.Zcash -> "ZEC"
             BlockchainType.Solana -> "SOL"
             BlockchainType.Tron -> "TRX"
+            BlockchainType.Stellar -> "XLM"
             is BlockchainType.Unsupported -> blockchainType.uid
         }
 
@@ -235,6 +237,17 @@ class AddressHandlerTron : IAddressHandler {
         val tronAddress = io.horizontalsystems.tronkit.models.Address.fromBase58(value)
         return Address(tronAddress.base58)
     }
+}
+
+class AddressHandlerStellar: IAddressHandler {
+    override fun isSupported(value: String) = try {
+        KeyPair.fromAccountId(value)
+        true
+    } catch (e: Exception) {
+        false
+    }
+
+    override fun parseAddress(value: String) = Address(value)
 }
 
 class AddressHandlerPure : IAddressHandler {

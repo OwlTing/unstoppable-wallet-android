@@ -1512,6 +1512,7 @@
     <string name="Intro_Wallet_Option">我已閱讀並同意</string>
     <string name="Intro_Wallet_Terms_Of_Use">奧丁丁錢包使用條款</string>
     <string name="Intro_Wallet_Agree">同意</string>
+    <string name="Stellar_Memo">Memo (optional)</string>
     <string name="Binding_Policy_Title"> OwlPay™ 隱私權政策</string>
     <string name="Binding_Policy_Confirm_Description">我已閱讀並同意</string>
     <string name="Register_Privacy_Policy">奧丁丁隱私權政策</string>

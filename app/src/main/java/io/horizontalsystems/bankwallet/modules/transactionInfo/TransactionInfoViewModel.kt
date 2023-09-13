@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import io.horizontalsystems.bankwallet.modules.contacts.ContactsRepository
 import io.horizontalsystems.bankwallet.modules.transactions.TransactionSource
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class TransactionInfoViewModel(
     private val service: TransactionInfoService,
@@ -21,6 +22,7 @@ class TransactionInfoViewModel(
         private set
 
     init {
+        Timber.d("init")
         viewModelScope.launch {
             contactsRepository.contactsFlow.collect {
                 viewItems = factory.getViewItemSections(service.transactionInfoItem)

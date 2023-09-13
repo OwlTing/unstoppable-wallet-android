@@ -145,6 +145,7 @@ class CreateAccountViewModel(
 //            TokenQuery(BlockchainType.BinanceSmartChain, TokenType.Native),
 //            TokenQuery(BlockchainType.Ethereum, TokenType.Eip20("0xdac17f958d2ee523a2206206994597c13d831ec7")),
 //            TokenQuery(BlockchainType.BinanceSmartChain, TokenType.Eip20("0xe9e7cea3dedca5984780bafc599bd69add087d56")),
+            TokenQuery(BlockchainType.Stellar, TokenType.Native),
         )
         walletActivator.activateWallets(account, tokenQueries)
     }

@@ -29,6 +29,8 @@ import io.horizontalsystems.bankwallet.entities.transactionrecords.evm.UnknownSw
 import io.horizontalsystems.bankwallet.entities.transactionrecords.solana.SolanaIncomingTransactionRecord
 import io.horizontalsystems.bankwallet.entities.transactionrecords.solana.SolanaOutgoingTransactionRecord
 import io.horizontalsystems.bankwallet.entities.transactionrecords.solana.SolanaUnknownTransactionRecord
+import io.horizontalsystems.bankwallet.entities.transactionrecords.stellar.StellarCreateAccountTransactionRecord
+import io.horizontalsystems.bankwallet.entities.transactionrecords.stellar.StellarPaymentTransactionRecord
 import io.horizontalsystems.bankwallet.entities.transactionrecords.tron.TronApproveTransactionRecord
 import io.horizontalsystems.bankwallet.entities.transactionrecords.tron.TronContractCallTransactionRecord
 import io.horizontalsystems.bankwallet.entities.transactionrecords.tron.TronExternalContractCallTransactionRecord
@@ -55,6 +57,7 @@ import io.horizontalsystems.bankwallet.modules.transactions.TransactionStatus
 import io.horizontalsystems.bankwallet.modules.transactions.TransactionViewItem
 import io.horizontalsystems.core.helpers.DateHelper
 import io.horizontalsystems.marketkit.models.BlockchainType
+import timber.log.Timber
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.Date
@@ -81,6 +84,8 @@ class TransactionInfoViewItemFactory(
         val miscItemsSection = mutableListOf<TransactionInfoViewItem>()
 
         var sentToSelf = false
+
+        Timber.d("getViewItemSections: ${transaction}")
 
         when (transaction) {
             is ContractCreationTransactionRecord -> {
@@ -312,7 +317,41 @@ class TransactionInfoViewItemFactory(
                 }
             }
 
-            else -> {}
+            is StellarCreateAccountTransactionRecord -> {
+                itemSections.add(
+                    getReceiveSectionItems(
+                        transaction.value,
+                        transaction.operation.sourceAccount,
+                        rates[transaction.value.coinUid]
+                    )
+                )
+            }
+
+            is StellarPaymentTransactionRecord -> {
+                val isSend = transaction.accountId == transaction.operation.from
+                if (isSend) {
+                    itemSections.add(
+                        getSendSectionItems(
+                            transaction.value,
+                            transaction.operation.to,
+                            rates[transaction.value.coinUid],
+                            false,
+                        )
+                    )
+                } else {
+                    itemSections.add(
+                        getReceiveSectionItems(
+                            transaction.value,
+                            transaction.operation.from,
+                            rates[transaction.value.coinUid]
+                        )
+                    )
+                }
+                addMemoItem(transaction.transaction.memo, miscItemsSection)
+            }
+
+            else -> {
+            }
         }
 
         if (sentToSelf) {

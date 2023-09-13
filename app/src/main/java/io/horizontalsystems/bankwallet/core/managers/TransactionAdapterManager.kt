@@ -63,6 +63,9 @@ class TransactionAdapterManager(
                     BlockchainType.Tron -> {
                         adapterFactory.tronTransactionsAdapter(wallet.transactionSource)
                     }
+                    BlockchainType.Stellar -> {
+                        adapterFactory.stellarTransactionsAdapter(wallet.transactionSource)
+                    }
                     else -> adapter as? ITransactionsAdapter
                 }
             }

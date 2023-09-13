@@ -142,8 +142,7 @@ private fun OwlTingIntroScreen(
     }
 }
 
-
-@OptIn(ExperimentalPagerApi::class, ExperimentalSnapperApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun IntroScreen(viewModel: IntroViewModel, nightMode: Boolean, closeActivity: () -> Unit) {
     val pagerState = rememberPagerState(initialPage = 0)

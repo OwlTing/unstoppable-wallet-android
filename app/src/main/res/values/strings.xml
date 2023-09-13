@@ -1790,6 +1790,7 @@
     <string name="Intro_Wallet_Option" translatable="false">I have read and agree to</string>
     <string name="Intro_Wallet_Terms_Of_Use" translatable="false">OwlTing Wallet Terms of Use</string>
     <string name="Intro_Wallet_Agree" translatable="false">Agree</string>
+    <string name="Stellar_Memo">Memo (optional)</string>
     <string name="Binding_Policy_Title" translatable="false">OwlPay™ Privacy Policy</string>
     <string name="Binding_Policy_Confirm_Description" translatable="false">I have read and agree to</string>
     <string name="Register_Privacy_Policy" translatable="false">OwlTing Privacy Policy</string>

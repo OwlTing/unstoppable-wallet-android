@@ -73,7 +73,7 @@ object LocaleHelper {
 
     private fun load(context: Context): Locale {
         val preferences = getPreferences(context)
-        val languageTag = preferences.getString(SELECTED_LANGUAGE, null) ?: fallbackLocale.toLanguageTag()
+        val languageTag = preferences.getString(SELECTED_LANGUAGE, null) ?: Locale.getDefault().toLanguageTag()
         return Locale.forLanguageTag(languageTag)
     }
 }

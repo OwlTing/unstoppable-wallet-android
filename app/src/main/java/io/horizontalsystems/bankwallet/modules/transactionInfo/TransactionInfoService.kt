@@ -23,6 +23,8 @@ import io.horizontalsystems.bankwallet.entities.transactionrecords.nftUids
 import io.horizontalsystems.bankwallet.entities.transactionrecords.solana.SolanaIncomingTransactionRecord
 import io.horizontalsystems.bankwallet.entities.transactionrecords.solana.SolanaOutgoingTransactionRecord
 import io.horizontalsystems.bankwallet.entities.transactionrecords.solana.SolanaUnknownTransactionRecord
+import io.horizontalsystems.bankwallet.entities.transactionrecords.stellar.StellarCreateAccountTransactionRecord
+import io.horizontalsystems.bankwallet.entities.transactionrecords.stellar.StellarPaymentTransactionRecord
 import io.horizontalsystems.bankwallet.entities.transactionrecords.tron.TronApproveTransactionRecord
 import io.horizontalsystems.bankwallet.entities.transactionrecords.tron.TronContractCallTransactionRecord
 import io.horizontalsystems.bankwallet.entities.transactionrecords.tron.TronExternalContractCallTransactionRecord
@@ -40,6 +42,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.rx2.await
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.math.BigDecimal
 
 class TransactionInfoService(
@@ -123,6 +126,12 @@ class TransactionInfoService(
                     tempCoinUidList.addAll(tx.outgoingEvents.map { it.value.coinUid })
                     tempCoinUidList
                 }
+                is StellarCreateAccountTransactionRecord -> {
+                    listOf(tx.value.coinUid)
+                }
+                is StellarPaymentTransactionRecord -> {
+                    listOf(tx.value.coinUid, tx.baseToken.coin.uid)
+                }
                 else -> emptyList()
             }
 
@@ -149,9 +158,10 @@ class TransactionInfoService(
         launch {
             adapter.getTransactionRecordsFlowable(null, FilterTransactionType.All).asFlow()
                 .collect { transactionRecords ->
-                    val record = transactionRecords.find { it == transactionRecord }
 
+                    val record = transactionRecords.find { it == transactionRecord }
                     if (record != null) {
+                        Timber.d("record: ${record.source}")
                         handleRecordUpdate(record)
                     }
                 }

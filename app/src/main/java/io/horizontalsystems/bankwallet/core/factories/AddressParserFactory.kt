@@ -22,6 +22,7 @@ class AddressParserFactory {
         BlockchainType.Gnosis,
         BlockchainType.Fantom,
         BlockchainType.Tron,
+        BlockchainType.Stellar,
         is BlockchainType.Unsupported -> AddressParser("", false)
     }
 }

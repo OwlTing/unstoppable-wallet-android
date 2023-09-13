@@ -164,6 +164,7 @@ data class TransactionViewItem(
                 BlockchainType.Gnosis -> R.drawable.logo_chain_gnosis_trx_32
                 BlockchainType.Fantom -> R.drawable.logo_chain_fantom_trx_32
                 BlockchainType.Tron -> R.drawable.logo_chain_tron_trx_32
+                BlockchainType.Stellar -> R.drawable.logo_chain_stellar_trx_24
                 else -> null
             }
         }

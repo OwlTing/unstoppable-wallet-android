@@ -79,6 +79,7 @@ val Token.typeInfo: String
         is TokenType.Eip20 -> type.address.shorten()
         is TokenType.Bep2 -> type.symbol
         is TokenType.Spl -> type.address.shorten()
+        is TokenType.Alphanum4 -> type.issuer.shorten()
         is TokenType.Unsupported -> ""
     }
 
@@ -119,6 +120,7 @@ val TokenQuery.protocolType: String?
         }
         is TokenType.Bep2 -> "BEP2"
         is TokenType.Spl -> "Solana"
+        is TokenType.Alphanum4 -> "Stellar"
         else -> null
     }
 
@@ -157,6 +159,9 @@ val TokenQuery.isSupported: Boolean
 //        BlockchainType.Tron -> {
 //            tokenType is TokenType.Native || tokenType is TokenType.Eip20
 //        }
+        BlockchainType.Stellar -> {
+            tokenType is TokenType.Native || tokenType is TokenType.Alphanum4
+        }
         else -> false
     }
 
@@ -179,6 +184,7 @@ val Blockchain.description: String
         BlockchainType.Gnosis -> "xDAI, ERC20 tokens"
         BlockchainType.Fantom -> "FTM, ERC20 tokens"
         BlockchainType.Tron -> "TRX, TRC20 tokens"
+        BlockchainType.Stellar -> "XLM"
         else -> ""
     }
 

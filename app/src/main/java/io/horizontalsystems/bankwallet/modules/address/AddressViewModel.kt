@@ -36,7 +36,6 @@ class AddressViewModel(
 
     fun hasContacts() =
         contactsRepository.getContactsFiltered(blockchainType).isNotEmpty()
-
     fun parseAddress(value: String) {
         this.value = value
         parseAddressJob?.cancel()

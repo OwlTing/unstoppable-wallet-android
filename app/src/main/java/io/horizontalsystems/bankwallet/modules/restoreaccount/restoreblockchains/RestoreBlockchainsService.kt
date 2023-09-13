@@ -74,6 +74,7 @@ class RestoreBlockchainsService(
 //        BlockchainType.Solana,
 //        BlockchainType.ECash,
 //        BlockchainType.Tron,
+        BlockchainType.Stellar,
     )
 
     init {

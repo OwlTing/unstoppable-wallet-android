@@ -17,6 +17,9 @@ class FeeTokenProvider(
             is TokenType.Bep2 -> {
                 TokenQuery(token.blockchainType, TokenType.Native)
             }
+            is TokenType.Alphanum4 -> {
+                TokenQuery(token.blockchainType, TokenType.Native)
+            }
             TokenType.Native,
             is TokenType.Unsupported -> null
         }

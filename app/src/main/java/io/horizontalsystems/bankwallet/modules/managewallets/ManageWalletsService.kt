@@ -82,6 +82,7 @@ class ManageWalletsService(
                     "avalanche-2",
                     "usd-coin",
                     "bitcoin",
+                    "stellar",
                 )
             ).map {
                 when (it.coin.code) {
@@ -110,6 +111,7 @@ class ManageWalletsService(
                                 token.blockchainType == BlockchainType.Ethereum
                                         || token.blockchainType == BlockchainType.Polygon
                                         || token.blockchainType == BlockchainType.Avalanche
+                                        || token.blockchainType == BlockchainType.Stellar
                             }
                         )
                     }
@@ -138,6 +140,7 @@ class ManageWalletsService(
                     "avalanche-2",
                     "usd-coin",
                     "bitcoin",
+                    "stellar",
                 ).contains(it.coin.uid)
             }
         }

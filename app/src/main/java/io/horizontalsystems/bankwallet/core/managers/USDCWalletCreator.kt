@@ -20,8 +20,6 @@ class USDCWalletCreator {
                 RestoreSettingsService(App.restoreSettingsManager, App.zcashBirthdayProvider)
             val coinSettingsService = CoinSettingsService()
             val coinTokensService = CoinTokensService()
-            val enableCoinService =
-                EnableCoinService(coinTokensService, restoreSettingsService, coinSettingsService)
             val manageWalletsService = ManageWalletsService(
                 App.marketKit,
                 App.walletManager,

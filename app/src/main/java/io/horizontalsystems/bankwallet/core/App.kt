@@ -53,6 +53,7 @@ import io.horizontalsystems.bankwallet.modules.walletconnect.version2.WC2Session
 import io.horizontalsystems.bankwallet.owlwallet.data.source.DefaultOTRepository
 import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.OTWalletApiClient
 import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.OTWalletRemoteDataSource
+import io.horizontalsystems.bankwallet.owlwallet.stellarkit.StellarKitManager
 import io.horizontalsystems.bankwallet.owlwallet.utils.PreferenceHelper
 import io.horizontalsystems.bankwallet.owlwallet.utils.VersionChecker
 //import io.horizontalsystems.bankwallet.owlwallet.utils.WalletSyncHelper
@@ -318,7 +319,9 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
             appDatabase.syncerStateDao()
         )
 
-        val adapterFactory = AdapterFactory(instance, btcBlockchainManager, evmBlockchainManager, evmSyncSourceManager, binanceKitManager, solanaKitManager, tronKitManager, backgroundManager, restoreSettingsManager, coinManager, evmLabelManager)
+        val stellarKitManager = StellarKitManager(backgroundManager)
+
+        val adapterFactory = AdapterFactory(instance, btcBlockchainManager, evmBlockchainManager, evmSyncSourceManager, binanceKitManager, solanaKitManager, tronKitManager, stellarKitManager, backgroundManager, restoreSettingsManager, coinManager, evmLabelManager)
         adapterManager = AdapterManager(walletManager, adapterFactory, btcBlockchainManager, evmBlockchainManager, binanceKitManager, solanaKitManager, tronKitManager)
         transactionAdapterManager = TransactionAdapterManager(adapterManager, adapterFactory)
 

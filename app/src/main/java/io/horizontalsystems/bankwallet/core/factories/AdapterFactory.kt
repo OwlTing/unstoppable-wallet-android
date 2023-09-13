@@ -1,7 +1,6 @@
 package io.horizontalsystems.bankwallet.core.factories
 
 import android.content.Context
-import io.horizontalsystems.bankwallet.BuildConfig
 import io.horizontalsystems.bankwallet.core.IAdapter
 import io.horizontalsystems.bankwallet.core.ICoinManager
 import io.horizontalsystems.bankwallet.core.ITransactionsAdapter
@@ -10,6 +9,7 @@ import io.horizontalsystems.bankwallet.core.adapters.zcash.ZcashAdapter
 import io.horizontalsystems.bankwallet.core.managers.*
 import io.horizontalsystems.bankwallet.entities.Wallet
 import io.horizontalsystems.bankwallet.modules.transactions.TransactionSource
+import io.horizontalsystems.bankwallet.owlwallet.stellarkit.StellarKitManager
 import io.horizontalsystems.core.BackgroundManager
 import io.horizontalsystems.marketkit.models.BlockchainType
 import io.horizontalsystems.marketkit.models.TokenQuery
@@ -23,6 +23,7 @@ class AdapterFactory(
     private val binanceKitManager: BinanceKitManager,
     private val solanaKitManager: SolanaKitManager,
     private val tronKitManager: TronKitManager,
+    private val stellarKitManager: StellarKitManager,
     private val backgroundManager: BackgroundManager,
     private val restoreSettingsManager: RestoreSettingsManager,
     private val coinManager: ICoinManager,
@@ -106,7 +107,9 @@ class AdapterFactory(
             BlockchainType.Tron -> {
                 TronAdapter(tronKitManager.getTronKitWrapper(wallet.account))
             }
-
+            BlockchainType.Stellar -> {
+                StellarAdapter(stellarKitManager.getStellarKitWrapper(wallet.account))
+            }
             else -> null
         }
         is TokenType.Eip20 -> {
@@ -118,6 +121,7 @@ class AdapterFactory(
         }
         is TokenType.Bep2 -> getBinanceAdapter(wallet, tokenType.symbol)
         is TokenType.Spl -> getSplAdapter(wallet, tokenType.address)
+        is TokenType.Alphanum4 -> StellarAdapter(stellarKitManager.getStellarUSDCKitWrapper(wallet.account))
         is TokenType.Unsupported -> null
     }
 
@@ -153,6 +157,14 @@ class AdapterFactory(
         val tronTransactionConverter = TronTransactionConverter(coinManager, tronKitWrapper, source, baseToken, evmLabelManager)
 
         return TronTransactionsAdapter(tronKitWrapper, tronTransactionConverter)
+    }
+
+    fun stellarTransactionsAdapter(source: TransactionSource): ITransactionsAdapter? {
+        val stellarKitWrapper = stellarKitManager.getStellarKitWrapper(source.account)
+        val baseToken = coinManager.getToken(TokenQuery(BlockchainType.Stellar, TokenType.Native)) ?: return null
+        val stellarTransactionsConverter = StellarTransactionConverter(coinManager, source, stellarKitWrapper, baseToken)
+
+        return StellarTransactionsAdapter(stellarKitWrapper, stellarTransactionsConverter)
     }
 
     fun unlinkAdapter(wallet: Wallet) {

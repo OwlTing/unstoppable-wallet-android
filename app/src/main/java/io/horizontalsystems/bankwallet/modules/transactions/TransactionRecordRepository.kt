@@ -73,7 +73,8 @@ class TransactionRecordRepository(
                 BlockchainType.Gnosis,
                 BlockchainType.Fantom,
                 BlockchainType.Solana,
-                BlockchainType.Tron -> {
+                BlockchainType.Tron,
+                BlockchainType.Stellar -> {
                     if (mergedWallets.none { it.source == wallet.source }) {
                         mergedWallets.add(TransactionWallet(null, wallet.source, null))
                     }
@@ -225,7 +226,6 @@ class TransactionRecordRepository(
     @Synchronized
     private fun handleRecords(records: List<TransactionRecord>, page: Int) {
         val expectedItemsCount = page * itemsPerPage
-
         records
             .sortedDescending()
             .take(expectedItemsCount)

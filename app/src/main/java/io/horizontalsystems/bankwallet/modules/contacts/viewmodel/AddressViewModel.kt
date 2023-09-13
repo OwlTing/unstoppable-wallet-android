@@ -51,14 +51,15 @@ class AddressViewModel(
         availableBlockchains = if (contactAddress == null) {
             val allBlockchainTypes = evmBlockchainManager.allBlockchainTypes + listOf(
                 BlockchainType.Bitcoin,
-                BlockchainType.BitcoinCash,
-                BlockchainType.Dash,
-                BlockchainType.Litecoin,
-                BlockchainType.Zcash,
-                BlockchainType.Solana,
-                BlockchainType.BinanceChain,
-                BlockchainType.ECash,
-                BlockchainType.Tron
+//                BlockchainType.BitcoinCash,
+//                BlockchainType.Dash,
+//                BlockchainType.Litecoin,
+//                BlockchainType.Zcash,
+//                BlockchainType.Solana,
+//                BlockchainType.BinanceChain,
+//                BlockchainType.ECash,
+//                BlockchainType.Tron,
+                BlockchainType.Stellar,
             )
             val definedBlockchainTypes = definedAddresses?.map { it.blockchain.type } ?: listOf()
             val availableBlockchainUids = allBlockchainTypes.filter { !definedBlockchainTypes.contains(it) }.map { it.uid }
@@ -173,6 +174,9 @@ class AddressViewModel(
             }
             BlockchainType.Tron -> {
                 rawAddressHandlers.add(AddressHandlerTron())
+            }
+            BlockchainType.Stellar -> {
+                rawAddressHandlers.add(AddressHandlerStellar())
             }
             is BlockchainType.Unsupported -> {
             }

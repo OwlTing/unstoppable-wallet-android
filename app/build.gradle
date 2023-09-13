@@ -304,11 +304,11 @@ dependencies {
     // Wallet kits
     implementation 'com.github.horizontalsystems:bitcoin-kit-android:8fbfa81'
     releaseImplementation 'com.github.horizontalsystems:ethereum-kit-android:e714fea'
-    debugImplementation 'com.github.OwlTing:ethereum-kit-android:0ccc41f'
+    debugImplementation 'com.github.OwlTing:ethereum-kit-android:10a9471'
     implementation 'com.github.horizontalsystems:blockchain-fee-rate-kit-android:1d3bd49'
     implementation 'com.github.horizontalsystems:binance-chain-kit-android:7e4d7c0'
-    releaseImplementation 'com.github.horizontalsystems:market-kit-android:f203edd'
-    debugImplementation 'com.github.OwlTing:market-kit-android:c228181'
+    releaseImplementation 'com.github.OwlTing:market-kit-android:bf2798f'
+    debugImplementation 'com.github.OwlTing:market-kit-android:4828e96'
     implementation 'com.github.horizontalsystems:solana-kit-android:f9d9f4a'
     implementation 'com.github.horizontalsystems:tron-kit-android:67f8d53'
     // Zcash SDK
@@ -370,6 +370,8 @@ dependencies {
 
     implementation 'com.jakewharton.timber:timber:5.0.1'
     implementation 'androidx.datastore:datastore-preferences:1.0.0'
+
+    implementation 'com.github.stellar:java-stellar-sdk:0.40.0'
 
     // UI Tests
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"

@@ -275,7 +275,21 @@ class CoinOverviewViewModel(
                         )
                     }
                 }
-
+                is TokenType.Alphanum4 -> {
+                    val configuredToken = ConfiguredToken(token)
+                    items.add(
+                        TokenVariant(
+                            value = tokenType.issuer.shorten(),
+                            copyValue = tokenType.issuer,
+                            imgUrl = token.blockchainType.imageUrl,
+                            explorerUrl = null,
+                            name = token.blockchain.name,
+                            configuredToken = configuredToken,
+                            canAddToWallet = false,
+                            inWallet = false
+                        )
+                    )
+                }
                 is TokenType.Unsupported -> {
                     val configuredToken = ConfiguredToken(token)
                     items.add(

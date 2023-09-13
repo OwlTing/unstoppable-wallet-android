@@ -44,6 +44,7 @@ class ConfiguredTokenInfoViewModel(
                 }
                 else -> null
             }
+            is TokenType.Alphanum4,
             is TokenType.Unsupported -> null
         }
 
