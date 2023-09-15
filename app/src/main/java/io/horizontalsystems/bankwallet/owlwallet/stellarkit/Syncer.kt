@@ -135,7 +135,7 @@ class Syncer(
                         it.createdAt,
                         DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
                     )
-                    val timestamp = createAt.toEpochSecond(ZoneOffset.ofHours(8))
+                    val timestamp = createAt.toEpochSecond(ZoneOffset.ofHours(0))
 
                     Transaction(
                         hash = it.hash,
