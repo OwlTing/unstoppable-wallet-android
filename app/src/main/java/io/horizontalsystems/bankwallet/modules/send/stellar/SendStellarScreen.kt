@@ -17,7 +17,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import io.horizontalsystems.bankwallet.R
 import io.horizontalsystems.bankwallet.core.slideFromRight
-import io.horizontalsystems.bankwallet.entities.DataState
 import io.horizontalsystems.bankwallet.modules.address.AddressParserModule
 import io.horizontalsystems.bankwallet.modules.address.AddressParserViewModel
 import io.horizontalsystems.bankwallet.modules.address.HSAddressInput
@@ -26,16 +25,17 @@ import io.horizontalsystems.bankwallet.modules.amount.HSAmountInput
 import io.horizontalsystems.bankwallet.modules.availablebalance.AvailableBalance
 import io.horizontalsystems.bankwallet.modules.send.SendConfirmationFragment
 import io.horizontalsystems.bankwallet.modules.send.SendScreen
-import io.horizontalsystems.bankwallet.owlwallet.login.ActionState
 import io.horizontalsystems.bankwallet.ui.compose.ComposeAppTheme
 import io.horizontalsystems.bankwallet.ui.compose.components.ButtonPrimaryYellow
 import io.horizontalsystems.bankwallet.ui.compose.components.FormsInput
 
 @Composable
 fun SendStellarScreen(
+    title: String,
     navController: NavController,
     viewModel: SendStellarViewModel,
-    amountInputModeViewModel: AmountInputModeViewModel
+    amountInputModeViewModel: AmountInputModeViewModel,
+    sendEntryPointDestId: Int
 ) {
     val wallet = viewModel.wallet
     val uiState = viewModel.uiState
@@ -46,7 +46,8 @@ fun SendStellarScreen(
     val proceedEnabled = uiState.proceedEnabled
     val amountInputType = amountInputModeViewModel.inputType
 
-    val paymentAddressViewModel = viewModel<AddressParserViewModel>(factory = AddressParserModule.Factory(wallet.token.blockchainType))
+    val paymentAddressViewModel =
+        viewModel<AddressParserViewModel>(factory = AddressParserModule.Factory(wallet.token.blockchainType))
     val amountUnique = paymentAddressViewModel.amountUnique
 
     ComposeAppTheme {
@@ -58,7 +59,7 @@ fun SendStellarScreen(
         }
 
         SendScreen(
-            fullCoin = fullCoin,
+            title = title,
             onCloseClick = { navController.popBackStack() }
         ) {
             AvailableBalance(
@@ -126,7 +127,10 @@ fun SendStellarScreen(
 
                     navController.slideFromRight(
                         R.id.sendConfirmation,
-                        SendConfirmationFragment.prepareParams(SendConfirmationFragment.Type.Stellar)
+                        SendConfirmationFragment.prepareParams(
+                            SendConfirmationFragment.Type.Stellar,
+                            sendEntryPointDestId
+                        )
                     )
                 },
                 enabled = proceedEnabled

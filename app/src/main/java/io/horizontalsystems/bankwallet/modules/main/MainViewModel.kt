@@ -24,7 +24,7 @@ import io.horizontalsystems.bankwallet.owlwallet.utils.MainTabManager
 import io.horizontalsystems.bankwallet.owlwallet.utils.VersionChecker
 import io.horizontalsystems.bankwallet.owlwallet.utils.UpdateAction
 import io.horizontalsystems.bankwallet.owlwallet.utils.getLangParam
-import io.horizontalsystems.bankwallet.modules.walletconnect.version1.WC1Manager
+import io.horizontalsystems.bankwallet.modules.walletconnect.version2.WC2Manager
 import io.horizontalsystems.bankwallet.modules.walletconnect.version2.WC2SessionManager
 import io.horizontalsystems.core.IPinComponent
 import io.reactivex.disposables.CompositeDisposable
@@ -43,7 +43,7 @@ class MainViewModel(
     private val releaseNotesManager: ReleaseNotesManager,
     private val localStorage: ILocalStorage,
     wc2SessionManager: WC2SessionManager,
-    private val wc1Manager: WC1Manager,
+    wc2Manager: WC2Manager,
     private val wcDeepLink: String?,
     private val versionHelper: VersionChecker,
     val mainTabManager: MainTabManager,
@@ -93,7 +93,7 @@ class MainViewModel(
     private var contentHidden = pinComponent.isLocked
     private var showWhatsNew = false
     private var activeWallet = accountManager.activeAccount
-    private var wcSupportState: WC1Manager.SupportState? = null
+    private var wcSupportState: WC2Manager.SupportState? = null
     private var torEnabled = localStorage.torEnabled
     private var versionCheckAction = UpdateAction.Nothing
 
@@ -156,7 +156,7 @@ class MainViewModel(
         })
 
         wcDeepLink?.let {
-            wcSupportState = wc1Manager.getWalletConnectSupportState()
+            wcSupportState = wc2Manager.getWalletConnectSupportState()
             syncState()
         }
 

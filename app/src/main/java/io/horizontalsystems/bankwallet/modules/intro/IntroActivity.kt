@@ -145,7 +145,8 @@ private fun OwlTingIntroScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun IntroScreen(viewModel: IntroViewModel, nightMode: Boolean, closeActivity: () -> Unit) {
-    val pagerState = rememberPagerState(initialPage = 0)
+    val pageCount = 3
+    val pagerState = rememberPagerState(initialPage = 0) { pageCount }
     ComposeAppTheme {
         Box {
             Image(
@@ -155,10 +156,8 @@ private fun IntroScreen(viewModel: IntroViewModel, nightMode: Boolean, closeActi
                 contentScale = ContentScale.Crop
             )
         }
-        val pageCount = 3
         HorizontalPager(
             modifier = Modifier.fillMaxSize(),
-            pageCount = pageCount,
             state = pagerState,
             verticalAlignment = Alignment.Top,
         ) { index ->

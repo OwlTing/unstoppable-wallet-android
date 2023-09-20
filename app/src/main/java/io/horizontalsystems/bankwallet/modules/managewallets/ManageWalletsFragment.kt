@@ -1,9 +1,5 @@
 package io.horizontalsystems.bankwallet.modules.managewallets
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,18 +14,15 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import io.horizontalsystems.bankwallet.R
-import io.horizontalsystems.bankwallet.core.BaseFragment
+import io.horizontalsystems.bankwallet.core.BaseComposeFragment
 import io.horizontalsystems.bankwallet.core.slideFromBottom
 import io.horizontalsystems.bankwallet.core.slideFromRight
-import io.horizontalsystems.bankwallet.entities.ConfiguredToken
 import io.horizontalsystems.bankwallet.modules.configuredtoken.ConfiguredTokenInfoDialog
 import io.horizontalsystems.bankwallet.modules.enablecoin.restoresettings.RestoreSettingsViewModel
 import io.horizontalsystems.bankwallet.modules.enablecoin.restoresettings.ZCashConfig
@@ -41,33 +34,25 @@ import io.horizontalsystems.bankwallet.ui.compose.components.*
 import io.horizontalsystems.core.findNavController
 import io.horizontalsystems.core.getNavigationResult
 import io.horizontalsystems.core.parcelable
+import io.horizontalsystems.marketkit.models.Token
 
-class ManageWalletsFragment : BaseFragment() {
+class ManageWalletsFragment : BaseComposeFragment() {
 
     private val vmFactory by lazy { ManageWalletsModule.Factory() }
     private val viewModel by viewModels<ManageWalletsViewModel> { vmFactory }
     private val restoreSettingsViewModel by viewModels<RestoreSettingsViewModel> { vmFactory }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return ComposeView(requireContext()).apply {
-            setViewCompositionStrategy(
-                ViewCompositionStrategy.DisposeOnLifecycleDestroyed(viewLifecycleOwner)
+    @Composable
+    override fun GetContent() {
+        ComposeAppTheme {
+            ManageWalletsScreen(
+                findNavController(),
+                viewModel,
+                restoreSettingsViewModel
             )
-            setContent {
-                ComposeAppTheme {
-                    ManageWalletsScreen(
-                        findNavController(),
-                        viewModel,
-                        restoreSettingsViewModel
-                    )
-                }
-            }
         }
     }
+
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -101,9 +86,9 @@ private fun ManageWalletsScreen(
     Column(
         modifier = Modifier.background(color = ComposeAppTheme.colors.tyler)
     ) {
-//        SearchBar(
-//            title = stringResource(R.string.ManageCoins_title),
-//            searchHintText = stringResource(R.string.ManageCoins_Search),
+        SearchBar(
+            title = stringResource(R.string.ManageCoins_title),
+            searchHintText = stringResource(R.string.ManageCoins_Search),
 //            menuItems = if (viewModel.addTokenEnabled) {
 //                listOf(
 //                    MenuItem(
@@ -116,23 +101,23 @@ private fun ManageWalletsScreen(
 //            } else {
 //                listOf()
 //            },
-//            onClose = { navController.popBackStack() },
-//            onSearchTextChanged = { text ->
-//                viewModel.updateFilter(text)
-//            }
-//        )
-        AppBar(
-            title = TranslatableString.ResString(R.string.ManageCoins_title),
-            navigationIcon = {
-                HsIconButton(onClick = { navController.popBackStack() }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_back),
-                        contentDescription = "back",
-                        tint = ComposeAppTheme.colors.jacob
-                    )
-                }
-            },
+            onClose = { navController.popBackStack() },
+            onSearchTextChanged = { text ->
+                viewModel.updateFilter(text)
+            }
         )
+//        AppBar(
+//            title = TranslatableString.ResString(R.string.ManageCoins_title),
+//            navigationIcon = {
+//                HsIconButton(onClick = { navController.popBackStack() }) {
+//                    Icon(
+//                        painter = painterResource(id = R.drawable.ic_back),
+//                        contentDescription = "back",
+//                        tint = ComposeAppTheme.colors.jacob
+//                    )
+//                }
+//            },
+//        )
 
         coinItems?.let {
             if (it.isEmpty()) {
@@ -172,7 +157,7 @@ private fun ManageWalletsScreen(
 
 @Composable
 private fun CoinCell(
-    viewItem: CoinViewItem<ConfiguredToken>,
+    viewItem: CoinViewItem<Token>,
     onItemClick: () -> Unit,
     onInfoClick: () -> Unit
 ) {

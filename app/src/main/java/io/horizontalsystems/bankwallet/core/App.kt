@@ -95,13 +95,9 @@ import io.horizontalsystems.bankwallet.modules.market.topplatforms.TopPlatformsR
 import io.horizontalsystems.bankwallet.modules.pin.PinComponent
 import io.horizontalsystems.bankwallet.modules.profeatures.ProFeaturesAuthorizationManager
 import io.horizontalsystems.bankwallet.modules.profeatures.storage.ProFeaturesStorage
-import io.horizontalsystems.bankwallet.modules.receive.ReceiveModule
+import io.horizontalsystems.bankwallet.modules.receive.address.ReceiveAddressModule
 import io.horizontalsystems.bankwallet.modules.theme.ThemeType
-import io.horizontalsystems.bankwallet.modules.walletconnect.storage.WC1SessionStorage
 import io.horizontalsystems.bankwallet.modules.walletconnect.storage.WC2SessionStorage
-import io.horizontalsystems.bankwallet.modules.walletconnect.version1.WC1Manager
-import io.horizontalsystems.bankwallet.modules.walletconnect.version1.WC1RequestManager
-import io.horizontalsystems.bankwallet.modules.walletconnect.version1.WC1SessionManager
 import io.horizontalsystems.bankwallet.modules.walletconnect.version2.WC2Manager
 import io.horizontalsystems.bankwallet.modules.walletconnect.version2.WC2Service
 import io.horizontalsystems.bankwallet.modules.walletconnect.version2.WC2SessionManager
@@ -111,7 +107,6 @@ import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.OTWalletRemo
 import io.horizontalsystems.bankwallet.owlwallet.stellarkit.StellarKitManager
 import io.horizontalsystems.bankwallet.owlwallet.utils.PreferenceHelper
 import io.horizontalsystems.bankwallet.owlwallet.utils.VersionChecker
-//import io.horizontalsystems.bankwallet.owlwallet.utils.WalletSyncHelper
 import io.horizontalsystems.bankwallet.widgets.MarketWidgetManager
 import io.horizontalsystems.bankwallet.widgets.MarketWidgetRepository
 import io.horizontalsystems.bankwallet.widgets.MarketWidgetWorker
@@ -173,12 +168,8 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
         lateinit var accountCleaner: IAccountCleaner
         lateinit var rateAppManager: IRateAppManager
         lateinit var coinManager: ICoinManager
-        lateinit var wc1SessionStorage: WC1SessionStorage
-        lateinit var wc1SessionManager: WC1SessionManager
-        lateinit var wc1RequestManager: WC1RequestManager
         lateinit var wc2Service: WC2Service
         lateinit var wc2SessionManager: WC2SessionManager
-        lateinit var wc1Manager: WC1Manager
         lateinit var wc2Manager: WC2Manager
         lateinit var termsManager: ITermsManager
         lateinit var marketFavoritesManager: MarketFavoritesManager
@@ -228,7 +219,7 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
 
         fun getReceiveAddress(wallet: Wallet): String {
             val receiveAdapter = adapterManager.getReceiveAdapterForWallet(wallet)
-                ?: throw ReceiveModule.NoReceiverAdapter()
+                ?: throw ReceiveAddressModule.NoReceiverAdapter()
             return receiveAdapter.receiveAddress
         }
     }
@@ -298,8 +289,7 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
         accountManager = AccountManager(accountsStorage, accountCleaner)
 
         val proFeaturesStorage = ProFeaturesStorage(appDatabase)
-        proFeatureAuthorizationManager =
-            ProFeaturesAuthorizationManager(proFeaturesStorage, accountManager, appConfigProvider)
+        proFeatureAuthorizationManager = ProFeaturesAuthorizationManager(proFeaturesStorage, accountManager, appConfigProvider)
 
         enabledWalletsStorage = EnabledWalletsStorage(appDatabase)
         walletStorage = WalletStorage(marketKit, enabledWalletsStorage)
@@ -386,27 +376,21 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
         addressParserFactory = AddressParserFactory()
 
         pinComponent = PinComponent(
-            pinStorage = pinStorage,
-            encryptionManager = encryptionManager,
-            excludedActivityNames = listOf(
-                    KeyStoreActivity::class.java.name,
-                    LockScreenActivity::class.java.name,
-                    LauncherActivity::class.java.name,
-            )
+                pinStorage = pinStorage,
+                encryptionManager = encryptionManager,
+                excludedActivityNames = listOf(
+                        KeyStoreActivity::class.java.name,
+                        LockScreenActivity::class.java.name,
+                        LauncherActivity::class.java.name,
+                )
         )
 
-        backgroundStateChangeListener =
-            BackgroundStateChangeListener(systemInfoManager, keyStoreManager, pinComponent).apply {
-                backgroundManager.registerListener(this)
-            }
+        backgroundStateChangeListener = BackgroundStateChangeListener(systemInfoManager, keyStoreManager, pinComponent).apply {
+            backgroundManager.registerListener(this)
+        }
 
         rateAppManager = RateAppManager(walletManager, adapterManager, localStorage)
 
-        wc1SessionStorage = WC1SessionStorage(appDatabase)
-        wc1SessionManager =
-            WC1SessionManager(wc1SessionStorage, accountManager, evmSyncSourceManager)
-        wc1RequestManager = WC1RequestManager()
-        wc1Manager = WC1Manager(accountManager, evmBlockchainManager)
         wc2Manager = WC2Manager(accountManager, evmBlockchainManager)
 
         termsManager = TermsManager(localStorage)
@@ -424,8 +408,7 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
             currencyManager
         )
 
-        releaseNotesManager =
-            ReleaseNotesManager(systemInfoManager, localStorage, appConfigProvider)
+        releaseNotesManager = ReleaseNotesManager(systemInfoManager, localStorage, appConfigProvider)
 
         preferenceHelper = PreferenceHelper(applicationContext)
         versionChecker = VersionChecker()
@@ -441,12 +424,7 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
         initializeWalletConnectV2(appConfig)
 
         wc2Service = WC2Service()
-        wc2SessionManager = WC2SessionManager(
-            accountManager,
-            WC2SessionStorage(appDatabase),
-            wc2Service,
-            wc2Manager
-        )
+        wc2SessionManager = WC2SessionManager(accountManager, WC2SessionStorage(appDatabase), wc2Service, wc2Manager)
 
         baseTokenManager = BaseTokenManager(coinManager, localStorage)
         balanceViewTypeManager = BalanceViewTypeManager(localStorage)

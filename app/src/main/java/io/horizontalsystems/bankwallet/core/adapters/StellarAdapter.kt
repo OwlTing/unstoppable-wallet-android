@@ -5,6 +5,7 @@ import io.horizontalsystems.bankwallet.core.BalanceData
 import io.horizontalsystems.bankwallet.core.IAdapter
 import io.horizontalsystems.bankwallet.core.IBalanceAdapter
 import io.horizontalsystems.bankwallet.core.IReceiveAdapter
+import io.horizontalsystems.bankwallet.owlwallet.stellarkit.Network
 import io.horizontalsystems.bankwallet.owlwallet.stellarkit.StellarKit
 import io.horizontalsystems.bankwallet.owlwallet.stellarkit.StellarKitWrapper
 import io.horizontalsystems.marketkit.models.Token
@@ -33,6 +34,9 @@ class StellarAdapter(
 
     override val receiveAddress: String
         get() = stellarKit.keyPair.accountId
+
+    override val isMainNet: Boolean
+        get() = stellarKit.network == Network.Mainnet
 
     suspend fun isAccountActive(address: String): Boolean = withContext(Dispatchers.IO) {
         stellarKit.isAccountActive(address)
