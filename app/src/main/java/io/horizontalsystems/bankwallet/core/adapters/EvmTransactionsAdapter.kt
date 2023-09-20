@@ -99,8 +99,8 @@ class EvmTransactionsAdapter(
                 token != null -> TransactionTag.tokenOutgoing(coinTagName(token))
                 else -> TransactionTag.OUTGOING
             }
-//            FilterTransactionType.Swap -> TransactionTag.SWAP
-//            FilterTransactionType.Approve -> TransactionTag.EIP20_APPROVE
+            FilterTransactionType.Swap -> TransactionTag.SWAP
+            FilterTransactionType.Approve -> TransactionTag.EIP20_APPROVE
         }
 
         return listOfNotNull(filterCoin, filterTag).map { listOf(it) }

@@ -1,7 +1,6 @@
 package io.horizontalsystems.bankwallet.core.managers
 
 import io.horizontalsystems.bankwallet.core.App
-import timber.log.Timber
 import io.horizontalsystems.core.helpers.LocaleHelper
 import java.util.*
 
@@ -12,16 +11,13 @@ class LanguageManager {
     var currentLocale: Locale = App.instance.getLocale()
         set(value) {
             field = value
-            Timber.d("setLocale: $currentLocale")
             App.instance.setLocale(currentLocale)
         }
 
     var currentLocaleTag: String
         get() = currentLocale.toLanguageTag()
         set(value) {
-            Timber.d("currentLocaleTag: $value")
             currentLocale = Locale.forLanguageTag(value)
-            Timber.d("currentLocaleTag: $currentLocale")
         }
 
     val currentLanguageName: String

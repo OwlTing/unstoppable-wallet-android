@@ -34,7 +34,6 @@ class SendConfirmationFragment : BaseComposeFragment() {
         when (arguments.parcelable<Type>(typeKey)) {
             Type.Bitcoin -> {
                 val sendBitcoinViewModel by navGraphViewModels<SendBitcoinViewModel>(R.id.sendXFragment)
-                
                 SendBitcoinConfirmationScreen(
                     findNavController(),
                     sendBitcoinViewModel,

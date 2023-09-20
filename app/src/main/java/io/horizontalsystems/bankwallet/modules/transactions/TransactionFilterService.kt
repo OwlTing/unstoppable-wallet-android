@@ -49,7 +49,8 @@ class TransactionFilterService {
     }
 
     fun getFilterTypes(): List<FilterTransactionType> {
-        return FilterTransactionType.values().toList()
+//        return FilterTransactionType.values().toList()
+        return listOf(FilterTransactionType.All, FilterTransactionType.Incoming, FilterTransactionType.Outgoing)
     }
 
     fun getBlockchains(): List<Blockchain?> {

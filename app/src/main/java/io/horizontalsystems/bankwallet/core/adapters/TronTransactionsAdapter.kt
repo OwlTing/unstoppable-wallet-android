@@ -113,8 +113,8 @@ class TronTransactionsAdapter(
                 else -> TransactionTag.OUTGOING
             }
 
-//            FilterTransactionType.Swap -> TransactionTag.SWAP
-//            FilterTransactionType.Approve -> TransactionTag.TRC20_APPROVE
+            FilterTransactionType.Swap -> TransactionTag.SWAP
+            FilterTransactionType.Approve -> TransactionTag.TRC20_APPROVE
         }
 
         return listOfNotNull(filterCoin, filterTag).map { listOf(it) }

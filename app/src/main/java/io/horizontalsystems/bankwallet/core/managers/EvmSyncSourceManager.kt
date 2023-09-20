@@ -115,10 +115,7 @@ class EvmSyncSourceManager(
                 evmSyncSource(
                     type,
                     "Omnia",
-                    RpcSource.Http(
-                        listOf(URL("https://endpoints.omniatech.io/v1/bsc/mainnet/public")),
-                        null
-                    ),
+                    RpcSource.Http(listOf(URL("https://endpoints.omniatech.io/v1/bsc/mainnet/public")), null),
                     defaultTransactionSource(type)
                 )
             )
@@ -188,10 +185,7 @@ class EvmSyncSourceManager(
                         evmSyncSource(
                             type,
                             "PublicNode",
-                            RpcSource.Http(
-                                listOf(URL("https://avalanche-evm.publicnode.com")),
-                                null
-                            ),
+                            RpcSource.Http(listOf(URL("https://avalanche-evm.publicnode.com")), null),
                             defaultTransactionSource(type)
                         )
                     )
@@ -224,10 +218,7 @@ class EvmSyncSourceManager(
                 evmSyncSource(
                     type,
                     "Omnia",
-                    RpcSource.Http(
-                        listOf(URL("https://endpoints.omniatech.io/v1/arbitrum/one/public")),
-                        null
-                    ),
+                    RpcSource.Http(listOf(URL("https://endpoints.omniatech.io/v1/arbitrum/one/public")), null),
                     defaultTransactionSource(type)
                 )
             )

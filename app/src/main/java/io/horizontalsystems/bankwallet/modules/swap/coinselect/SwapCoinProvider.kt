@@ -9,7 +9,6 @@ import io.horizontalsystems.bankwallet.modules.swap.SwapMainModule
 import io.horizontalsystems.bankwallet.modules.swap.SwapMainModule.CoinBalanceItem
 import io.horizontalsystems.marketkit.models.BlockchainType
 import io.horizontalsystems.marketkit.models.Token
-import timber.log.Timber
 import java.math.BigDecimal
 
 class SwapCoinProvider(
@@ -77,23 +76,13 @@ class SwapCoinProvider(
 
     fun getCoins(filter: String): List<CoinBalanceItem> {
         val walletItems = getWalletItems(filter)
-
         val coinItems = getCoinItems(filter).filter { coinItem ->
             walletItems.indexOfFirst { it.token == coinItem.token } == -1
         }
 
         val allItems = walletItems + coinItems
 
-        val filtered = allItems.filter {
-            it.token.coin.code == "ETH"
-                    || it.token.coin.code == "MATIC"
-                    || it.token.coin.code == "AVAX"
-                    || it.token.coin.code == "USDC"
-                    || it.token.coin.code == "USDT"
-                    || it.token.coin.code == "DAI"
-        }
-
-        return filtered.sortedWith(compareByDescending { it.balance })
+        return allItems.sortedWith(compareByDescending { it.balance })
     }
 
 }

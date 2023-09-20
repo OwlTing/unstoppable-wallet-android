@@ -42,7 +42,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.rx2.await
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import java.math.BigDecimal
 
 class TransactionInfoService(
@@ -158,10 +157,9 @@ class TransactionInfoService(
         launch {
             adapter.getTransactionRecordsFlowable(null, FilterTransactionType.All).asFlow()
                 .collect { transactionRecords ->
-
                     val record = transactionRecords.find { it == transactionRecord }
+
                     if (record != null) {
-                        Timber.d("record: ${record.source}")
                         handleRecordUpdate(record)
                     }
                 }

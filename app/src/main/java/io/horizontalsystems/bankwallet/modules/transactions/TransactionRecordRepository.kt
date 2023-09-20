@@ -226,6 +226,7 @@ class TransactionRecordRepository(
     @Synchronized
     private fun handleRecords(records: List<TransactionRecord>, page: Int) {
         val expectedItemsCount = page * itemsPerPage
+
         records
             .sortedDescending()
             .take(expectedItemsCount)

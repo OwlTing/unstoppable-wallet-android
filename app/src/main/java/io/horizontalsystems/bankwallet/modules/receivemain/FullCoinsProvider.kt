@@ -14,7 +14,6 @@ import io.horizontalsystems.marketkit.models.BlockchainType
 import io.horizontalsystems.marketkit.models.FullCoin
 import io.horizontalsystems.marketkit.models.Token
 import io.horizontalsystems.marketkit.models.TokenType
-import timber.log.Timber
 
 class FullCoinsProvider(
     private val marketKit: MarketKitWrapper,

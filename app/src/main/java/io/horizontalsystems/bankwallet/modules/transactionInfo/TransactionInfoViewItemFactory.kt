@@ -57,7 +57,6 @@ import io.horizontalsystems.bankwallet.modules.transactions.TransactionStatus
 import io.horizontalsystems.bankwallet.modules.transactions.TransactionViewItem
 import io.horizontalsystems.core.helpers.DateHelper
 import io.horizontalsystems.marketkit.models.BlockchainType
-import timber.log.Timber
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.Date
@@ -84,8 +83,6 @@ class TransactionInfoViewItemFactory(
         val miscItemsSection = mutableListOf<TransactionInfoViewItem>()
 
         var sentToSelf = false
-
-        Timber.d("getViewItemSections: ${transaction}")
 
         when (transaction) {
             is ContractCreationTransactionRecord -> {

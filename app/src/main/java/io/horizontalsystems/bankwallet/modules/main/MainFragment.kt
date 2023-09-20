@@ -85,6 +85,7 @@ class MainFragment : BaseComposeFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         requireActivity().onBackPressedDispatcher.addCallback(
             this,
             object : OnBackPressedCallback(true) {
@@ -94,11 +95,6 @@ class MainFragment : BaseComposeFragment() {
             })
     }
 
-    private fun openAppInPlayMarket() {
-        context?.let { context ->
-            RateAppManager.openPlayMarket(context)
-        }
-    }
 }
 
 @Composable
@@ -306,10 +302,7 @@ private fun HideContentBox(contentHidden: Boolean) {
     } else {
         Modifier
     }
-    Box(
-        Modifier
-            .fillMaxSize()
-            .then(backgroundModifier))
+    Box(Modifier.fillMaxSize().then(backgroundModifier))
 }
 
 @Composable

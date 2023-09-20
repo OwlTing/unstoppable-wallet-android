@@ -81,7 +81,6 @@ fun BalanceForAccount(navController: NavController, accountViewItem: AccountView
 
 
     BackupAlert(navController)
-
     ModalBottomSheetLayout(
         sheetState = invalidUrlBottomSheetState,
         sheetBackgroundColor = ComposeAppTheme.colors.transparent,
