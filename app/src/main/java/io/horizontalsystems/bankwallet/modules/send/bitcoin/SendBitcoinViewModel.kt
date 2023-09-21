@@ -110,7 +110,7 @@ class SendBitcoinViewModel(
             addressError = addressState.addressError,
             amountCaution = amountState.amountCaution,
             feeRateCaution = feeRateState.feeRateCaution,
-            canBeSend = amountState.canBeSend && addressState.canBeSend && feeRateState.canBeSend,
+            canBeSend = amountState.canBeSend && addressState.canBeSend && feeRateState.canBeSend && fee != null,
             showAddressInput = showAddressInput,
         )
 
