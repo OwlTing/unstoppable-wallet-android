@@ -56,6 +56,7 @@
     <string name="Button_SignUp">註冊</string>
     <string name="Button_Submit">提交</string>
     <string name="Button_TryAgain">再試一次</string>
+    <string name="Button_Share">分享</string>
     <string name="Error_OutOfRange">不能小於 %1$s 或大於 %2$s</string>
     <string name="Error_NotInteger">錯誤的整數</string>
     <string name="Error">出錯</string>
@@ -256,33 +257,16 @@
     <string name="Market_Filter_TimePeriod_1M">1月</string>
     <string name="Market_Filter_TimePeriod_6M">6月</string>
     <string name="Market_Filter_TimePeriod_1Y">1年</string>
-    <string name="Market_Filter_PriceChange_Positive_10_plus">&gt; +10%</string>
-    <string name="Market_Filter_PriceChange_Positive_25_plus">&gt; +25%</string>
-    <string name="Market_Filter_PriceChange_Positive_50_plus">&gt; +50%</string>
-    <string name="Market_Filter_PriceChange_Positive_100_plus">&gt; +100%</string>
-    <string name="Market_Filter_PriceChange_Negative_10_minus">&lt; -10%</string>
-    <string name="Market_Filter_PriceChange_Negative_25_minus">&lt; -25%</string>
-    <string name="Market_Filter_PriceChange_Negative_50_minus">&lt; -50%</string>
-    <string name="Market_Filter_PriceChange_Negative_75_minus">&lt; -75%</string>
     <string name="TimePeriod_24h">24小時</string>
     <!--Coin Markets-->
     <string name="CoinMarket_Title">%s 市場</string>
     <!--TVL Rank-->
-    <string name="TvlRank_Title">鎖倉排名</string>
     <string name="TvlRank_MultiChain">多鏈</string>
-    <string name="TvlRank_Field_HighestTvl">最高鎖倉</string>
-    <string name="TvlRank_Field_LowestTvl">最低鎖倉</string>
-    <string name="TvlRank_Field_All">所有</string>
-    <string name="TvlRank_Field_Eth">Ethreum</string>
-    <string name="TvlRank_Field_Bsc">Binance</string>
-    <string name="TvlRank_Field_Sol">Solana</string>
-    <string name="TvlRank_Field_Ava">Avalanche</string>
-    <string name="TvlRank_Field_Mat">Polygon</string>
-    <string name="TvlRank_Filters_PopupTitle">過濾器</string>
     <!--Balance-->
     <string name="Balance_Withdraw">提取</string>
     <string name="Balance_Title">餘額</string>
     <string name="Balance_Send">發送​​</string>
+    <string name="Balance_Swap">掉期交易</string>
     <string name="Balance_Deposit">接收</string>
     <string name="Balance_Receive">接收</string>
     <string name="Balance_Address">地址</string>
@@ -294,18 +278,33 @@
     <string name="Balance_Syncing_WithProgress">正在同步... %s%%</string>
     <string name="Balance_AddCoins">添加代幣</string>
     <string name="Balance_AddCoin">添加代幣</string>
-    <string name="Balance_CoinDisabled">已禁用代幣%s</string>
+    <string name="Balance_CoinDisabled">已停用代幣%s</string>
     <string name="Balance_Sort_Balance">餘額</string>
     <string name="Balance_Sort_PopupTitle">排序</string>
     <string name="Balance_Sort_Az">名稱</string>
     <string name="Balance_Sort_24hPriceChange">價格變動</string>
     <string name="Balance_Hidden">隱藏</string>
-    <string name="Balance_DownloadingBlocks">正在下載塊</string>
-    <string name="Balance_ScanningBlocks">掃描塊</string>
+    <string name="Balance_DownloadingBlocks">正在下載區塊</string>
+    <string name="Balance_ScanningBlocks">掃描區塊</string>
     <string name="Balance_Backup_Alert">您必須在接收%s之前先備份%s錢包。 </string>
     <string name="Balance_NoWalletAlert">尚無錢包</string>
-    <string name="Balance_NoCoinsAlert">您沒有添加的硬幣。 \n添加您將使用的硬幣</string>
-    <string name="Balance_WatchAccount_NoBalance">此錢包地址沒有任何餘額</string>
+    <string name="Balance_NoCoinsAlert">您沒有加入的硬幣。 \n加入您將使用的硬幣</string>
+    <string name="Balance_WatchAccount_NoBalance">此錢包位址沒有任何餘額</string>
+    <string name="Balance_NoAssetsToSend">您沒有要寄送的資產。 </string>
+    <string name="Balance_NoAssetsToSwap">您目前沒有可供交換的資產。 </string>
+    <string name="Balance_Network">網</string>
+    <string name="Balance_Format">格式</string>
+    <string name="Balance_NetworkSelectDescription">選擇要接收位址的網路。 </string>
+    <string name="Balance_ReceiveAddressHint">您存放 %s 的地址</string>
+    <string name="Balance_ReceiveWatchAddressHint">觀看 %s 的地址</string>
+    <string name="Balance_ReceiveWarningText">只傳送 %s 到此位址。向此地址發送其他類型的令牌將導致其最終丟失。 </string>
+    <string name="Balance_Receive_AddressFormatDescription">選擇要接收的位址的格式。 </string>
+    <string name="Balance_Receive_AddressFormat">地址格式</string>
+    <string name="Balance_Receive_AddressFormat_RecommendedAddressType">現金地址格式更適合接收比特幣現金(BCH)，因為它提高了用戶體驗和相容性。然而，無論寄件者的位址格式為何，兩種位址格式都可以互換地用於接收BCCH。 </string>
+    <string name="Balance_Receive_AddressFormat_RecommendedDerivation">本機SegWit格式是比特幣中為了改善輸送和安全性而偏好的。所有位址格式 (Taproot, SegWit, Legacy) 可以互換使用來接收BTC ，而不論發送者的位址格式。啟用跨越不同種類的無縫交易。 </string>
+    <string name="Balance_Receive_Account">帳戶</string>
+    <string name="Balance_Receive_NotActive">不活動</string>
+    <string name="Balance_LockedAmount_Title">鎖定</string>
     <!--Send NFT-->
     <string name="SendNft_Title">發送​​</string>
     <string name="SendNft_Error_NotEnoughtBalance">餘額不足</string>
@@ -314,7 +313,7 @@
     <string name="Send_Hint_Address">地址或域名</string>
     <string name="Send_Fee">費用</string>
     <string name="Send_Fee_Info">區塊鏈要求用戶在發送交易時支付網絡費用。當大量交易在網絡上進行時，這筆費用將更高。 </string>
-    <string name="Send_Button_Paste">粘帖</string>
+    <string name="Send_Button_Paste">貼上</string>
     <string name="Send_Button_Max">最多</string>
     <string name="Send_Advanced">高級</string>
     <string name="Send_Hodler_Description">時間鎖（TimeLock）只適用於發送到BIP44地址（從1開始)</string>
@@ -347,7 +346,6 @@
     <string name="Send_TxSpeed_High">高</string>
     <string name="Send_TxSpeed_Recommended">推薦</string>
     <string name="Send_TxSpeed_Custom">自定義</string>
-    <string name="Send_TxSpeed_CustomFeeHint">聰/字節</string>
     <string name="Send_DialogFee">費用：</string>
     <string name="Send_DialogProceed">繼續</string>
     <string name="Send_LockTime_Off">關</string>
@@ -379,10 +377,8 @@
     <string name="FeeSettings_Fee_Info">需為此交易支付的最高估計交易費用是根據以下燃料限制（gas limit）、最高費率和最高優先級費用價值計算得出。支付的實際費用通常會較低。 </string>
     <string name="FeeSettings_NetworkFee">網絡費</string>
     <string name="FeeSettings_NetworkFee_Info">在網絡上發送給定交易的估計費用。 </string>
-    <string name="FeeSettings_GasLimit">GAS限制</string>
     <string name="FeeSettings_GasLimit_Info">交易複雜度以被稱為“gas”（燃料）的單位度量。它將根據被執行的智能合同而變化。 Gas Limit（燃料限制）是執行它所需要的估計最大燃料。使用的實際燃料通常會較低。 </string>
-    <string name="FeeSettings_GasPrice">Gas Price (Gwei)</string>
-    <string name="FeeSettings_GasPrice_Info">網上交易費用將按燃料單位計量。燃料價格是用戶願意按單位消費的金額。當網絡忙碌時，燃料價格就高，空閒時價格就低。燃料價格不足常常是交易被長期擱置的一個原因。 </string>
+    <string name="FeeSettings_GasPrice_Info">網路交易費用將以燃料單位計量。燃料價格是用戶願意以單位消費的金額。當網路忙碌時，燃料價格就高，空閒時價格就低。燃料價格不足常常是交易被長期擱置的一個原因。 </string>
     <string name="FeeSettings_BaseFee">基礎費用</string>
     <string name="FeeSettings_BaseFee_Info">網絡協議將決定每一個區塊的每一燃料（gas）的基礎價格，稱為基礎費率。它根據不同區塊的網絡利用水平而變化。它可能會在下一個區塊中增加或減少不多於12.5%，使得費用更具有可預測性。這裡顯示的值為當前區塊的基礎費率。 </string>
     <string name="FeeSettings_MaxFee">最大收費率(Gwei)</string>
@@ -443,7 +439,6 @@
     <string name="WalletConnect_Disconnecting">正在斷開連接</string>
     <string name="WalletConnect_SignMessageRequest_Title">簽名請求</string>
     <string name="WalletConnect_SignMessageRequest_Domain">域名</string>
-    <string name="WalletConnect_SignMessageRequest_dApp">dApp</string>
     <string name="WalletConnect_SignMessageRequest_ShowMessageTitle">待簽名消息</string>
     <string name="WalletConnect_SignMessageRequest_SignMessageHint">請對消息簽名以便進行驗證</string>
     <string name="WalletConnect_SignMessageRequest_ButtonSign">簽名</string>
@@ -662,7 +657,8 @@
     <string name="TransactionInfoOptions_Cancel_Button">取消交易</string>
     <string name="TransactionInfoOptions_Warning_TransactionInBlock">交易已在區塊中</string>
     <!-- Info -->
-    <string name="Info_LockTime_Description">匯款人通過將在%s失效的消費鎖定匯出這些資金。 \n\n無需擔心，收到的加密貨幣已經屬於您，但在鎖定期限結束前，您無法在網絡上消費它們。 </string>
+    <string name="Info_LockTime_Description">匯款人透過將在%s失效的消費鎖定匯出這些資金。 \n\n無需擔心，收到的加密貨幣已經屬於您，但在鎖定期限結束前，您無法在網路上消費它們。 </string>
+    <string name="Info_LockTime_Description_Static">匯款人透過將在所顯示日期失效的消費鎖定匯出這些資金。 \n\n無需擔心，收到的比特幣已經屬於您，但在鎖定期限結束前，您無法在比特幣網路上消費它們。 </string>
     <string name="Info_DoubleSpend_Title">雙复支付</string>
     <string name="Info_DoubleSpend_Description">雙重支付風險！區塊鏈上還有另一筆交易試圖支付這筆交易所使用的投入。網絡只接受一筆交易。 </string>
     <string name="Info_DoubleSpend_ThisTx">此交易</string>
@@ -688,13 +684,12 @@
     <string name="Settings_Terms">使用條款</string>
     <string name="Settings_Privacy">隱私保護</string>
     <string name="Settings_ShareThisWallet">分享給好友</string>
-    <string name="Settings_AppStatus">應用狀態</string>
-    <string name="Settings_WalletConnect">WalletConnect</string>
+    <string name="Settings_AppStatus">應用程式狀態</string>
     <string name="Settings_RateUs">評價我們</string>
     <string name="Settings_LaunchScreen">啟動分頁</string>
     <string name="Settings_Appearance">外觀</string>
-    <string name="Settings_Contact_ViaTelegram">通過 Telegram</string>
-    <string name="Settings_Contact_ViaEmail">通過電子郵件</string>
+    <string name="Settings_Contact_ViaTelegram">透過 Telegram</string>
+    <string name="Settings_Contact_ViaEmail">透過電子郵件</string>
     <string name="Settings_PersonalSupport">個人支持</string>
     <string name="Settings_PersonalSupport_EnterTelegramAccountDescription">請輸入您的 Telegram 帳號名稱，開始與我們的團隊的個人支援聊天。一旦我們看到這個問題，我們就會回到您的面前。 </string>
     <string name="Settings_PersonalSupport_YouAlreadyRequestedSupportDescription">您已經請求了一個私聊，在Telegram 上找到它</string>
@@ -707,7 +702,10 @@
     <string name="Settings_PersonalSupport_OpenTelegram">打開 Telegram</string>
     <string name="Settings_Donate_Info">在你的支持下，我們可以使這個應用更好！ </string>
     <string name="Settings_Donate">捐助</string>
-    <string name="Settings_Donate_CoinAddress">%s 地址</string>
+    <string name="Settings_DonateToken">捐款%s</string>
+    <string name="Settings_DonateWith">捐款方式</string>
+    <string name="Settings_Donate_GetAddress">取得位址</string>
+    <string name="Settings_Donate_Addresses">地址</string>
     <string name="Appearance_Theme">主題</string>
     <string name="Appearance_Tab">TAB設置</string>
     <string name="Appearance_LaunchScreen">局域網SCREEN</string>
@@ -922,6 +920,7 @@
     <string name="ManageAccount_WatchAddresses">觀察地址</string>
     <string name="ManageAccount_SwitchWallet_Subtitle">選擇錢包以快速切換</string>
     <string name="ManageAccount_DeleteWarning">您要停止監視這個錢包地址嗎？</string>
+    <string name="Balance_Receive_BackupRequired_Description">您需要備份 %1$s</string>
     <!--Network Settings-->
     <string name="NetworkSettings_Title">網絡設置</string>
     <string name="NetworkSettings_SwithesAutomatically">自動切換</string>
@@ -974,19 +973,11 @@
     <!-- Bip32 Root Key -->
     <string name="Bip32RootKey">BIP32 Root Key</string>
     <!-- Account Extended Keys -->
-    <string name="ExtendedKey_Blockchain">Blockchain</string>
-    <string name="ExtendedKey_Purpose">目的</string>
-    <string name="ExtendedKey_Account">賬戶</string>
     <string name="ExtendedKey_TapToShowPrivateKey">點擊顯示私鑰</string>
-    <string name="AccountExtendedPrivateKey">Account Extended Private Key</string>
-    <string name="AccountExtendedPublicKey">Account Extended Public Key</string>
-    <string name="AccountExtendedPrivateKey_Short">Account xPrivKey</string>
-    <string name="AccountExtendedPublicKey_Short">Account xPubKey</string>
     <!-- Private Keys -->
     <string name="PrivateKeys_Title">私鑰</string>
     <string name="PrivateKeys_EvmPrivateKey">EVM 私鑰</string>
     <string name="PrivateKeys_EvmPrivateKeyDescription">授予對基於加密貨幣的EVM的完全控制，即在相應錢包內的以太坊、幣安智能鍊等。 </string>
-    <string name="PrivateKeys_Bip32RootKey">BIP32 Root Key</string>
     <string name="PrivateKeys_Bip32RootKeyDescription">授予對相應錢包上的資產的完全控制。 </string>
     <string name="PrivateKeys_AccountExtendedPrivateKey">Account Extended Private Key</string>
     <string name="PrivateKeys_AccountExtendedPrivateKeyDescription">授予對比特幣和基於加密貨幣的其他未花費交易輸出（UTXO）的完全控制，即在相應錢包內的萊特幣、比特幣現金、達世幣等。 </string>
@@ -994,7 +985,6 @@
     <!-- Public Keys -->
     <string name="PublicKeys_Title">公鑰</string>
     <string name="PublicKeys_EvmAddress">EVM 地址</string>
-    <string name="PublicKeys_AccountExtendedPublicKey">Account Extended Public Key</string>
     <string name="PublicKeys_EvmAddress_Description">允許只讀監視持有Etherum、 Binance Smart Chain和其他基於 EVM 的區塊鏈的錢包。 </string>
     <string name="PublicKeys_AccountExtendedPublicKeyDescription">允許只讀監視持有比特幣和其他基於 UTXO 的加密錢包(即Liteco、 比特幣現金、 破折號等)。 </string>
     <!-- Recovery Phrase Verify -->
@@ -1101,7 +1091,6 @@
     <string name="CoinPage_Audits_PoweredBy">由 Defiyield.app 提供支持</string>
     <string name="CoinPage_Audits_Issues">發布: %d</string>
     <string name="CoinPage_InvestorData">投資數據</string>
-    <string name="CoinPage_Treasuries">國庫券</string>
     <string name="CoinPage_Treasuries_FilterTitle">篩選器</string>
     <string name="CoinPage_Treasuries_PoweredBy">由Bitcointreasuries.net提供</string>
     <string name="CoinPage_Reports">報告</string>
@@ -1172,7 +1161,6 @@
     <string name="CoinPage_MajorHolders_InTopWallets">在前10名持有者中</string>
     <string name="CoinPage_MajorHolders_HoldersNumber">持有者總數：%s</string>
     <string name="CoinPage_CoinInvestments_Lead">領投</string>
-    <string name="CoinPage_NftBannerTitle">Unstoppable NFT</string>
     <string name="CoinPage_NftBannerDescription">通過持有不可阻擋的 NFT 獲取高級錢包功能。 </string>
     <string name="CoinPage_CoinNotFound">[%s]\n未找到</string>
     <string name="CoinPage_Indicators">指標</string>
@@ -1199,14 +1187,10 @@
     <string name="CoinAnalytics_DexVolume_Info3">Token\'s rank based on trading volume on leading decentralized exchanges over 30-day period.</string>
     <string name="CoinAnalytics_DexVolume_Info4">List of all tokens ranked based on trading volume on decentralized exchanges over 24H / 7D / 1M intervals.</string>
     <string name="CoinAnalytics_DexVolume_TrackedDexes">正在追踪的DEX：</string>
-    <string name="CoinAnalytics_DexVolume_TrackedDexes_Info1">Ethereum : Uniswap V2/3, Sushiswap</string>
-    <string name="CoinAnalytics_DexVolume_TrackedDexes_Info2">Binance-Smart-Chain : PancakeSwap</string>
     <string name="CoinAnalytics_DexLiquidity_Info1">Total currently available liquidity for the token on leading decentralized exchanges.</string>
     <string name="CoinAnalytics_DexLiquidity_Info2">Chart showing variation in available liquidity for the token on leading decentralized exchanges over 1 year period.</string>
     <string name="CoinAnalytics_DexLiquidity_Info3">List of all tokens ranked based on available liquidity for the token on leading decentralized exchanges.</string>
     <string name="CoinAnalytics_DexLiquidity_TrackedDexes">正在追踪的DEX：</string>
-    <string name="CoinAnalytics_DexLiquidity_TrackedDexes_Info1">Ethereum : Uniswap V2/3, Balancer V1/2, Bancor V2, Curve, Sushiswap</string>
-    <string name="CoinAnalytics_DexLiquidity_TrackedDexes_Info2">Binance-Smart-Chain : PancakeSwap, DODO V1/2</string>
     <string name="CoinAnalytics_ActiveAddresses_Info1">Total number of unique daily active addresses over 24-hour period.</string>
     <string name="CoinAnalytics_ActiveAddresses_Info2">Chart showing variation in daily active address count over 1 year period.</string>
     <string name="CoinAnalytics_ActiveAddresses_Info3">Total number of unique blockchain addresses transacting with token over 30-day period.</string>
@@ -1262,7 +1246,6 @@
     <string name="CoinAnalytics_OtherData">其它數據</string>
     <string name="CoinAnalytics_Reports">報告</string>
     <string name="CoinAnalytics_Funding">資金支持</string>
-    <string name="CoinAnalytics_Treasuries">國庫券</string>
     <string name="Coin_Analytics_Audits">審計</string>
     <string name="Coin_Analytics_Last30d">最近30天</string>
     <string name="Coin_Analytics_Current">當前</string>
@@ -1312,7 +1295,6 @@
     <string name="SubscriptionInfo_PersonalSupport_Info">通過 Telegram 直接聯繫我們的團隊以獲取個人幫助。 </string>
     <string name="SubscriptionInfo_GetPremium">成為付費會員</string>
     <string name="SubscriptionInfo_HavePremium">我已經有高級版</string>
-    <string name="Nfts_Title">NFT</string>
     <string name="Nfts_PriceType_Days_7">平均7天</string>
     <string name="Nfts_PriceType_Days_30">平均30天</string>
     <string name="Nfts_PriceType_LastSale">收盤價</string>
@@ -1323,7 +1305,6 @@
     <string name="Nfts_PriceMode">價格模式</string>
     <string name="NftAsset_Overview">行情</string>
     <string name="NftAsset_Activity">活動</string>
-    <string name="NftAsset_OpenSea">OpenSea</string>
     <string name="NftAsset_Action_Share">分享</string>
     <string name="NftAsset_Action_Save">保存</string>
     <string name="NftAsset_OwnedCount">擁有數量</string>
@@ -1344,9 +1325,6 @@
     <string name="NftAsset_TokenStandard">代幣標準</string>
     <string name="NftAsset_Blockchain">區塊鏈</string>
     <string name="NftAsset_Links_Website">網站</string>
-    <string name="NftAsset_Links_OpenSea">OpenSea</string>
-    <string name="NftAsset_Links_Discord">Discord</string>
-    <string name="NftAsset_Links_Twitter">Twitter</string>
     <string name="PoweredBy_OpenSeaAPI">由 OpenSea API 提供支持</string>
     <string name="Nft_TopCollections">前列 NFT 收藏</string>
     <string name="Nft_TopCollections_Description">按交易量排列的主要NFT收藏。 </string>
@@ -1478,7 +1456,6 @@
     <string name="CexDeposit_Title">存款 %s</string>
     <string name="CexDeposit_CopyAddress">複製地址</string>
     <string name="CexDeposit_ShareAddress">共享地址</string>
-    <string name="CexDeposit_Memo">Memo (Tag)</string>
     <string name="CexDeposit_Network">網絡</string>
     <string name="CexDeposit_AddressDescription">您存放 %s 的地址</string>
     <string name="CexDeposit_DepositWarning">只發送 %s 到此地址。向此地址發送其他類型的令牌將導致其最終丟失。 </string>
