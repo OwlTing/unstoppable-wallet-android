@@ -226,7 +226,7 @@ private fun ReceiveAddressScreen(
                                                 Image(
                                                     modifier = Modifier.size(32.dp),
                                                     painter = adaptiveIconPainterResource(
-                                                        id = R.mipmap.launcher_main,
+                                                        id = R.mipmap.ic_launcher,
                                                         fallbackDrawable = R.drawable.launcher_main_preview
                                                     ),
                                                     contentDescription = null
