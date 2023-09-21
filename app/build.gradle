@@ -301,8 +301,8 @@ dependencies {
 
     // Wallet kits
     implementation 'com.github.horizontalsystems:bitcoin-kit-android:5b9ebaa'
-    releaseImplementation 'com.github.horizontalsystems:ethereum-kit-android:e714fea'
-    debugImplementation 'com.github.OwlTing:ethereum-kit-android:10a9471'
+    releaseImplementation 'com.github.OwlTing:ethereum-kit-android:4afea44'
+    debugImplementation 'com.github.OwlTing:ethereum-kit-android:d98fd6f'
     implementation 'com.github.horizontalsystems:blockchain-fee-rate-kit-android:1d3bd49'
     implementation 'com.github.horizontalsystems:binance-chain-kit-android:7e4d7c0'
     releaseImplementation 'com.github.OwlTing:market-kit-android:2e8c654'

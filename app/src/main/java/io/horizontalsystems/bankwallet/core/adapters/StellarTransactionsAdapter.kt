@@ -79,7 +79,7 @@ class StellarTransactionsAdapter(
 
     private fun coinTagName(token: Token) = when (val type = token.type) {
         TokenType.Native -> TransactionTag.STELLAR_COIN
-        is TokenType.Alphanum4 -> type.issuer
+        is TokenType.Alphanum4 -> TransactionTag.STELLAR_USDC
         else -> ""
     }
 

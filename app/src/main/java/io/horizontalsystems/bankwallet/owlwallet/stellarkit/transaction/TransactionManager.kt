@@ -90,14 +90,14 @@ class TransactionManager(
                     } else {
                         if (isSend) {
                             mutableListOf(
-                                op.assetIssuer,
-                                TransactionTag.tokenOutgoing(op.assetIssuer),
+                                TransactionTag.STELLAR_USDC,
+                                TransactionTag.STELLAR_USDC_OUTGOING,
                                 TransactionTag.OUTGOING
                             )
                         } else {
                             mutableListOf(
-                                op.assetIssuer,
-                                TransactionTag.tokenIncoming(op.assetIssuer),
+                                TransactionTag.STELLAR_USDC,
+                                TransactionTag.STELLAR_USDC_INCOMING,
                                 TransactionTag.INCOMING
                             )
                         }

@@ -80,7 +80,8 @@ class EvmTransactionsAdapter(
 
     private fun coinTagName(token: Token) = when (val type = token.type) {
         TokenType.Native -> TransactionTag.EVM_COIN
-        is TokenType.Eip20 -> type.address
+//        is TokenType.Eip20 -> type.address
+        is TokenType.Eip20 -> TransactionTag.EVM_USDC
         else -> ""
     }
 
