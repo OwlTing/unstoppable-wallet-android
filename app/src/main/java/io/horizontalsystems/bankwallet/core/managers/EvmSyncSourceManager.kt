@@ -53,7 +53,7 @@ class EvmSyncSourceManager(
                     listOf(
                         evmSyncSource(
                             type,
-                            "TestNet Websocket",
+                            "Infura",
                             RpcSource.goerliInfuraWebSocket(
                                 appConfigProvider.infuraProjectId,
                                 appConfigProvider.infuraProjectSecret
@@ -62,7 +62,7 @@ class EvmSyncSourceManager(
                         ),
                         evmSyncSource(
                             type,
-                            "TestNet HTTP",
+                            "Infura",
                             RpcSource.goerliInfuraHttp(
                                 appConfigProvider.infuraProjectId,
                                 appConfigProvider.infuraProjectSecret
@@ -124,16 +124,16 @@ class EvmSyncSourceManager(
                     listOf(
                         evmSyncSource(
                             type,
-                            "Polygon-RPC HTTP",
+                            "Polygon RPC",
                             RpcSource.Http(
-                                listOf(URL("https://rpc.ankr.com/polygon_mumbai")),
+                                listOf(URL("https://rpc-mumbai.maticvigil.com/")),
                                 null
                             ), TransactionSource(
                                 "mumbai.polygonscan.com",
                                 TransactionSource.SourceType.Etherscan(
                                     "https://api-testnet.polygonscan.com",
                                     "https://mumbai.polygonscan.com",
-                                    appConfigProvider.snowtraceApiKey
+                                    appConfigProvider.polygonscanApiKey
                                 )
                             )
                         )
