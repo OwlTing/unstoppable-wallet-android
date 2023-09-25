@@ -47,6 +47,7 @@ class SupportedTokenHelper {
                         filterTokens(it.tokens)
                     )
                 }
+                .filter { it.tokens.isNotEmpty() }
         }
 
         fun createUSDCWallets(account: Account, blockchains: List<BlockchainType>): List<Wallet> {
