@@ -28,7 +28,10 @@ class SupportedTokenHelper {
 
                     "BTC",
                     "XLM",
-                    "USDC" -> true
+                    "USDC", -> true
+                    "USDC.E" -> {
+                        it.blockchain.type == BlockchainType.Polygon
+                    }
 
                     else -> {
                         false
@@ -38,7 +41,7 @@ class SupportedTokenHelper {
         }
 
         fun filterFullCoin(fullCoins: List<FullCoin>): List<FullCoin> {
-            val supportedCoinCodes = arrayOf("ETH", "MATIC", "AVAX", "BTC", "XLM", "USDC")
+            val supportedCoinCodes = arrayOf("ETH", "MATIC", "AVAX", "BTC", "XLM", "USDC", "USDC.E")
             return fullCoins
                 .filter { supportedCoinCodes.contains(it.coin.code) }
                 .map {
@@ -51,17 +54,35 @@ class SupportedTokenHelper {
         }
 
         fun createUSDCWallets(account: Account, blockchains: List<BlockchainType>): List<Wallet> {
-            return App.marketKit.fullCoins(listOf("usd-coin"))
-                .map {
-                    FullCoin(
-                        it.coin,
-                        filterTokens(it.tokens),
-                    )
-                }
-                .first()
-                .tokens
-                .filter { blockchains.contains(it.blockchainType) }
-                .map { Wallet(it, account) }
+            val wallets = mutableListOf<Wallet>()
+
+            wallets.addAll(
+                App.marketKit.fullCoins(listOf("usd-coin"))
+                    .map {
+                        FullCoin(
+                            it.coin,
+                            filterTokens(it.tokens),
+                        )
+                    }
+                    .first()
+                    .tokens
+                    .filter { blockchains.contains(it.blockchainType) }
+                    .map { Wallet(it, account) }
+            )
+            wallets.addAll(
+                App.marketKit.fullCoins(listOf("usd-coin-bridged"))
+                    .map {
+                        FullCoin(
+                            it.coin,
+                            filterTokens(it.tokens),
+                        )
+                    }
+                    .first()
+                    .tokens
+                    .filter { blockchains.contains(it.blockchainType) }
+                    .map { Wallet(it, account) }
+            )
+            return wallets
         }
     }
 }
