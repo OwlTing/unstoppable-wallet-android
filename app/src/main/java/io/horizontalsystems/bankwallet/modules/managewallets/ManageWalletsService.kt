@@ -14,6 +14,7 @@ import io.horizontalsystems.bankwallet.entities.AccountType
 import io.horizontalsystems.bankwallet.entities.Wallet
 import io.horizontalsystems.bankwallet.modules.enablecoin.restoresettings.RestoreSettingsService
 import io.horizontalsystems.bankwallet.modules.receivemain.FullCoinsProvider
+import io.horizontalsystems.bankwallet.owlwallet.utils.SupportedTokenHelper
 import io.horizontalsystems.marketkit.models.BlockchainType
 import io.horizontalsystems.marketkit.models.FullCoin
 import io.horizontalsystems.marketkit.models.Token
@@ -109,9 +110,11 @@ class ManageWalletsService(
             eligibleTokens.all { it.type is TokenType.Derived } ||
             eligibleTokens.all { it.type is TokenType.AddressTyped }
         ) {
-            eligibleTokens.filter { isEnabled(it) || it.type.isDefault }
+//            eligibleTokens.filter { isEnabled(it) || it.type.isDefault }
+            eligibleTokens
         } else {
-            eligibleTokens.filter { isEnabled(it) || it.type.isNative }
+//            eligibleTokens.filter { isEnabled(it) || it.type.isNative }
+            eligibleTokens
         }
 
         return tokens.map { getItemForToken(it) }

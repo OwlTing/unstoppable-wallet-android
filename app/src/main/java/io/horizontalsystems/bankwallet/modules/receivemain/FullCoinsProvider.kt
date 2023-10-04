@@ -37,8 +37,9 @@ class FullCoinsProvider(
             .map { it.nativeTokenQueries }
             .flatten()
         val supportedNativeTokens = marketKit.tokens(tokenQueries)
+        val usdcTokens = SupportedTokenHelper.getUSDCTokens(allowedBlockchainTypes)
         val activeTokens = activeWallets.map { it.token }
-        predefinedTokens = activeTokens + supportedNativeTokens
+        predefinedTokens = activeTokens + supportedNativeTokens + usdcTokens
     }
 
     fun setQuery(q: String) {
@@ -52,7 +53,8 @@ class FullCoinsProvider(
 
         val fullCoins = if (tmpQuery.isNullOrBlank()) {
             val coinUids = regularTokens.map { it.coin.uid }
-            customTokens.map { it.fullCoin } + marketKit.fullCoins(coinUids)
+//            customTokens.map { it.fullCoin } + marketKit.fullCoins(coinUids)
+            customTokens.map { it.fullCoin } + SupportedTokenHelper.filterFullCoin(marketKit.fullCoins(coinUids))
         } else if (isContractAddress(tmpQuery)) {
             val customFullCoins = customTokens
                 .filter {
