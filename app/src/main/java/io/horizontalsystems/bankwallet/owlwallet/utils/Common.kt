@@ -16,9 +16,15 @@ fun getBlockchainTypeByNetwork(network: String) = when (network) {
     "Ethereum" -> BlockchainType.Ethereum
     "Avalanche" -> BlockchainType.Avalanche
     "Polygon" -> BlockchainType.Polygon
+    "Stellar" -> BlockchainType.Stellar
     else -> throw IllegalArgumentException("Unsupported network type $network")
 }
 
 fun isWalletSupported(wallet: Wallet): Boolean {
-    return wallet.coin.code == "ETH" || wallet.coin.code == "MATIC" || wallet.coin.code == "AVAX" || wallet.coin.code == "USDC"
+    return wallet.coin.code == "ETH"
+            || wallet.coin.code == "MATIC"
+            || wallet.coin.code == "AVAX"
+            || wallet.coin.code == "USDC"
+            || wallet.coin.code == "XLM"
+//            || wallet.coin.code == "USDC.E"
 }

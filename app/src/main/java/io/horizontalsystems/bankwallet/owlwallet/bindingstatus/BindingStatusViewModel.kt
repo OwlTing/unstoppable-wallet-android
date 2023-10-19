@@ -202,6 +202,7 @@ class BindingStatusViewModel(
                 "matic-network",
                 "avalanche-2",
                 "usd-coin",
+                "stellar",
             )
         ).map {
             when (it.coin.code) {
@@ -223,6 +224,12 @@ class BindingStatusViewModel(
                         it.tokens.filter { token -> token.blockchainType == BlockchainType.Avalanche }
                     )
                 }
+                "XLM" -> {
+                    FullCoin(
+                        it.coin,
+                        it.tokens.filter { token -> token.blockchainType == BlockchainType.Stellar }
+                    )
+                }
                 "USDC" -> {
                     FullCoin(
                         it.coin,
@@ -230,6 +237,7 @@ class BindingStatusViewModel(
                             token.blockchainType == BlockchainType.Ethereum
                                     || token.blockchainType == BlockchainType.Polygon
                                     || token.blockchainType == BlockchainType.Avalanche
+                                    || token.blockchainType == BlockchainType.Stellar
                         }
                     )
                 }
@@ -253,6 +261,11 @@ class BindingStatusViewModel(
             "AVAX" -> {
                 fullCoins.firstOrNull {
                     it.coin.code == "AVAX"
+                }?.tokens?.get(0)
+            }
+            "XLM" -> {
+                fullCoins.firstOrNull {
+                    it.coin.code == "XLM"
                 }?.tokens?.get(0)
             }
             "USDC" -> {
