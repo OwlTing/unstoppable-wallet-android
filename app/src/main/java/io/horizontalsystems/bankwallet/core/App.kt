@@ -104,7 +104,7 @@ import io.horizontalsystems.bankwallet.modules.walletconnect.version2.WC2Session
 import io.horizontalsystems.bankwallet.owlwallet.data.source.DefaultOTRepository
 import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.OTWalletApiClient
 import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.OTWalletRemoteDataSource
-import io.horizontalsystems.bankwallet.owlwallet.stellarkit.StellarKitManager
+import io.horizontalsystems.bankwallet.core.managers.StellarKitManager
 import io.horizontalsystems.bankwallet.owlwallet.utils.PreferenceHelper
 import io.horizontalsystems.bankwallet.owlwallet.utils.VersionChecker
 import io.horizontalsystems.bankwallet.widgets.MarketWidgetManager

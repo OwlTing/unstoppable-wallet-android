@@ -5,17 +5,16 @@ import io.horizontalsystems.bankwallet.core.ITransactionsAdapter
 import io.horizontalsystems.bankwallet.entities.LastBlockInfo
 import io.horizontalsystems.bankwallet.entities.transactionrecords.TransactionRecord
 import io.horizontalsystems.bankwallet.modules.transactions.FilterTransactionType
-import io.horizontalsystems.bankwallet.owlwallet.stellarkit.Network
-import io.horizontalsystems.bankwallet.owlwallet.stellarkit.StellarKit.SyncState
-import io.horizontalsystems.bankwallet.owlwallet.stellarkit.StellarKitWrapper
-import io.horizontalsystems.bankwallet.owlwallet.stellarkit.models.TransactionTag
+import com.owlting.app.stellarkit.Network
+import com.owlting.app.stellarkit.StellarKit.SyncState
+import io.horizontalsystems.bankwallet.core.managers.StellarKitWrapper
+import com.owlting.app.stellarkit.models.TransactionTag
 import io.horizontalsystems.marketkit.models.Token
 import io.horizontalsystems.marketkit.models.TokenType
 import io.reactivex.Flowable
 import io.reactivex.Single
 import kotlinx.coroutines.rx2.asFlowable
 import kotlinx.coroutines.rx2.rxSingle
-import timber.log.Timber
 
 class StellarTransactionsAdapter(
     stellarKitWrapper: StellarKitWrapper,

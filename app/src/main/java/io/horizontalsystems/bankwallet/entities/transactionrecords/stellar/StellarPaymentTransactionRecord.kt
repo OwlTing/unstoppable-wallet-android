@@ -2,8 +2,8 @@ package io.horizontalsystems.bankwallet.entities.transactionrecords.stellar
 
 import io.horizontalsystems.bankwallet.entities.TransactionValue
 import io.horizontalsystems.bankwallet.modules.transactions.TransactionSource
-import io.horizontalsystems.bankwallet.owlwallet.stellarkit.models.PaymentOperation
-import io.horizontalsystems.bankwallet.owlwallet.stellarkit.models.Transaction
+import com.owlting.app.stellarkit.models.PaymentOperation
+import com.owlting.app.stellarkit.models.Transaction
 import io.horizontalsystems.marketkit.models.Token
 
 class StellarPaymentTransactionRecord(

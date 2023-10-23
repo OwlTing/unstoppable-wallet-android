@@ -7,10 +7,10 @@ import io.horizontalsystems.bankwallet.entities.transactionrecords.stellar.Stell
 import io.horizontalsystems.bankwallet.entities.transactionrecords.stellar.StellarPaymentTransactionRecord
 import io.horizontalsystems.bankwallet.entities.transactionrecords.stellar.StellarTransactionRecord
 import io.horizontalsystems.bankwallet.modules.transactions.TransactionSource
-import io.horizontalsystems.bankwallet.owlwallet.stellarkit.StellarKitWrapper
-import io.horizontalsystems.bankwallet.owlwallet.stellarkit.models.CreateAccountOperation
-import io.horizontalsystems.bankwallet.owlwallet.stellarkit.models.FullTransaction
-import io.horizontalsystems.bankwallet.owlwallet.stellarkit.models.PaymentOperation
+import io.horizontalsystems.bankwallet.core.managers.StellarKitWrapper
+import com.owlting.app.stellarkit.models.CreateAccountOperation
+import com.owlting.app.stellarkit.models.FullTransaction
+import com.owlting.app.stellarkit.models.PaymentOperation
 import io.horizontalsystems.erc20kit.events.TokenInfo
 import io.horizontalsystems.marketkit.models.BlockchainType
 import io.horizontalsystems.marketkit.models.Token
@@ -31,7 +31,7 @@ class StellarTransactionConverter(
         when (val operation = fullTransaction.operation) {
             is CreateAccountOperation -> {
                 return StellarCreateAccountTransactionRecord(
-                    accountId = stellarKitWrapper.stellarKit.keyPair.accountId,
+                    accountId = stellarKitWrapper.stellarKit.accountId,
                     transaction = transaction,
                     operation = operation,
                     baseToken = baseToken,
@@ -41,14 +41,14 @@ class StellarTransactionConverter(
             }
 
             is PaymentOperation -> {
-                val negative = operation.from == stellarKitWrapper.stellarKit.keyPair.accountId
+                val negative = operation.from == stellarKitWrapper.stellarKit.accountId
                 val value = if (operation.assetCode == "USDC") {
                     getUSDCCoinValue(operation.amount, negative)
                 } else {
                     getBaseCoinValue(operation.amount, negative)
                 }
                 return StellarPaymentTransactionRecord(
-                    accountId = stellarKitWrapper.stellarKit.keyPair.accountId,
+                    accountId = stellarKitWrapper.stellarKit.accountId,
                     transaction = transaction,
                     operation = operation,
                     baseToken = baseToken,
@@ -59,7 +59,7 @@ class StellarTransactionConverter(
 
             else -> {
                 return StellarTransactionRecord(
-                    accountId = stellarKitWrapper.stellarKit.keyPair.accountId,
+                    accountId = stellarKitWrapper.stellarKit.accountId,
                     transaction = transaction,
                     baseToken = baseToken,
                     source = source,

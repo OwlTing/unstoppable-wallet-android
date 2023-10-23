@@ -1,5 +1,6 @@
 package io.horizontalsystems.bankwallet.modules.address
 
+import com.owlting.app.stellarkit.StellarKit
 import com.unstoppabledomains.resolution.Resolution
 import io.horizontalsystems.bankwallet.entities.Address
 import io.horizontalsystems.binancechainkit.helpers.Crypto
@@ -12,7 +13,6 @@ import io.horizontalsystems.marketkit.models.BlockchainType
 import io.horizontalsystems.marketkit.models.TokenQuery
 import io.horizontalsystems.marketkit.models.TokenType
 import io.horizontalsystems.tronkit.account.AddressHandler
-import org.stellar.sdk.KeyPair
 import org.web3j.ens.EnsResolver
 
 interface IAddressHandler {
@@ -241,7 +241,7 @@ class AddressHandlerTron : IAddressHandler {
 
 class AddressHandlerStellar: IAddressHandler {
     override fun isSupported(value: String) = try {
-        KeyPair.fromAccountId(value)
+        StellarKit.fromAccountId(value)
         true
     } catch (e: Exception) {
         false

@@ -1,14 +1,17 @@
 package io.horizontalsystems.bankwallet.core.adapters
 
+import com.owlting.app.stellarkit.Network
+import com.owlting.app.stellarkit.StellarKit
+import com.owlting.app.stellarkit.models.Alphanum4
+import com.owlting.app.stellarkit.models.Native
 import io.horizontalsystems.bankwallet.core.AdapterState
 import io.horizontalsystems.bankwallet.core.BalanceData
 import io.horizontalsystems.bankwallet.core.IAdapter
 import io.horizontalsystems.bankwallet.core.IBalanceAdapter
 import io.horizontalsystems.bankwallet.core.IReceiveAdapter
-import io.horizontalsystems.bankwallet.owlwallet.stellarkit.Network
-import io.horizontalsystems.bankwallet.owlwallet.stellarkit.StellarKit
-import io.horizontalsystems.bankwallet.owlwallet.stellarkit.StellarKitWrapper
+import io.horizontalsystems.bankwallet.core.managers.StellarKitWrapper
 import io.horizontalsystems.marketkit.models.Token
+import io.horizontalsystems.marketkit.models.TokenType
 import io.reactivex.Flowable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +36,7 @@ class StellarAdapter(
         }
 
     override val receiveAddress: String
-        get() = stellarKit.keyPair.accountId
+        get() = stellarKit.accountId
 
     override val isMainNet: Boolean
         get() = stellarKit.network == Network.Mainnet
@@ -43,7 +46,7 @@ class StellarAdapter(
     }
 
     fun isOwnAccount(accountId: String): Boolean {
-        return accountId == stellarKit.keyPair.accountId
+        return accountId == stellarKit.accountId
     }
 
     //    protected val balanceUpdatedSubject: PublishSubject<Unit> = PublishSubject.create()
@@ -77,7 +80,13 @@ class StellarAdapter(
     }
 
     fun send(token: Token, amount: BigInteger, accountId: String, memo: String) {
-        stellarKit.send(token, amount, accountId, memo)
+
+        val asset = when (token.type) {
+            is TokenType.Alphanum4 -> Alphanum4(token.coin.code, (token.type as TokenType.Alphanum4).issuer)
+            else -> Native()
+        }
+
+        stellarKit.send(asset, amount, accountId, memo)
     }
 
     private fun balanceInBigDecimal(balance: BigInteger?, decimal: Int): BigDecimal {

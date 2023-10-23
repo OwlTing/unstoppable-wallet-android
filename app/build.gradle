@@ -336,6 +336,7 @@ dependencies {
     implementation project(':core')
     implementation project(':components:icons')
     implementation project(':components:chartview')
+    implementation project(':stellarkit')
 
     // Integration with activities
     implementation 'androidx.activity:activity-compose:1.7.2'
@@ -364,7 +365,7 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:5.0.1'
     implementation 'androidx.datastore:datastore-preferences:1.0.0'
 
-    implementation 'com.github.stellar:java-stellar-sdk:0.40.0'
+
 
     // UI Tests
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
