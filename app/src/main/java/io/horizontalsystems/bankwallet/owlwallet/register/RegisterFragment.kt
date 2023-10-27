@@ -110,7 +110,7 @@ fun RegisterScreen(
             ) {
 
                 AppBar(
-                    title = TranslatableString.ResString(R.string.Settings_Register_Title),
+                    title = stringResource(R.string.Settings_Register_Title),
                     navigationIcon = {
                         HsIconButton(onClick = {
                             navController.popBackStack()

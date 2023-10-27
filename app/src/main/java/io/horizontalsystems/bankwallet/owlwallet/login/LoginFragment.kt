@@ -127,7 +127,7 @@ fun LoginScreen(
                     }
 
                 AppBar(
-                    title = TranslatableString.ResString(R.string.Settings_Login),
+                    title = stringResource(R.string.Settings_Login),
                     navigationIcon = {
                         HsIconButton(onClick = {
                             navController.popBackStack()

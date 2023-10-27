@@ -75,7 +75,7 @@ fun CountryPickerScreen(
                     .background(color = ComposeAppTheme.colors.tyler)
             ) {
                 AppBar(
-                    title = TranslatableString.ResString(R.string.Binding_Kyc_Nationality),
+                    title = stringResource(R.string.Binding_Kyc_Nationality),
                     navigationIcon = {
                         HsIconButton(onClick = {
                             navController.popBackStack()

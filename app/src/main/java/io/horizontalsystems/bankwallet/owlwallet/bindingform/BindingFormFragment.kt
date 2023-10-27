@@ -121,7 +121,7 @@ fun BindingFormStatusScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             AppBar(
-                title = TranslatableString.ResString(R.string.Binding_Title),
+                title = stringResource(R.string.Binding_Title),
                 navigationIcon = navigationIcon,
             )
 

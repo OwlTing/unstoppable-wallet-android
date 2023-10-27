@@ -149,6 +149,9 @@ private fun ManageWalletsScreen(
                             }
                         )
                     }
+                    item {
+                        VSpacer(height = 32.dp)
+                    }
                 }
             }
         }

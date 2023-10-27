@@ -183,7 +183,13 @@ class RestoreBlockchainsService(
     }
 
     fun restore() {
-        val account = accountFactory.account(accountName, accountType, AccountOrigin.Restored, manualBackup, fileBackup)
+        val account = accountFactory.account(
+            accountName,
+            accountType,
+            AccountOrigin.Restored,
+            manualBackup,
+            fileBackup,
+        )
         accountManager.save(account)
 
         restoreSettingsMap.forEach { (token, settings) ->

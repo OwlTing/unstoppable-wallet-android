@@ -103,7 +103,7 @@ fun BindingStatusScreen(
             modifier = Modifier.background(color = ComposeAppTheme.colors.tyler)
         ) {
             AppBar(
-                title = TranslatableString.ResString(R.string.Binding_Title),
+                title = stringResource(R.string.Binding_Title),
                 navigationIcon = navigationIcon,
             )
 

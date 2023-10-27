@@ -151,9 +151,13 @@ class MainViewModel(
             updateSettingsBadge()
         })
 
-        disposables.add(accountManager.activeAccountObservable.subscribe {
-            updateTransactionsTabEnabled()
-        })
+        viewModelScope.launch {
+            accountManager.activeAccountStateFlow.collect {
+                if (it is ActiveAccountState.ActiveAccount) {
+                    updateTransactionsTabEnabled()
+                }
+            }
+        }
 
         wcDeepLink?.let {
             wcSupportState = wc2Manager.getWalletConnectSupportState()
@@ -317,6 +321,9 @@ class MainViewModel(
 
     private fun syncNavigation() {
         mainNavItems = navigationItems()
+        if (selectedPageIndex >= mainNavItems.size) {
+            selectedPageIndex = mainNavItems.size - 1
+        }
         syncState()
     }
 

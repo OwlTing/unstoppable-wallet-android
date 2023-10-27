@@ -100,7 +100,7 @@ fun ForgotPasswordScreen(
                     .background(color = ComposeAppTheme.colors.tyler)
             ) {
                 AppBar(
-                    title = TranslatableString.ResString(R.string.Auth_Forgot_Password),
+                    title = stringResource(R.string.Auth_Forgot_Password),
                     navigationIcon = {
                         HsIconButton(onClick = {
                             navController.popBackStack()
