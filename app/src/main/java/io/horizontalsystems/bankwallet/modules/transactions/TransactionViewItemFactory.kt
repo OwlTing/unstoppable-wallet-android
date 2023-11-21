@@ -639,9 +639,9 @@ class TransactionViewItemFactory(
             if (isSend) Translator.getString(R.string.Transactions_Send) else Translator.getString(R.string.Transactions_Receive)
         val subtitle =
             if (isSend) {
-                Translator.getString(R.string.Transactions_To)
+                Translator.getString(R.string.Transactions_To, mapped(record.operation.to, record.blockchainType))
             } else {
-                Translator.getString(R.string.Transactions_From)
+                Translator.getString(R.string.Transactions_From, mapped(record.operation.from, record.blockchainType))
             }
 
         val primaryValue =
