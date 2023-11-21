@@ -6,8 +6,11 @@ import com.owlting.app.stellarkit.models.StellarAsset
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import org.stellar.sdk.Asset
 import org.stellar.sdk.AssetTypeCreditAlphaNum4
 import org.stellar.sdk.AssetTypeNative
+import org.stellar.sdk.ChangeTrustAsset
+import org.stellar.sdk.ChangeTrustOperation
 
 import org.stellar.sdk.KeyPair
 import org.stellar.sdk.Memo
@@ -52,25 +55,46 @@ class StellarService(
     private val _baseTokenBalanceFlow = MutableStateFlow(baseTokenBalance)
     val baseTokenBalanceFlow: StateFlow<BigInteger> = _baseTokenBalanceFlow
 
+    private val usdcIssuer get() = if (network == Network.Testnet) usdcIssuerTestNet else usdcIssuerMainNet
+
     fun getBalance() {
         val account = server.accounts().account(keyPair.accountId)
+
+        for (accountBalance in account.balances) {
+            Timber.d("$coinUid balance: ${accountBalance.assetType} ${accountBalance.assetCode} ${accountBalance.assetIssuer} ${accountBalance.limit}")
+        }
 
         if (coinUid == "stellar") {
             for (accountBalance in account.balances) {
                 if (accountBalance.assetType == "native") {
                     balance = BigDecimal.valueOf(accountBalance.balance.toDouble() * 10_000_000)
                         .toBigInteger()
-                    baseTokenBalance = BigDecimal.valueOf(accountBalance.balance.toDouble() * 10_000_000)
-                        .toBigInteger()
+                    baseTokenBalance =
+                        BigDecimal.valueOf(accountBalance.balance.toDouble() * 10_000_000)
+                            .toBigInteger()
                     break
                 }
             }
-        } else {
+        } else if (coinUid == "usd-coin") {
+            var containsUSDC = false
+            for (accountBalance in account.balances) {
+                if (accountBalance.assetIssuer.isPresent && accountBalance.assetIssuer.get() == usdcIssuer) {
+                    containsUSDC = true
+                    break
+                }
+            }
+            Timber.d("containsUSDC: $containsUSDC")
+
+            if (!containsUSDC) {
+                addTrustToUSDC()
+            }
+
             for (accountBalance in account.balances) {
                 if (accountBalance.assetType == "native") {
-                    baseTokenBalance = BigDecimal.valueOf(accountBalance.balance.toDouble() * 10_000_000)
-                        .toBigInteger()
-                } else if (accountBalance.assetCode.isPresent && accountBalance.assetCode.get() == "USDC") {
+                    baseTokenBalance =
+                        BigDecimal.valueOf(accountBalance.balance.toDouble() * 10_000_000)
+                            .toBigInteger()
+                } else if (accountBalance.assetIssuer.isPresent && accountBalance.assetIssuer.get() == usdcIssuer) {
                     balance = BigDecimal.valueOf(accountBalance.balance.toDouble() * 10_000_000)
                         .toBigInteger()
                 }
@@ -85,7 +109,6 @@ class StellarService(
             }
 
             is Alphanum4 -> {
-
                 AssetTypeCreditAlphaNum4(stellarAsset.code, stellarAsset.issuer)
             }
 
@@ -94,34 +117,64 @@ class StellarService(
         Timber.d("sendAmount: ${amount.toBigDecimal().movePointLeft(stellarAsset.decimals)}")
 
         val transaction: Transaction = TransactionBuilder(
-                server.accounts().account(keyPair.accountId),
-                if (network == Network.Testnet) org.stellar.sdk.Network.TESTNET else org.stellar.sdk.Network.PUBLIC
+            server.accounts().account(keyPair.accountId),
+            if (network == Network.Testnet) org.stellar.sdk.Network.TESTNET else org.stellar.sdk.Network.PUBLIC
         )
-                .addOperation(
-                        PaymentOperation.Builder(
-                                accountId,
-                                asset,
-                                amount.toBigDecimal().movePointLeft(stellarAsset.decimals).toString(),
-                        ).build()
-                ) // A memo allows you to add your own metadata to a transaction. It's
-                // optional and does not affect how Stellar treats the transaction.
-                .addMemo(Memo.text(memo)) // Wait a maximum of three minutes for the transaction
-                .setTimeout(180) // Set the amount of lumens you're willing to pay per operation to submit your transaction
-                .setBaseFee(Transaction.MIN_BASE_FEE)
-                .build()
+            .addOperation(
+                PaymentOperation.Builder(
+                    accountId,
+                    asset,
+                    amount.toBigDecimal().movePointLeft(stellarAsset.decimals).toString(),
+                ).build()
+            ) // A memo allows you to add your own metadata to a transaction. It's
+            // optional and does not affect how Stellar treats the transaction.
+            .addMemo(Memo.text(memo)) // Wait a maximum of three minutes for the transaction
+            .setTimeout(0) // Set the amount of lumens you're willing to pay per operation to submit your transaction
+            .setBaseFee(Transaction.MIN_BASE_FEE)
+            .build()
         // Sign the transaction to prove you are actually the person sending it.
         transaction.sign(keyPair)
 
         try {
             val response = server.submitTransaction(transaction)
             Timber.d("Success!")
-            Timber.d(response.toString())
+            Timber.d(response.isSuccess.toString())
         } catch (e: java.lang.Exception) {
             Timber.e("Something went wrong!")
             Timber.e(e.message.toString())
             // If the result is unknown (no response body, timeout etc.) we simply resubmit
             // already built transaction:
             // SubmitTransactionResponse response = server.submitTransaction(transaction);
+        }
+    }
+
+    private fun addTrustToUSDC() {
+        try {
+            val transaction: Transaction = TransactionBuilder(
+                server.accounts().account(keyPair.accountId),
+                if (network == Network.Testnet) org.stellar.sdk.Network.TESTNET else org.stellar.sdk.Network.PUBLIC
+            )
+                .addOperation(
+                    ChangeTrustOperation.Builder(
+                        ChangeTrustAsset.create(
+                            AssetTypeCreditAlphaNum4("USDC", usdcIssuer)
+                        ),
+                        "922337203685.4775807",
+                    ).build()
+                )
+                .addMemo(Memo.text("Trust USDC"))
+                .setTimeout(0)
+                .setBaseFee(Transaction.MIN_BASE_FEE)
+                .build()
+            transaction.sign(keyPair)
+
+            Timber.d("submitTransaction")
+            val response = server.submitTransaction(transaction)
+            Timber.d("Success!")
+            Timber.d(response.isSuccess.toString())
+        } catch (e: java.lang.Exception) {
+            Timber.e("Something went wrong!")
+            Timber.e(e.message.toString())
         }
     }
 
@@ -132,11 +185,11 @@ class StellarService(
 
     fun getTransactions(limit: Int): List<TransactionResponse> {
         val builder =
-                server.transactions()
-                        .order(RequestBuilder.Order.DESC)
-                        .forAccount(keyPair.accountId)
-                        .limit(limit)
-                        .includeFailed(true)
+            server.transactions()
+                .order(RequestBuilder.Order.DESC)
+                .forAccount(keyPair.accountId)
+                .limit(limit)
+                .includeFailed(true)
 
         val results = builder.execute()
         return results.records
@@ -161,5 +214,10 @@ class StellarService(
         } catch (e: Exception) {
             false
         }
+    }
+
+    companion object {
+        const val usdcIssuerTestNet = "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5"
+        const val usdcIssuerMainNet = "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN"
     }
 }
