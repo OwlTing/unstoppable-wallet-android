@@ -34,6 +34,15 @@ jobs:
 
       - run: cp "${{ steps.localProperties.outputs.filePath }}" "./"
 
+      - name: Decode service credentials file
+        id: serviceCredentialsFile
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: 'service_credentials_file_prod.json'
+          encodedString: ${{ secrets.SERVICE_CREDENTIALS_FILE_PROD }}
+
+      - run: cp "${{ steps.serviceCredentialsFile.outputs.filePath }}" "./fastlane"
+
       - name: Get the version name
         id: versionNameId
         run: echo "versionName=$(cat app/build.gradle | grep " versionName " | awk -F '"' '{print $2}')" >> $GITHUB_ENV

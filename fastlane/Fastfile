@@ -11,6 +11,7 @@ platform :android do
       app: "1:579010722190:android:f63e05916c8177d921ccdf",
       android_artifact_type: "APK",
       android_artifact_path: "./app/build/outputs/apk/debug/app-debug.apk",
+      service_credentials_file: "fastlane/service_credentials_file_dev.json",
       groups: "Tester"
     )
   end
@@ -23,6 +24,7 @@ platform :android do
         app: "1:682017879164:android:cc0832e43e72743c6405f9",
         android_artifact_type: "AAB",
         android_artifact_path: "./app/build/outputs/bundle/release/app-release.aab",
+        service_credentials_file: "fastlane/service_credentials_file_prod.json",
         groups: "Tester"
       )
     end
