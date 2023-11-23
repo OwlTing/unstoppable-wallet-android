@@ -23,7 +23,7 @@ android {
         compileSdk compile_sdk_version
         minSdkVersion min_sdk_version
         targetSdkVersion compile_sdk_version
-        versionCode 19
+        versionCode 20
         versionName "1.3.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -309,8 +309,8 @@ dependencies {
     debugImplementation 'com.github.OwlTing:ethereum-kit-android:0c9ba3d'
     implementation 'com.github.horizontalsystems:blockchain-fee-rate-kit-android:1d3bd49'
     implementation 'com.github.horizontalsystems:binance-chain-kit-android:7e4d7c0'
-    releaseImplementation 'com.github.OwlTing:market-kit-android:958e79e'
-    debugImplementation 'com.github.OwlTing:market-kit-android:935a0ce'
+    releaseImplementation 'com.github.OwlTing:market-kit-android:a45a7fb'
+    debugImplementation 'com.github.OwlTing:market-kit-android:5647bf2'
     implementation 'com.github.horizontalsystems:solana-kit-android:5cc6e81'
     implementation 'com.github.horizontalsystems:tron-kit-android:67f8d53'
     // Zcash SDK

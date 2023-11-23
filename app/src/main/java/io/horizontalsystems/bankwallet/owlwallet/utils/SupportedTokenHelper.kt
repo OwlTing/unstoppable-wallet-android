@@ -14,7 +14,7 @@ class SupportedTokenHelper {
 
     companion object {
 
-        fun filterTokens(tokens: List<Token>): List<Token> {
+        private fun filterTokens(tokens: List<Token>): List<Token> {
             return tokens.filter {
                 when (it.coin.code) {
                     "ETH" -> {
@@ -36,11 +36,8 @@ class SupportedTokenHelper {
                     "USDC" -> {
                         it.blockchain.type == BlockchainType.Ethereum
                                 || it.blockchain.type == BlockchainType.Avalanche
+                                || it.blockchain.type == BlockchainType.Polygon
                                 || it.blockchain.type == BlockchainType.Stellar
-                    }
-
-                    "USDC.E" -> {
-                        it.blockchain.type == BlockchainType.Polygon
                     }
 
                     else -> {
@@ -51,7 +48,7 @@ class SupportedTokenHelper {
         }
 
         fun filterFullCoin(fullCoins: List<FullCoin>): List<FullCoin> {
-            val supportedCoinCodes = arrayOf("ETH", "MATIC", "AVAX", "BTC", "XLM", "USDC", "USDC.E")
+            val supportedCoinCodes = arrayOf("ETH", "MATIC", "AVAX", "BTC", "XLM", "USDC")
             return fullCoins
                 .filter { supportedCoinCodes.contains(it.coin.code) }
                 .map {
@@ -68,19 +65,6 @@ class SupportedTokenHelper {
 
             wallets.addAll(
                 App.marketKit.fullCoins(listOf("usd-coin"))
-                    .map {
-                        FullCoin(
-                            it.coin,
-                            filterTokens(it.tokens),
-                        )
-                    }
-                    .first()
-                    .tokens
-                    .filter { blockchains.contains(it.blockchainType) }
-                    .map { Wallet(it, account) }
-            )
-            wallets.addAll(
-                App.marketKit.fullCoins(listOf("usd-coin-bridged"))
                     .map {
                         FullCoin(
                             it.coin,
@@ -122,14 +106,14 @@ class SupportedTokenHelper {
                                 listOf(
                                     TokenQuery(
                                         it,
-                                        TokenType.Eip20("0x0fa8781a83e46826621b3bc094ea2a0212e71b23")
+                                        TokenType.Eip20("0x9999f7Fea5938fD3b1E26A12c3f2fb024e194f97")
                                     )
                                 )
                             } else {
                                 listOf(
                                     TokenQuery(
                                         it,
-                                        TokenType.Eip20("0x2791bca1f2de4661ed88a30c99a7a9449aa84174")
+                                        TokenType.Eip20("0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359")
                                     )
                                 )
                             }
