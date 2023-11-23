@@ -19,16 +19,18 @@ object LanguageSettingsModule {
 val LocaleType.icon: Int
     get() {
         return when(this) {
-            LocaleType.de -> R.drawable.icon_32_flag_germany
+//            LocaleType.de -> R.drawable.icon_32_flag_germany
             LocaleType.en -> R.drawable.icon_32_flag_england
-            LocaleType.es -> R.drawable.icon_32_flag_spain
-            LocaleType.pt_br -> R.drawable.icon_32_flag_brazil
-            LocaleType.fa -> R.drawable.icon_32_flag_iran
-            LocaleType.fr -> R.drawable.icon_32_flag_france
-            LocaleType.ko -> R.drawable.icon_32_flag_korea
-            LocaleType.ru -> R.drawable.icon_32_flag_russia
-            LocaleType.tr -> R.drawable.icon_32_flag_turkey
-            LocaleType.zh -> R.drawable.icon_32_flag_china
+//            LocaleType.es -> R.drawable.icon_32_flag_spain
+//            LocaleType.pt_br -> R.drawable.icon_32_flag_brazil
+//            LocaleType.fa -> R.drawable.icon_32_flag_iran
+//            LocaleType.fr -> R.drawable.icon_32_flag_france
+//            LocaleType.ko -> R.drawable.icon_32_flag_korea
+//            LocaleType.ru -> R.drawable.icon_32_flag_russia
+//            LocaleType.tr -> R.drawable.icon_32_flag_turkey
+            LocaleType.cn -> R.drawable.icon_32_flag_china
+            LocaleType.zh -> R.drawable.icon_24_flags_taiwan
+
         }
     }
 
