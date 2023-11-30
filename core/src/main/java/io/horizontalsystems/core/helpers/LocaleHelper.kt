@@ -3,6 +3,8 @@ package io.horizontalsystems.core.helpers
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
+import androidx.core.os.LocaleListCompat
+import timber.log.Timber
 import java.util.Locale
 
 // https://github.com/zeugma-solutions/locale-helper-android
@@ -37,6 +39,7 @@ object LocaleHelper {
     fun getLocale(context: Context): Locale {
         val storedLocale = getStoredLocale(context)
         storedLocale?.let {
+            Timber.d("storedLocale: $storedLocale")
             return storedLocale
         }
 
@@ -44,20 +47,41 @@ object LocaleHelper {
     }
 
     private fun getSystemLocale(context: Context): Locale {
-        val systemLocale = context.resources.configuration.locales.get(0)
-        var tag = systemLocale.toLanguageTag()
+        Timber.d("getSystemLocale")
+//        val systemLocale = context.resources.configuration.locales.get(0)
+//        var tag = systemLocale.toLanguageTag()
 
         //App language tags are in the format "en", except "pt-BR"
 //        if (tag.contains("-") && tag != LocaleType.pt_br.tag) {
 //            tag = tag.split("-")[0]
 //        }
 
-        //use system locale if it is supported by app, else use fallback locale
-        if (LocaleType.values().map { it.tag }.contains(tag)) {
-            val localeFromSupportedTag = Locale.forLanguageTag(tag)
-            setLocale(context, localeFromSupportedTag)
-            return localeFromSupportedTag
+        val locales = LocaleListCompat.getDefault()
+        for (i in 0 until locales.size()) {
+            Timber.d("$i ${locales.get(i)}")
         }
+        val tag = if (locales.size() > 1) {
+            locales.get(1)!!.toLanguageTag()
+        } else {
+            locales.get(0)!!.toLanguageTag()
+        }
+
+        Timber.d("tag: $tag")
+
+        if (tag.contains("TW")) {
+            setLocale(context, Locale.TRADITIONAL_CHINESE)
+            return Locale.TRADITIONAL_CHINESE
+        } else if (tag.contains("CN")) {
+            setLocale(context, Locale.SIMPLIFIED_CHINESE)
+            return Locale.SIMPLIFIED_CHINESE
+        }
+
+        //use system locale if it is supported by app, else use fallback locale
+//        if (LocaleType.values().map { it.tag }.contains(tag)) {
+//            val localeFromSupportedTag = Locale.forLanguageTag(tag)
+//            setLocale(context, localeFromSupportedTag)
+//            return localeFromSupportedTag
+//        }
         return fallbackLocale
     }
 
@@ -102,9 +126,10 @@ object LocaleHelper {
 }
 
 enum class LocaleType(val tag: String) {
-//    de("de"),
+    //    de("de"),
     en("en"),
-//    es("es"),
+
+    //    es("es"),
 //    pt_br("pt-BR"),
 //    fa("fa"),
 //    fr("fr"),

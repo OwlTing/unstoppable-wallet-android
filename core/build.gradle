@@ -49,5 +49,7 @@ dependencies {
     implementation "androidx.biometric:biometric:$biometric_version"
     implementation "com.google.android.material:material:$material_version"
 
+    implementation 'com.jakewharton.timber:timber:5.0.1'
+
     testImplementation "junit:junit:$junit_version"
 }
