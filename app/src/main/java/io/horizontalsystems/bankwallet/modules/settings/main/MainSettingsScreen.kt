@@ -80,7 +80,7 @@ fun SettingsScreen(
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 Spacer(modifier = Modifier.height(12.dp))
                 SettingSections(viewModel, navController)
-                OwlTingSections(viewModel, navController)
+//                OwlTingSections(viewModel, navController)
                 SettingsFooter(viewModel)
             }
         }
