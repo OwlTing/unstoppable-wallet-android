@@ -3,6 +3,7 @@ package com.owlting.app.stellarkit
 import android.app.Application
 import com.owlting.app.stellarkit.database.StellarDatabaseManager
 import com.owlting.app.stellarkit.database.Storage
+import com.owlting.app.stellarkit.exception.KitException
 import com.owlting.app.stellarkit.models.FullTransaction
 import com.owlting.app.stellarkit.models.StellarAsset
 import com.owlting.app.stellarkit.transaction.TransactionManager
@@ -75,9 +76,15 @@ class StellarKit(
         return stellarService.isAccountActive(accountId)
     }
 
-    fun send(stellarAsset: StellarAsset, amount: BigInteger, accountId: String, memo: String) {
-        stellarService.send(stellarAsset, amount, accountId, memo)
-        syncer.refresh()
+    fun send(stellarAsset: StellarAsset, amount: BigInteger, accountId: String, memo: String,isInactiveAddress: Boolean) {
+        try {
+            stellarService.send(stellarAsset, amount, accountId, memo ,isInactiveAddress)
+        } catch (e: KitException) {
+            Timber.e(e)
+            throw e
+        }finally {
+            syncer.refresh()
+        }
     }
 
     suspend fun getFullTransactions(tags: List<List<String>>, fromHash: String? = null, limit: Int? = null): List<FullTransaction> {

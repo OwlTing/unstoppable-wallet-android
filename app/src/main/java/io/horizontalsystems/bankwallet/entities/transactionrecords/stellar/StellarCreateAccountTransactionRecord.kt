@@ -5,15 +5,29 @@ import io.horizontalsystems.bankwallet.modules.transactions.TransactionSource
 import com.owlting.app.stellarkit.models.CreateAccountOperation
 import com.owlting.app.stellarkit.models.Transaction
 import io.horizontalsystems.marketkit.models.Token
+import java.math.BigDecimal
 
 class StellarCreateAccountTransactionRecord(
     accountId: String,
     transaction: Transaction,
     val operation: CreateAccountOperation,
-    baseToken: Token,
+    val baseToken: Token,
     source: TransactionSource,
     val value: TransactionValue,
 ) : StellarTransactionRecord(accountId, transaction, baseToken, source) {
 
     override val mainValue = value
+
+    fun copyWithCoinValue(value: BigDecimal): StellarCreateAccountTransactionRecord {
+        return StellarCreateAccountTransactionRecord(
+            accountId,
+            transaction,
+            operation,
+            baseToken,
+            source,
+            TransactionValue.CoinValue(baseToken, value)
+        )
+    }
+
+
 }

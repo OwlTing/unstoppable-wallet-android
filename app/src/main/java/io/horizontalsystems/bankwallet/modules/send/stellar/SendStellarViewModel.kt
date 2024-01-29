@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.owlting.app.stellarkit.exception.ErrorType
+import com.owlting.app.stellarkit.exception.KitException
 import io.horizontalsystems.bankwallet.R
 import io.horizontalsystems.bankwallet.core.App
 import io.horizontalsystems.bankwallet.core.HSCaution
@@ -270,7 +272,7 @@ class SendStellarViewModel(
 //            logger.info("sending tx")
 
             Timber.d("evmAmount: ${amountState.evmAmount!!}")
-            adapter.send(sendToken, amountState.evmAmount!!, addressState.address!!.hex, memo)
+            adapter.send(sendToken, amountState.evmAmount!!, addressState.address!!.hex, memo, addressState.isInactiveAddress)
 
             sendResult = SendResult.Sent
 //            logger.info("success")
@@ -283,8 +285,15 @@ class SendStellarViewModel(
     private fun createCaution(error: Throwable) = when (error) {
         is UnknownHostException -> HSCaution(TranslatableString.ResString(R.string.Hud_Text_NoInternet))
         is LocalizedException -> HSCaution(TranslatableString.ResString(error.errorTextRes))
+        is KitException -> HSCaution(handleKitException(error))
         else -> HSCaution(TranslatableString.PlainString(error.message ?: ""))
     }
+
+    private fun  handleKitException(e: KitException) =  when (e.errorType){
+        ErrorType.Transactions_Failed -> TranslatableString.ResString(R.string.Transactions_Failed)
+    }
+
+
 
     private fun handleUpdatedAmountState(amountState: SendAmountAdvancedService.State) {
         this.amountState = amountState
