@@ -275,10 +275,10 @@ private fun InactiveAddressWarningItem(navController: NavController) {
         modifier = Modifier
             .clickable(
                 onClick = {
-                    navController.slideFromBottom(
-                        R.id.feeSettingsInfoDialog,
-                        FeeSettingsInfoDialog.prepareParams(title, info)
-                    )
+//                    navController.slideFromBottom(
+//                        R.id.feeSettingsInfoDialog,
+//                        FeeSettingsInfoDialog.prepareParams(title, info)
+//                    )
                 },
                 interactionSource = MutableInteractionSource(),
                 indication = null

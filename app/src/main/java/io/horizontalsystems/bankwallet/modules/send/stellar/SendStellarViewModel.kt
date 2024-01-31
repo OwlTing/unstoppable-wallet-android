@@ -296,13 +296,14 @@ class SendStellarViewModel(
         emitState()
     }
 
+
     private fun emitState() {
         uiState = SendUiState(
             availableBalance = amountState.availableBalance,
             amountCaution = amountState.amountCaution,
             addressError = addressState.addressError,
-            proceedEnabled = amountState.canBeSend && addressState.canBeSend,
-            sendEnabled = cautions.isEmpty(),
+            proceedEnabled = amountState.canBeSend && addressState.canBeSend && ! addressState.isInactiveAddress,
+            sendEnabled = cautions.isEmpty()&& ! addressState.isInactiveAddress  ,
             feeViewState = feeState.viewState,
             cautions = cautions
         )
