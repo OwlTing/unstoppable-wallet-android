@@ -43,6 +43,18 @@ jobs:
 
       - run: cp "${{ steps.serviceCredentialsFile.outputs.filePath }}" "./fastlane"
 
+      - name: Decode google-services json file
+        id: googleServicesJsonFile
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: 'google-services.json'
+          encodedString: ${{ secrets.FIREBASE_JSON_BASE64_PROD }}
+
+      - run: cp "${{ steps.googleServicesJsonFile.outputs.filePath }}" "./app/src/release"
+
+      - name: check googleServicesJsonFile exist
+        run: ls -al "./app/src/release"
+
       - name: Get the version name
         id: versionNameId
         run: echo "versionName=$(cat app/build.gradle | grep " versionName " | awk -F '"' '{print $2}')" >> $GITHUB_ENV
