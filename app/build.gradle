@@ -5,6 +5,15 @@ import com.android.tools.profgen.ArtProfileKt
 import com.android.tools.profgen.ArtProfileSerializer
 import com.android.tools.profgen.DexFile
 
+
+plugins {
+//    id 'com.android.application'
+//    id 'kotlin-android'
+//    id 'kotlin-parcelize'
+//    id 'kotlin-kapt'
+    id 'com.google.gms.google-services'
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
@@ -15,6 +24,7 @@ def propertiesFile = rootProject.file('local.properties')
 if (propertiesFile.exists()) {
     properties.load(new FileInputStream(propertiesFile))
 }
+
 
 android {
 
@@ -396,6 +406,9 @@ dependencies {
 
     api 'com.jaredrummler:android-shell:1.0.0'
     api 'com.offbynull.portmapper:portmapper:2.0.5'
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.7.3"))
+    implementation 'com.google.firebase:firebase-analytics-ktx:19.0.1'
 }
 
 configurations.all {

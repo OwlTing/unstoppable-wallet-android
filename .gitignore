@@ -9,3 +9,4 @@
 
 /fastlane/service_credentials_file_dev.json
 /fastlane/service_credentials_file_prod.json
+/**/google-services.json

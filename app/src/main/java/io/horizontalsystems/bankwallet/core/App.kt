@@ -111,6 +111,7 @@ import io.horizontalsystems.bankwallet.owlwallet.data.source.DefaultOTRepository
 import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.OTWalletApiClient
 import io.horizontalsystems.bankwallet.owlwallet.data.source.remote.OTWalletRemoteDataSource
 import io.horizontalsystems.bankwallet.core.managers.StellarKitManager
+import io.horizontalsystems.bankwallet.owlwallet.utils.FirebaseAnalyticHelper
 import io.horizontalsystems.bankwallet.owlwallet.utils.PreferenceHelper
 import io.horizontalsystems.bankwallet.owlwallet.utils.VersionChecker
 import io.horizontalsystems.bankwallet.widgets.MarketWidgetManager
@@ -206,6 +207,7 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
         lateinit var preferenceHelper: PreferenceHelper
         lateinit var mainTabManager: MainTabManager
         lateinit var versionChecker: VersionChecker
+        lateinit var firebaseAnalyticHelper: FirebaseAnalyticHelper
 
         fun initOwlTingRepo() {
             OTWalletApiClient.clear()
@@ -234,7 +236,7 @@ class App : CoreApp(), WorkConfiguration.Provider, ImageLoaderFactory {
 
     override fun onCreate() {
         super.onCreate()
-
+        firebaseAnalyticHelper = FirebaseAnalyticHelper().apply { logLaunchEvent() }
         if (!BuildConfig.DEBUG) {
             //Disable logging for lower levels in Release build
             Logger.getLogger("").level = Level.SEVERE
