@@ -17,8 +17,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import io.horizontalsystems.bankwallet.R
 import io.horizontalsystems.bankwallet.core.slideFromRight
+import io.horizontalsystems.bankwallet.entities.DataState
+import io.horizontalsystems.bankwallet.modules.address.AddressInputModule
 import io.horizontalsystems.bankwallet.modules.address.AddressParserModule
 import io.horizontalsystems.bankwallet.modules.address.AddressParserViewModel
+import io.horizontalsystems.bankwallet.modules.address.AddressViewModel
 import io.horizontalsystems.bankwallet.modules.address.HSAddressInput
 import io.horizontalsystems.bankwallet.modules.amount.AmountInputModeViewModel
 import io.horizontalsystems.bankwallet.modules.amount.HSAmountInput
@@ -28,6 +31,7 @@ import io.horizontalsystems.bankwallet.modules.send.SendScreen
 import io.horizontalsystems.bankwallet.ui.compose.ComposeAppTheme
 import io.horizontalsystems.bankwallet.ui.compose.components.ButtonPrimaryYellow
 import io.horizontalsystems.bankwallet.ui.compose.components.FormsInput
+import timber.log.Timber
 
 @Composable
 fun SendStellarScreen(
@@ -43,12 +47,38 @@ fun SendStellarScreen(
     val availableBalance = uiState.availableBalance
     val addressError = uiState.addressError
     val amountCaution = uiState.amountCaution
-    val proceedEnabled = uiState.proceedEnabled
+    var proceedEnabled = uiState.proceedEnabled
     val amountInputType = amountInputModeViewModel.inputType
 
     val paymentAddressViewModel =
         viewModel<AddressParserViewModel>(factory = AddressParserModule.Factory(wallet.token.blockchainType))
     val amountUnique = paymentAddressViewModel.amountUnique
+
+    val addressViewModel = viewModel<AddressViewModel>(
+        factory = AddressInputModule.FactoryToken(wallet.token.tokenQuery, wallet.coin.code, null),
+        key = "address_view_model_${wallet.token.tokenQuery.id}"
+    )
+    when (addressViewModel.inputState) {
+        is DataState.Success -> {
+
+        }
+
+        is DataState.Error -> {
+            proceedEnabled = false
+            Timber.e("AddressViewModel error: ${addressViewModel.inputState}")
+
+        }
+
+        DataState.Loading -> {
+            proceedEnabled = false
+        }
+
+        null -> {
+            proceedEnabled = false
+        }
+    }
+
+
 
     ComposeAppTheme {
         val fullCoin = wallet.token.fullCoin
@@ -98,9 +128,10 @@ fun SendStellarScreen(
                 coinCode = wallet.coin.code,
                 error = addressError,
                 textPreprocessor = paymentAddressViewModel,
-                navController = navController
-            ) {
-                viewModel.onEnterAddress(it)
+                navController = navController,
+
+                ) {
+                viewModel.onAddressSport(it)
             }
 
             Spacer(modifier = Modifier.height(12.dp))

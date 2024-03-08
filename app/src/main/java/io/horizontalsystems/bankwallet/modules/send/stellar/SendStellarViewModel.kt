@@ -16,6 +16,7 @@ import io.horizontalsystems.bankwallet.core.providers.Translator
 import io.horizontalsystems.bankwallet.entities.Address
 import io.horizontalsystems.bankwallet.entities.ViewState
 import io.horizontalsystems.bankwallet.entities.Wallet
+import io.horizontalsystems.bankwallet.modules.address.AddressValidationException
 import io.horizontalsystems.bankwallet.modules.send.SendAmountAdvancedService
 import io.horizontalsystems.bankwallet.modules.send.SendResult
 import io.horizontalsystems.bankwallet.modules.send.tron.SendTronConfirmationData
@@ -27,7 +28,6 @@ import io.horizontalsystems.tronkit.transaction.Fee
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.stellar.sdk.Transaction
 import timber.log.Timber
 import java.math.BigDecimal
 import java.net.UnknownHostException
@@ -109,7 +109,7 @@ class SendStellarViewModel(
         amountService.setAmount(amount)
     }
 
-    fun onEnterAddress(address: Address?) {
+    fun onAddressSport(address: Address?) {
         viewModelScope.launch {
             addressService.setAddress(address)
         }
@@ -272,7 +272,13 @@ class SendStellarViewModel(
 //            logger.info("sending tx")
 
             Timber.d("evmAmount: ${amountState.evmAmount!!}")
-            adapter.send(sendToken, amountState.evmAmount!!, addressState.address!!.hex, memo, addressState.isInactiveAddress)
+            adapter.send(
+                sendToken,
+                amountState.evmAmount!!,
+                addressState.address!!.hex,
+                memo,
+                addressState.isInactiveAddress
+            )
 
             sendResult = SendResult.Sent
 //            logger.info("success")
@@ -311,8 +317,8 @@ class SendStellarViewModel(
             availableBalance = amountState.availableBalance,
             amountCaution = amountState.amountCaution,
             addressError = addressState.addressError,
-            proceedEnabled = amountState.canBeSend && addressState.canBeSend && ! addressState.isInactiveAddress,
-            sendEnabled = cautions.isEmpty()&& ! addressState.isInactiveAddress  ,
+            proceedEnabled = amountState.canBeSend && addressState.canBeSend,
+            sendEnabled = cautions.isEmpty(),
             feeViewState = feeState.viewState,
             cautions = cautions
         )
