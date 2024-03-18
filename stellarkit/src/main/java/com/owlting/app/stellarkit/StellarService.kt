@@ -1,5 +1,7 @@
 package com.owlting.app.stellarkit
 
+import com.owlting.app.stellarkit.exception.ErrorType
+import com.owlting.app.stellarkit.exception.KitException
 import com.owlting.app.stellarkit.models.Alphanum4
 import com.owlting.app.stellarkit.models.Native
 import com.owlting.app.stellarkit.models.StellarAsset
@@ -11,9 +13,11 @@ import org.stellar.sdk.AssetTypeCreditAlphaNum4
 import org.stellar.sdk.AssetTypeNative
 import org.stellar.sdk.ChangeTrustAsset
 import org.stellar.sdk.ChangeTrustOperation
+import org.stellar.sdk.CreateAccountOperation
 
 import org.stellar.sdk.KeyPair
 import org.stellar.sdk.Memo
+import org.stellar.sdk.Operation
 import org.stellar.sdk.PaymentOperation
 import org.stellar.sdk.Server
 import org.stellar.sdk.Transaction
@@ -101,8 +105,25 @@ class StellarService(
             }
         }
     }
-
-    fun send(stellarAsset: StellarAsset, amount: BigInteger, accountId: String, memo: String) {
+    /**
+     * Send the amount to the account.
+     *
+     * @param stellarAsset The asset to send.
+     * @param amount The amount to send.
+     * @param accountId The account to send to.
+     * @param memo The memo to send with the transaction.
+     * @param isInactiveAddress If the address is inactive, it will create the account.
+     * @throws KitException If the transaction fails
+     */
+    @Throws(KitException::class)
+    fun send(
+        stellarAsset: StellarAsset,
+        amount: BigInteger,
+        accountId: String,
+        memo: String,
+        isInactiveAddress: Boolean
+    )
+    {
         val asset = when (stellarAsset) {
             is Native -> {
                 AssetTypeNative()
@@ -115,17 +136,28 @@ class StellarService(
             else -> throw Exception("The token is not supported.")
         }
         Timber.d("sendAmount: ${amount.toBigDecimal().movePointLeft(stellarAsset.decimals)}")
+        /// if the address is inactive, need to create the account
+        // or submit will return 400 error code in case response.ledger will be null
+        val operation = if (isInactiveAddress) {
+            CreateAccountOperation.Builder(
+                accountId,
+                amount.toBigDecimal().movePointLeft(stellarAsset.decimals).toString()
+            ).build()
+        } else {
+            PaymentOperation.Builder(
+                accountId,
+                asset,
+                amount.toBigDecimal().movePointLeft(stellarAsset.decimals).toString(),
+            ).build()
+        }
 
         val transaction: Transaction = TransactionBuilder(
             server.accounts().account(keyPair.accountId),
             if (network == Network.Testnet) org.stellar.sdk.Network.TESTNET else org.stellar.sdk.Network.PUBLIC
         )
+
             .addOperation(
-                PaymentOperation.Builder(
-                    accountId,
-                    asset,
-                    amount.toBigDecimal().movePointLeft(stellarAsset.decimals).toString(),
-                ).build()
+                operation
             ) // A memo allows you to add your own metadata to a transaction. It's
             // optional and does not affect how Stellar treats the transaction.
             .addMemo(Memo.text(memo)) // Wait a maximum of three minutes for the transaction
@@ -139,6 +171,18 @@ class StellarService(
             val response = server.submitTransaction(transaction)
             Timber.d("Success!")
             Timber.d(response.isSuccess.toString())
+            if (!response.isSuccess) {
+                throw KitException(errorType =ErrorType.Transactions_Failed , message =  "Transaction failed! ,response : $response")
+            }
+
+        } catch (e: KitException) {
+            throw e
+        } catch (e: java.lang.Exception) {
+            Timber.e("Something went wrong!")
+            Timber.e(e.message.toString())
+            // If the result is unknown (no response body, timeout etc.) we simply resubmit
+            // already built transaction:
+            // SubmitTransactionResponse response = server.submitTransaction(transaction);
         } catch (e: java.lang.Exception) {
             Timber.e("Something went wrong!")
             Timber.e(e.message.toString())

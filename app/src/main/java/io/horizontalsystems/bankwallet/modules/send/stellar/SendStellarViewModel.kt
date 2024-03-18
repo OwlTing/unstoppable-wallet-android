@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.owlting.app.stellarkit.exception.ErrorType
+import com.owlting.app.stellarkit.exception.KitException
 import io.horizontalsystems.bankwallet.R
 import io.horizontalsystems.bankwallet.core.App
 import io.horizontalsystems.bankwallet.core.HSCaution
@@ -14,6 +16,7 @@ import io.horizontalsystems.bankwallet.core.providers.Translator
 import io.horizontalsystems.bankwallet.entities.Address
 import io.horizontalsystems.bankwallet.entities.ViewState
 import io.horizontalsystems.bankwallet.entities.Wallet
+import io.horizontalsystems.bankwallet.modules.address.AddressValidationException
 import io.horizontalsystems.bankwallet.modules.send.SendAmountAdvancedService
 import io.horizontalsystems.bankwallet.modules.send.SendResult
 import io.horizontalsystems.bankwallet.modules.send.tron.SendTronConfirmationData
@@ -25,7 +28,6 @@ import io.horizontalsystems.tronkit.transaction.Fee
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.stellar.sdk.Transaction
 import timber.log.Timber
 import java.math.BigDecimal
 import java.net.UnknownHostException
@@ -107,7 +109,7 @@ class SendStellarViewModel(
         amountService.setAmount(amount)
     }
 
-    fun onEnterAddress(address: Address?) {
+    fun onAddressSport(address: Address?) {
         viewModelScope.launch {
             addressService.setAddress(address)
         }
@@ -270,7 +272,13 @@ class SendStellarViewModel(
 //            logger.info("sending tx")
 
             Timber.d("evmAmount: ${amountState.evmAmount!!}")
-            adapter.send(sendToken, amountState.evmAmount!!, addressState.address!!.hex, memo)
+            adapter.send(
+                sendToken,
+                amountState.evmAmount!!,
+                addressState.address!!.hex,
+                memo,
+                addressState.isInactiveAddress
+            )
 
             sendResult = SendResult.Sent
 //            logger.info("success")
@@ -283,8 +291,15 @@ class SendStellarViewModel(
     private fun createCaution(error: Throwable) = when (error) {
         is UnknownHostException -> HSCaution(TranslatableString.ResString(R.string.Hud_Text_NoInternet))
         is LocalizedException -> HSCaution(TranslatableString.ResString(error.errorTextRes))
+        is KitException -> HSCaution(handleKitException(error))
         else -> HSCaution(TranslatableString.PlainString(error.message ?: ""))
     }
+
+    private fun  handleKitException(e: KitException) =  when (e.errorType){
+        ErrorType.Transactions_Failed -> TranslatableString.ResString(R.string.Transactions_Failed)
+    }
+
+
 
     private fun handleUpdatedAmountState(amountState: SendAmountAdvancedService.State) {
         this.amountState = amountState
@@ -302,8 +317,8 @@ class SendStellarViewModel(
             availableBalance = amountState.availableBalance,
             amountCaution = amountState.amountCaution,
             addressError = addressState.addressError,
-            proceedEnabled = amountState.canBeSend && addressState.canBeSend && ! addressState.isInactiveAddress,
-            sendEnabled = cautions.isEmpty()&& ! addressState.isInactiveAddress  ,
+            proceedEnabled = amountState.canBeSend && addressState.canBeSend,
+            sendEnabled = cautions.isEmpty(),
             feeViewState = feeState.viewState,
             cautions = cautions
         )

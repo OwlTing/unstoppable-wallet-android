@@ -79,14 +79,14 @@ class StellarAdapter(
         stellarKit.refresh()
     }
 
-    fun send(token: Token, amount: BigInteger, accountId: String, memo: String) {
+    fun send(token: Token, amount: BigInteger, accountId: String, memo: String,isInactiveAddress: Boolean) {
 
         val asset = when (token.type) {
             is TokenType.Alphanum4 -> Alphanum4(token.coin.code, (token.type as TokenType.Alphanum4).issuer)
             else -> Native()
         }
 
-        stellarKit.send(asset, amount, accountId, memo)
+        stellarKit.send(asset, amount, accountId, memo,isInactiveAddress)
     }
 
     private fun balanceInBigDecimal(balance: BigInteger?, decimal: Int): BigDecimal {
