@@ -21,6 +21,7 @@ import io.horizontalsystems.bankwallet.entities.DataState
 import io.horizontalsystems.bankwallet.modules.address.AddressInputModule
 import io.horizontalsystems.bankwallet.modules.address.AddressParserModule
 import io.horizontalsystems.bankwallet.modules.address.AddressParserViewModel
+import io.horizontalsystems.bankwallet.modules.address.AddressValidationException
 import io.horizontalsystems.bankwallet.modules.address.AddressViewModel
 import io.horizontalsystems.bankwallet.modules.address.HSAddressInput
 import io.horizontalsystems.bankwallet.modules.amount.AmountInputModeViewModel
@@ -64,9 +65,12 @@ fun SendStellarScreen(
         }
 
         is DataState.Error -> {
-            proceedEnabled = false
             Timber.e("AddressViewModel error: ${addressViewModel.inputState}")
-
+            when ((addressViewModel.inputState as DataState.Error).error) {
+                is AddressValidationException.Unsupported -> {
+                    proceedEnabled = false
+                }
+            }
         }
 
         DataState.Loading -> {
