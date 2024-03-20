@@ -667,7 +667,7 @@ class TransactionViewItemFactory(
         val subtitle =if (isReceiver)
             Translator.getString(
                 R.string.Transactions_From ,
-                mapped(record.transaction.sourceAccount, record.blockchainType)
+                mapped(record.operation.sourceAccount, record.blockchainType)
             )else Translator.getString(
             R.string.Transactions_To ,
                 mapped(record.operation.account, record.blockchainType)
