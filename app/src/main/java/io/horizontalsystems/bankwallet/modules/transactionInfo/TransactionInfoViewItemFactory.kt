@@ -57,6 +57,7 @@ import io.horizontalsystems.bankwallet.modules.transactions.TransactionStatus
 import io.horizontalsystems.bankwallet.modules.transactions.TransactionViewItem
 import io.horizontalsystems.core.helpers.DateHelper
 import io.horizontalsystems.marketkit.models.BlockchainType
+import timber.log.Timber
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.Date
@@ -137,7 +138,15 @@ class TransactionInfoViewItemFactory(
                 val valueIn = transaction.valueIn
                 val valueOut = transaction.valueOut
 
-                itemSections.add(getSwapEventSectionItems(getYouPayString(status), valueIn, transaction.amountIn, rates[valueIn.coinUid], false))
+                itemSections.add(
+                    getSwapEventSectionItems(
+                        getYouPayString(status),
+                        valueIn,
+                        transaction.amountIn,
+                        rates[valueIn.coinUid],
+                        false
+                    )
+                )
 
                 if (valueOut != null) {
                     val youGetSectionItems = getSwapEventSectionItems(
@@ -153,7 +162,12 @@ class TransactionInfoViewItemFactory(
                         val contact = getContact(recipient)
 
                         youGetSectionItems.add(
-                            Address(getString(R.string.TransactionInfo_RecipientHash), recipient, contact == null, blockchainType)
+                            Address(
+                                getString(R.string.TransactionInfo_RecipientHash),
+                                recipient,
+                                contact == null,
+                                blockchainType
+                            )
                         )
 
                         contact?.let {
@@ -166,7 +180,14 @@ class TransactionInfoViewItemFactory(
                     itemSections.add(youGetSectionItems)
                 }
 
-                itemSections.add(getSwapDetailsSectionItems(rates, transaction.exchangeAddress, valueOut, valueIn))
+                itemSections.add(
+                    getSwapDetailsSectionItems(
+                        rates,
+                        transaction.exchangeAddress,
+                        valueOut,
+                        valueIn
+                    )
+                )
             }
 
             is UnknownSwapTransactionRecord -> {
@@ -174,63 +195,166 @@ class TransactionInfoViewItemFactory(
                 val valueOut = transaction.valueOut
 
                 if (valueIn != null) {
-                    itemSections.add(getSwapEventSectionItems(getYouPayString(status), valueIn, null, rates[valueIn.coinUid], false))
+                    itemSections.add(
+                        getSwapEventSectionItems(
+                            getYouPayString(status),
+                            valueIn,
+                            null,
+                            rates[valueIn.coinUid],
+                            false
+                        )
+                    )
                 }
 
                 if (valueOut != null) {
-                    itemSections.add(getSwapEventSectionItems(getYouGetString(status), valueOut, null, rates[valueOut.coinUid], true))
+                    itemSections.add(
+                        getSwapEventSectionItems(
+                            getYouGetString(status),
+                            valueOut,
+                            null,
+                            rates[valueOut.coinUid],
+                            true
+                        )
+                    )
                 }
 
-                itemSections.add(getSwapDetailsSectionItems(rates, transaction.exchangeAddress, valueOut, valueIn))
+                itemSections.add(
+                    getSwapDetailsSectionItems(
+                        rates,
+                        transaction.exchangeAddress,
+                        valueOut,
+                        valueIn
+                    )
+                )
             }
 
             is ApproveTransactionRecord ->
-                itemSections.add(getApproveSectionItems(transaction.value, rates[transaction.value.coinUid], transaction.spender))
+                itemSections.add(
+                    getApproveSectionItems(
+                        transaction.value,
+                        rates[transaction.value.coinUid],
+                        transaction.spender
+                    )
+                )
 
             is TronApproveTransactionRecord ->
-                itemSections.add(getApproveSectionItems(transaction.value, rates[transaction.value.coinUid], transaction.spender))
+                itemSections.add(
+                    getApproveSectionItems(
+                        transaction.value,
+                        rates[transaction.value.coinUid],
+                        transaction.spender
+                    )
+                )
 
             is ContractCallTransactionRecord -> {
-                itemSections.add(getContractMethodSectionItems(transaction.method, transaction.contractAddress, transaction.blockchainType))
+                itemSections.add(
+                    getContractMethodSectionItems(
+                        transaction.method,
+                        transaction.contractAddress,
+                        transaction.blockchainType
+                    )
+                )
 
                 for (event in transaction.outgoingEvents) {
-                    itemSections.add(getSendSectionItems(event.value, event.address, rates[event.value.coinUid], nftMetadata = nftMetadata))
+                    itemSections.add(
+                        getSendSectionItems(
+                            event.value,
+                            event.address,
+                            rates[event.value.coinUid],
+                            nftMetadata = nftMetadata
+                        )
+                    )
                 }
 
                 for (event in transaction.incomingEvents) {
-                    itemSections.add(getReceiveSectionItems(event.value, event.address, rates[event.value.coinUid], nftMetadata = nftMetadata))
+                    itemSections.add(
+                        getReceiveSectionItems(
+                            event.value,
+                            event.address,
+                            rates[event.value.coinUid],
+                            nftMetadata = nftMetadata
+                        )
+                    )
                 }
             }
 
             is TronContractCallTransactionRecord -> {
-                itemSections.add(getContractMethodSectionItems(transaction.method, transaction.contractAddress, transaction.blockchainType))
+                itemSections.add(
+                    getContractMethodSectionItems(
+                        transaction.method,
+                        transaction.contractAddress,
+                        transaction.blockchainType
+                    )
+                )
 
                 for (event in transaction.outgoingEvents) {
-                    itemSections.add(getSendSectionItems(event.value, event.address, rates[event.value.coinUid], nftMetadata = nftMetadata))
+                    itemSections.add(
+                        getSendSectionItems(
+                            event.value,
+                            event.address,
+                            rates[event.value.coinUid],
+                            nftMetadata = nftMetadata
+                        )
+                    )
                 }
 
                 for (event in transaction.incomingEvents) {
-                    itemSections.add(getReceiveSectionItems(event.value, event.address, rates[event.value.coinUid], nftMetadata = nftMetadata))
+                    itemSections.add(
+                        getReceiveSectionItems(
+                            event.value,
+                            event.address,
+                            rates[event.value.coinUid],
+                            nftMetadata = nftMetadata
+                        )
+                    )
                 }
             }
 
             is ExternalContractCallTransactionRecord -> {
                 for (event in transaction.outgoingEvents) {
-                    itemSections.add(getSendSectionItems(event.value, event.address, rates[event.value.coinUid], nftMetadata = nftMetadata))
+                    itemSections.add(
+                        getSendSectionItems(
+                            event.value,
+                            event.address,
+                            rates[event.value.coinUid],
+                            nftMetadata = nftMetadata
+                        )
+                    )
                 }
 
                 for (event in transaction.incomingEvents) {
-                    itemSections.add(getReceiveSectionItems(event.value, event.address, rates[event.value.coinUid], nftMetadata = nftMetadata))
+                    itemSections.add(
+                        getReceiveSectionItems(
+                            event.value,
+                            event.address,
+                            rates[event.value.coinUid],
+                            nftMetadata = nftMetadata
+                        )
+                    )
                 }
             }
 
             is TronExternalContractCallTransactionRecord -> {
                 for (event in transaction.outgoingEvents) {
-                    itemSections.add(getSendSectionItems(event.value, event.address, rates[event.value.coinUid], nftMetadata = nftMetadata))
+                    itemSections.add(
+                        getSendSectionItems(
+                            event.value,
+                            event.address,
+                            rates[event.value.coinUid],
+                            nftMetadata = nftMetadata
+                        )
+                    )
                 }
 
                 for (event in transaction.incomingEvents) {
-                    itemSections.add(getReceiveSectionItems(event.value, event.address, rates[event.value.coinUid], nftMetadata = nftMetadata))
+                    itemSections.add(
+                        getReceiveSectionItems(
+                            event.value,
+                            event.address,
+                            rates[event.value.coinUid],
+                            nftMetadata = nftMetadata
+                        )
+                    )
                 }
             }
 
@@ -238,7 +362,8 @@ class TransactionInfoViewItemFactory(
                 itemSections.add(
                     listOf(
                         Transaction(
-                            transaction.transaction.contract?.label ?: getString(R.string.Transactions_ContractCall),
+                            transaction.transaction.contract?.label
+                                ?: getString(R.string.Transactions_ContractCall),
                             "",
                             TransactionViewItem.Icon.Platform(transaction.blockchainType).iconRes
                         )
@@ -247,22 +372,51 @@ class TransactionInfoViewItemFactory(
             }
 
             is BitcoinIncomingTransactionRecord -> {
-                itemSections.add(getReceiveSectionItems(transaction.value, transaction.from, rates[transaction.value.coinUid]))
+                itemSections.add(
+                    getReceiveSectionItems(
+                        transaction.value,
+                        transaction.from,
+                        rates[transaction.value.coinUid]
+                    )
+                )
 
-                miscItemsSection.addAll(getBitcoinSectionItems(transaction, transactionItem.lastBlockInfo))
+                miscItemsSection.addAll(
+                    getBitcoinSectionItems(
+                        transaction,
+                        transactionItem.lastBlockInfo
+                    )
+                )
                 addMemoItem(transaction.memo, miscItemsSection)
             }
 
             is BitcoinOutgoingTransactionRecord -> {
                 sentToSelf = transaction.sentToSelf
-                itemSections.add(getSendSectionItems(transaction.value, transaction.to, rates[transaction.value.coinUid], transaction.sentToSelf))
+                itemSections.add(
+                    getSendSectionItems(
+                        transaction.value,
+                        transaction.to,
+                        rates[transaction.value.coinUid],
+                        transaction.sentToSelf
+                    )
+                )
 
-                miscItemsSection.addAll(getBitcoinSectionItems(transaction, transactionItem.lastBlockInfo))
+                miscItemsSection.addAll(
+                    getBitcoinSectionItems(
+                        transaction,
+                        transactionItem.lastBlockInfo
+                    )
+                )
                 addMemoItem(transaction.memo, miscItemsSection)
             }
 
             is BinanceChainIncomingTransactionRecord -> {
-                itemSections.add(getReceiveSectionItems(transaction.value, transaction.from, rates[transaction.value.coinUid]))
+                itemSections.add(
+                    getReceiveSectionItems(
+                        transaction.value,
+                        transaction.from,
+                        rates[transaction.value.coinUid]
+                    )
+                )
 
                 addMemoItem(transaction.memo, miscItemsSection)
             }
@@ -306,22 +460,52 @@ class TransactionInfoViewItemFactory(
 
             is SolanaUnknownTransactionRecord -> {
                 for (transfer in transaction.outgoingTransfers) {
-                    itemSections.add(getSendSectionItems(transfer.value, transfer.address, rates[transfer.value.coinUid], nftMetadata = nftMetadata))
+                    itemSections.add(
+                        getSendSectionItems(
+                            transfer.value,
+                            transfer.address,
+                            rates[transfer.value.coinUid],
+                            nftMetadata = nftMetadata
+                        )
+                    )
                 }
 
                 for (transfer in transaction.incomingTransfers) {
-                    itemSections.add(getReceiveSectionItems(transfer.value, transfer.address, rates[transfer.value.coinUid], nftMetadata = nftMetadata))
+                    itemSections.add(
+                        getReceiveSectionItems(
+                            transfer.value,
+                            transfer.address,
+                            rates[transfer.value.coinUid],
+                            nftMetadata = nftMetadata
+                        )
+                    )
                 }
             }
 
             is StellarCreateAccountTransactionRecord -> {
-                itemSections.add(
-                    getReceiveSectionItems(
-                        transaction.value,
-                        transaction.operation.sourceAccount,
-                        rates[transaction.value.coinUid]
+                val isSend = transaction.accountId == transaction.operation.sourceAccount
+                if (isSend) {
+                    // In stellar, create account transaction is a special case of payment transaction for activating an account
+
+                    val covertToMinusCoinValue =
+                        transaction.copyWithCoinValue( BigDecimal("-1") *  transaction.mainValue.decimalValue!!)
+                    itemSections.add(
+                        getSendSectionItems(
+                            covertToMinusCoinValue.value,
+                            transaction.operation.sourceAccount,
+                            rates[transaction.value.coinUid]
+                        )
                     )
-                )
+                } else {
+                    itemSections.add(
+                        getReceiveSectionItems(
+                            transaction.value,
+                            transaction.operation.sourceAccount,
+                            rates[transaction.value.coinUid]
+                        )
+                    )
+                }
+
             }
 
             is StellarPaymentTransactionRecord -> {
@@ -368,7 +552,8 @@ class TransactionInfoViewItemFactory(
     }
 
     private fun getContact(address: String?): Contact? {
-        return contactsRepo.getContactsFiltered(blockchainType, addressQuery = address).firstOrNull()
+        return contactsRepo.getContactsFiltered(blockchainType, addressQuery = address)
+            .firstOrNull()
     }
 
     private fun addMemoItem(
@@ -389,7 +574,9 @@ class TransactionInfoViewItemFactory(
         nftMetadata: Map<NftUid, NftAssetBriefMetadata> = mapOf()
     ): List<TransactionInfoViewItem> {
         val mint = fromAddress == zeroAddress
-        val title: String = if (mint) getString(R.string.Transactions_Mint) else getString(R.string.Transactions_Receive)
+
+        val title: String =
+            if (mint) getString(R.string.Transactions_Mint) else getString(R.string.Transactions_Receive)
 
         val subtitle: String
         val amount: TransactionInfoViewItem
@@ -401,6 +588,7 @@ class TransactionInfoViewItemFactory(
                 amount = getNftAmount(value, true, nftMetadata[value.nftUid])
                 rate = null
             }
+
             else -> {
                 subtitle = getFullName(value)
                 amount = getAmount(coinPrice, value, true)
@@ -416,7 +604,12 @@ class TransactionInfoViewItemFactory(
         if (!mint && fromAddress != null) {
             val contact = getContact(fromAddress)
             items.add(
-                Address(getString(R.string.TransactionInfo_From), fromAddress, contact == null, blockchainType)
+                Address(
+                    getString(R.string.TransactionInfo_From),
+                    fromAddress,
+                    contact == null,
+                    blockchainType
+                )
             )
             contact?.let {
                 items.add(
@@ -430,7 +623,10 @@ class TransactionInfoViewItemFactory(
         return items
     }
 
-    private fun getFullName(transactionValue: TransactionValue, nftMetadata: NftAssetBriefMetadata? = null): String =
+    private fun getFullName(
+        transactionValue: TransactionValue,
+        nftMetadata: NftAssetBriefMetadata? = null
+    ): String =
         when (transactionValue) {
             is TransactionValue.CoinValue -> transactionValue.coin.name
             is TransactionValue.TokenValue -> transactionValue.tokenName
@@ -442,6 +638,7 @@ class TransactionInfoViewItemFactory(
                     }
                 } ?: "#${transactionValue.nftUid.tokenId}"
             }
+
             is TransactionValue.RawValue -> ""
         }
 
@@ -454,7 +651,8 @@ class TransactionInfoViewItemFactory(
     ): List<TransactionInfoViewItem> {
         val burn = toAddress == zeroAddress
 
-        val title: String = if (burn) getString(R.string.Transactions_Burn) else getString(R.string.Transactions_Send)
+        val title: String =
+            if (burn) getString(R.string.Transactions_Burn) else getString(R.string.Transactions_Send)
 
         val subtitle: String
         val amount: TransactionInfoViewItem
@@ -463,9 +661,11 @@ class TransactionInfoViewItemFactory(
         when (value) {
             is TransactionValue.NftValue -> {
                 subtitle = getFullName(value, nftMetadata[value.nftUid])
-                amount = getNftAmount(value, if (sentToSelf) null else false, nftMetadata[value.nftUid])
+                amount =
+                    getNftAmount(value, if (sentToSelf) null else false, nftMetadata[value.nftUid])
                 rate = null
             }
+
             else -> {
                 subtitle = getFullName(value)
                 amount = getAmount(coinPrice, value, if (sentToSelf) null else false)
@@ -474,14 +674,23 @@ class TransactionInfoViewItemFactory(
         }
 
         val items: MutableList<TransactionInfoViewItem> = mutableListOf(
-            Transaction(title, subtitle, if (burn) R.drawable.icon_24_flame else R.drawable.ic_arrow_up_right_12),
+            Transaction(
+                title,
+                subtitle,
+                if (burn) R.drawable.icon_24_flame else R.drawable.ic_arrow_up_right_12
+            ),
             amount
         )
 
         if (!burn && toAddress != null) {
             val contact = getContact(toAddress)
             items.add(
-                Address(getString(R.string.TransactionInfo_To), toAddress, contact == null, blockchainType)
+                Address(
+                    getString(R.string.TransactionInfo_To),
+                    toAddress,
+                    contact == null,
+                    blockchainType
+                )
             )
 
             contact?.let {
@@ -572,7 +781,11 @@ class TransactionInfoViewItemFactory(
             )
         )
 
-    private fun getApproveSectionItems(value: TransactionValue, coinPrice: CurrencyValue?, spenderAddress: String): List<TransactionInfoViewItem> {
+    private fun getApproveSectionItems(
+        value: TransactionValue,
+        coinPrice: CurrencyValue?,
+        spenderAddress: String
+    ): List<TransactionInfoViewItem> {
         val fiatAmountFormatted = coinPrice?.let {
             value.decimalValue?.let { decimalValue ->
                 numberFormatter.formatFiatFull(
@@ -616,7 +829,12 @@ class TransactionInfoViewItemFactory(
                 value.coinIconPlaceholder,
                 value.coin?.uid
             ),
-            Address(getString(R.string.TransactionInfo_Spender), spenderAddress, contact == null, blockchainType)
+            Address(
+                getString(R.string.TransactionInfo_Spender),
+                spenderAddress,
+                contact == null,
+                blockchainType
+            )
         )
 
         contact?.let {
@@ -638,7 +856,10 @@ class TransactionInfoViewItemFactory(
         )
     )
 
-    private fun getBitcoinSectionItems(transaction: BitcoinTransactionRecord, lastBlockInfo: LastBlockInfo?): List<TransactionInfoViewItem> {
+    private fun getBitcoinSectionItems(
+        transaction: BitcoinTransactionRecord,
+        lastBlockInfo: LastBlockInfo?
+    ): List<TransactionInfoViewItem> {
         val items: MutableList<TransactionInfoViewItem> = mutableListOf()
 
         transaction.conflictingHash?.let { conflictingHash ->
@@ -668,7 +889,10 @@ class TransactionInfoViewItemFactory(
         rates: Map<String, CurrencyValue?>
     ): List<TransactionInfoViewItem> {
         val items: MutableList<TransactionInfoViewItem> = mutableListOf(
-            Value(getString(R.string.TransactionInfo_Date), dateHelper.getFullDate(Date(transaction.timestamp * 1000))),
+            Value(
+                getString(R.string.TransactionInfo_Date),
+                dateHelper.getFullDate(Date(transaction.timestamp * 1000))
+            ),
             Status(status)
         )
 
@@ -700,12 +924,16 @@ class TransactionInfoViewItemFactory(
     private fun getExplorerSectionItems(explorerData: TransactionInfoModule.ExplorerData): List<TransactionInfoViewItem> =
         listOf(
             Explorer(
-                translator.getString(R.string.TransactionInfo_ButtonViewOnExplorerName, explorerData.title),
+                translator.getString(
+                    R.string.TransactionInfo_ButtonViewOnExplorerName,
+                    explorerData.title
+                ),
                 explorerData.url
             )
         )
 
-    private fun getDoubleSpendViewItem(transactionHash: String, conflictingHash: String) = DoubleSpend(transactionHash, conflictingHash)
+    private fun getDoubleSpendViewItem(transactionHash: String, conflictingHash: String) =
+        DoubleSpend(transactionHash, conflictingHash)
 
     private fun getYouPayString(status: TransactionStatus): String {
         return if (status == TransactionStatus.Completed) {
@@ -769,9 +997,11 @@ class TransactionInfoViewItemFactory(
                 decimalValue > BigDecimal.ZERO -> "+"
                 else -> ""
             }
-            val valueWithCoinCode = numberFormatter.formatCoinFull(decimalValue.abs(), value.coinCode, 8)
+            val valueWithCoinCode =
+                numberFormatter.formatCoinFull(decimalValue.abs(), value.coinCode, 8)
             if (amount is SwapTransactionRecord.Amount.Extremum && incoming != null) {
-                val suffix = if (incoming) getString(R.string.Swap_AmountMin) else getString(R.string.Swap_AmountMax)
+                val suffix =
+                    if (incoming) getString(R.string.Swap_AmountMin) else getString(R.string.Swap_AmountMax)
                 "$sign$valueWithCoinCode $suffix"
             } else {
                 "$sign$valueWithCoinCode"
@@ -784,7 +1014,13 @@ class TransactionInfoViewItemFactory(
         } else {
             null
         }
-        return Amount(coinValueColored, fiatValueColored, value.coinIconUrl, value.coinIconPlaceholder, coinUid)
+        return Amount(
+            coinValueColored,
+            fiatValueColored,
+            value.coinIconUrl,
+            value.coinIconPlaceholder,
+            coinUid
+        )
     }
 
     private fun getNftAmount(
@@ -799,7 +1035,8 @@ class TransactionInfoViewItemFactory(
                 decimalValue > BigDecimal.ZERO -> "+"
                 else -> ""
             }
-            val valueWithCoinCode = numberFormatter.formatCoinFull(decimalValue.abs(), value.coinCode, 8)
+            val valueWithCoinCode =
+                numberFormatter.formatCoinFull(decimalValue.abs(), value.coinCode, 8)
             "$sign$valueWithCoinCode"
         }
 
@@ -829,7 +1066,10 @@ class TransactionInfoViewItemFactory(
         return Value(getString(R.string.TransactionInfo_HistoricalRate), rateValue)
     }
 
-    private fun getFee(transactionValue: TransactionValue, rate: CurrencyValue?): TransactionInfoViewItem {
+    private fun getFee(
+        transactionValue: TransactionValue,
+        rate: CurrencyValue?
+    ): TransactionInfoViewItem {
         val feeAmountString = getFeeAmountString(rate, transactionValue)
 
         return Value(getString(R.string.TransactionInfo_Fee), feeAmountString)
@@ -851,7 +1091,10 @@ class TransactionInfoViewItemFactory(
         return Value(feeTitle, feeAmountString)
     }
 
-    private fun getFeeAmountString(rate: CurrencyValue?, transactionValue: TransactionValue): String {
+    private fun getFeeAmountString(
+        rate: CurrencyValue?,
+        transactionValue: TransactionValue
+    ): String {
         val feeInFiat = rate?.let {
             transactionValue.decimalValue?.let { decimalValue ->
                 numberFormatter.formatFiatFull(
