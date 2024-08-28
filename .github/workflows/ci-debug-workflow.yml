@@ -8,25 +8,25 @@ jobs:
   debug_build:
     runs-on: [self-hosted, linux]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      # - name: Checkout code
+      #   uses: actions/checkout@v3
+      #   with:
+      #     fetch-depth: 0
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.1.2'
-          bundler-cache: true
+      # - name: Setup Ruby
+      #   uses: ruby/setup-ruby@v1
+      #   with:
+      #     ruby-version: '3.1.2'
+      #     bundler-cache: true
 
-      - name: Decode local properties
-        id: localProperties
-        uses: timheuer/base64-to-file@v1.2
-        with:
-          fileName: 'local.properties'
-          encodedString: ${{ secrets.LOCAL_PROPERTIES }}
+      # - name: Decode local properties
+      #   id: localProperties
+      #   uses: timheuer/base64-to-file@v1.2
+      #   with:
+      #     fileName: 'local.properties'
+      #     encodedString: ${{ secrets.LOCAL_PROPERTIES }}
 
-      - run: cp "${{ steps.localProperties.outputs.filePath }}" "./"
+      # - run: cp "${{ steps.localProperties.outputs.filePath }}" "./"
 
       - name: Decode service credentials file
         id: serviceCredentialsFile
@@ -37,6 +37,10 @@ jobs:
 
       - run: cp "${{ steps.serviceCredentialsFile.outputs.filePath }}" "./fastlane"
 
+      - name: Print service credentials (dev)
+        run: cat "./fastlane/service_credentials_file_dev.json"
+
+
       - name: Decode google-services json file
         id: googleServicesJsonFile
         uses: timheuer/base64-to-file@v1.2
@@ -45,6 +49,9 @@ jobs:
           encodedString: ${{ secrets.FIREBASE_JSON_BASE64_DEV}}
 
       - run: cp "${{ steps.googleServicesJsonFile.outputs.filePath }}" "./app/src/debug"
+
+      - name: Print service credentials (dev)
+        run: cat "./app/src/debug/google-services.json"
 
       - name: check googleServicesJsonFile exist
         run: ls -al "./app/src/debug"
